@@ -1,4 +1,3 @@
-import react from 'React';
 import { useChatContext } from 'web3-mq-react';
 
 const ChatBox: React.FC = () => {
