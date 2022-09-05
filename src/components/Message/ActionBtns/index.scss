@@ -1,0 +1,56 @@
+.actionBtns {
+  background: #605dec;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  padding: 0 12px;
+
+  &.mobileStyle {
+    position: absolute;
+    right: 24px;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
+    height: fit-content;
+    padding: 8px 12px;
+    align-items: flex-start;
+    .btn {
+      flex-direction: column;
+      height: auto;
+      justify-content: space-between;
+      &:not(:last-child) {
+        margin-right: 7px;
+      }
+    }
+  }
+
+  .btn {
+    height: 36px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-size: 12px;
+
+    .com {
+      width: 14px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+    }
+
+    .msg {
+      max-width: 50px;
+    }
+
+    &:not(:last-child) {
+      margin-right: 14px;
+    }
+
+    svg {
+      fill: #fff;
+      width: 14px;
+    }
+  }
+}

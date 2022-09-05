@@ -1,0 +1,57 @@
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    -webkit-transform: scale3d(0, 0, 0.3);
+    transform: scale3d(0, 0, 0.3);
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+// @keyframes zoomOut {
+//   from {
+//     opacity: 1;
+//   }
+//   50% {
+//     opacity: 0;
+//     -webkit-transform: scale3d(-0.3, 0, -0.3);
+//     transform: scale3d(-0.3, 0, -0.3);
+//   }
+// }
+
+.toast-wrapper {
+  position: fixed;
+  box-sizing: border-box;
+  right: 15%;
+  top: 15%;
+  text-align: center;
+  z-index: 1010;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1em;
+}
+
+.toast {
+  padding: 10px 16px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #f2f2f2;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1), 0 3px 3px rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  margin-bottom: 1rem;
+  min-height: 60px;
+  max-width: 350px;
+  transition: all 0.3s;
+  animation-name: zoomIn;
+  animation-duration: 0.3s;
+  font-weight:600;
+
+  .icon{
+	font-size:16px;
+	margin-right:12px;
+  }
+}

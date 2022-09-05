@@ -1,0 +1,184 @@
+.modalBtn {
+  cursor: pointer;
+  display: flex;
+  margin-right: 70px;
+  flex-direction: column;
+  align-items: center;
+  font-family: 'Helvetica Neue', sans-serif;
+  .icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background-color: #fff;
+    border-radius: 10px;
+  }
+  .title {
+    text-align: center;
+    padding-top: 10px;
+    color: #1f2128;
+    font-weight: bold;
+    font-size: 12px;
+  }
+}
+.modalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 30px;
+  .title {
+    font-family: 'Helvetica Neue';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 20px;
+    color: #252423;
+  }
+  .closeBtn {
+    cursor: pointer;
+    font-size: 16px;
+    height: 16px;
+    &:hover {
+      color: #777;
+    }
+  }
+}
+.modalBody {
+  max-height: 450px;
+  overflow-y: scroll;
+  padding: 20px 30px;
+  .label {
+    font-family: 'Helvetica Neue';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 16px;
+    color: #616161;
+    margin: 24px 0 12px;
+  }
+  textarea {
+    font-family: 'Helvetica Neue';
+    min-height: 130px;
+    border: 1px solid #dedede;
+    border-radius: 8px;
+    width: 100%;
+    padding: 14px 15px;
+    box-sizing: border-box;
+    resize: none;
+    background: #ffffff;
+    font-size: 14px;
+    line-height: 16px;
+    color: rgba(0, 0, 0, 0.9);
+    outline: none;
+  }
+  .title {
+    font-family: 'Helvetica Neue';
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+.radioGroup {
+  margin-top: 12px;
+}
+.submitBtn {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  width: 100%;
+  max-width: 540px;
+  cursor: pointer;
+  background-color: #605dec;
+  border-radius: 49px;
+  text-align: center;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  color: #fff;
+  height: 48px;
+  line-height: 48px;
+}
+
+// selectUser Component style
+.selectUserContainer {
+  max-width: 540px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background-color: #f0f0f0;
+  .icon {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  }
+  .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 1px 0px;
+  }
+  .input {
+    width: 100%;
+    background-color: #f0f0f0;
+    margin: 2px;
+    flex: 1;
+    outline: none;
+    border: none;
+    min-height: 28px;
+    font-size: 17px;
+    color: rgba(0, 0, 0, 0.9);
+  }
+  .selectItemWarp {
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 30px;
+    padding: 3px 8px 3px 5px;
+    margin: 3px 10px 3px 0;
+    .name {
+      margin-right: 12px;
+      font-family: 'Helvetica Neue';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 16px;
+      color: #242424;
+    }
+  }
+}
+.showListWarp {
+  position: relative;
+}
+.showList {
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 100%;
+  max-height: 192px;
+  overflow-y: scroll;
+  z-index: 12;
+  background: #fff;
+  border: 1px solid #e1dfdd;
+  box-shadow: 0 8px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 0 0 3px 3px;
+}
+
+.checkBoxItem {
+  cursor: pointer;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background-color: #f3f2f1;
+  }
+}
+.unChecked {
+  width: 16px;
+  height: 16px;
+  border: 1px solid #616161;
+  border-radius: 4px;
+}

@@ -1,0 +1,44 @@
+.threadContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  border-left: 1px solid #f1f1f1;
+  border-radius: 0px 10px 0 0;
+  background: #ffffff;
+  min-width: 400px;
+  max-width: 400px;
+}
+.mobileStyle {
+  position: fixed !important;
+  border: none;
+  min-width: 100%;
+}
+
+// threadHeader CSS
+.threadHeaderContainer {
+  padding: 10px 16px;
+  min-height: 80px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 1px solid #f2f2f2;
+  font-weight: bold;
+  color: #000;
+  .title {
+    font-weight: bold;
+  }
+  .warp {
+    display: flex;
+    align-items: center;
+  }
+  .closeBtn {
+    width: 23px;
+    height: 22px;
+    cursor: pointer;
+  }
+  .arrowLeft {
+    margin-right: 10px;
+  }
+}

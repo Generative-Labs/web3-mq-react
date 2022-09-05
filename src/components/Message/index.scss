@@ -1,0 +1,62 @@
+.messageSimpleContainer {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f2f2f2;
+  position: relative;
+
+  &.mobileStyle {
+    padding: 10px 16px;
+    .message {
+      margin-left: 0;
+    }
+    .actionBtns {
+      top: 10px;
+    }
+  }
+
+  &:hover:not(.deviceMobileStyle) .actionBtns {
+    display: flex;
+  }
+  &.deviceMobileShow .actionBtns {
+    display: flex;
+  }
+}
+.message {
+  position: relative;
+  width: 100%;
+  margin-left: 5px;
+}
+.dataInner {
+  span {
+    white-space: nowrap;
+    font-size: 11px;
+    color: #4c5667;
+    font-weight: 500;
+    display: inline-block;
+    line-height: 23px;
+  }
+  .name {
+    font-weight: 700;
+    margin-right: 8px;
+    color: #000;
+    font-size: 14px;
+  }
+}
+
+.hideMessageMargin {
+  margin: 0 !important;
+}
+.otherMsgType {
+  min-height: 32px;
+  padding: 5px 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.actionBtns {
+  position: absolute;
+  right: 24px;
+  top: 16px;
+  display: none;
+}

@@ -1,0 +1,52 @@
+.channelPreviewContainer {
+  height: 56px;
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding:9px 24px;
+  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
+  &:hover {
+	background-color: rgba(165, 166, 246, 0.1);
+  }
+  &.selected {
+    background-color: rgba(165, 166, 246, 0.1);
+  }
+}
+.wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;  
+}
+.previewTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.title {
+  font-weight: 500;
+  font-size: 15px;
+  &.dark {
+    color: white;
+  }
+  &.light {
+    color: #000000;
+  }
+}
+
+.updateTime {
+  font-size: 11px;
+  color: #858688;
+}
+.lastMessage {
+  text-align: left;
+  font-size: 13px;
+  line-height: 16px;
+  margin: 0;
+  color: #858688;
+  height: 16px;
+  max-width: 200px;
+}

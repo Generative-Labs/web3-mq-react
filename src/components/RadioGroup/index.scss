@@ -1,0 +1,36 @@
+.radioGroupContainer {
+  display: flex;
+}
+.radio {
+  cursor: pointer;
+  margin-right: 30px;
+  display: flex;
+  align-items: center;
+  font-family: helvetica neue, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  height: 25px;
+  line-height: 25px;
+  color: #242424;
+}
+.label {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #fff;
+  border: 1px solid #242424;
+  margin-right: 12px;
+}
+.selected {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #605dec;
+  .inner {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #605dec;
+  }
+}

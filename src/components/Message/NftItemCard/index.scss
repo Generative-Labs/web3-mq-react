@@ -1,0 +1,51 @@
+.nftContainer {
+  height: 78px;
+  margin-top: 10px;
+}
+
+.nftBox {
+  border: 1px solid #E1E1E1;
+  border-radius: 4px;
+  width: 100%;
+  height: 100%;
+  padding: 12px;
+  display: flex;
+
+  img {
+    height: 100%;
+    border-radius: 4px;
+    margin-right: 12px;
+  }
+}
+
+.nftInfo {
+  div:nth-of-type(1) {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    color: #242424;
+    height: 22px;
+    line-height: 22px;
+  }
+
+  div:nth-of-type(2), div:nth-of-type(3) {
+    font-family: 'SF Pro Text', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    height: 18px;
+    line-height: 18px;
+    margin-top: 2px;
+
+    span:nth-of-type(1) {
+      color: #616161;
+    }
+
+    span:nth-of-type(2) {
+      font-weight: 600;
+      color: #242424;
+    }
+  }
+
+}

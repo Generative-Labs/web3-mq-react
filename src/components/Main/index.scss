@@ -1,0 +1,16 @@
+.mainContainer {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.listItem {
+  min-width: 350px;
+  height: 100%;
+  overflow-y: auto;
+}
+.hide {
+  display: none;
+}
+.mobileStyle {
+  height: calc(100vh - 60px);
+}

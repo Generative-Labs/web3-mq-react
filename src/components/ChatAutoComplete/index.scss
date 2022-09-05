@@ -1,0 +1,99 @@
+.messageInput {
+  width: 100%;
+  padding: 14px 15px;
+  box-sizing: border-box;
+  resize: none;
+  background: #ffffff;
+  font-size: 14px;
+  line-height: 16px;
+  min-height: 0px;
+  color: rgba(0, 0, 0, 0.9);
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  outline: none;
+}
+.chatAutoCompleteContainer {
+  display: inline-flex;
+  align-items: center;
+  flex: 1;
+
+  &.mobileStyle {
+    .messageInput {
+      padding: 10px 15px;
+    }
+    svg {
+      margin-left: 10px;
+    }
+  }
+
+  .replyMessageBox {
+    flex: 1;
+    border: 1px solid #f2f2f2;
+    border-radius: 4px;
+    &:focus-within + .sendmessageIcon svg {
+      fill: #000;
+    }
+    .replyHistoryMessage {
+      border: 1px solid #f0f0f0;
+      box-shadow: 0px 0.15px 0.45px rgba(0, 0, 0, 0.11), 0px 0.8px 1.8px rgba(0, 0, 0, 0.13);
+      border-radius: 3px;
+      margin: 13px 13px 0;
+      padding: 4px 28px 4px 17px;
+      position: relative;
+
+      .name {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 16px;
+        color: #252423;
+        margin-right: 12px;
+      }
+
+      .time {
+        font-weight: 500;
+        font-size: 12px;
+        color: #4c5667;
+      }
+
+      .content {
+        font-size: 14px;
+        color: #252423;
+      }
+
+      &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 4px;
+        width: 3px;
+        height: 90%;
+        background: #605dec;
+        border-radius: 3px;
+        margin: auto 0;
+      }
+      svg {
+        position: absolute;
+        right: 6px;
+        top: 6px;
+        width: 12px;
+        height: 12px;
+        transform: scale(0.9);
+        cursor: pointer;
+        transition: fill 0.2s ease-in-out;
+        transition: fill 0.2s ease-in-out;
+      }
+    }
+    textarea {
+      border: none;
+    }
+  }
+}
+.sendmessageIcon svg {
+  cursor: pointer;
+  margin-left: 20px;
+  width: 23px;
+  height: 20px;
+  transition: fill 0.2s ease-in-out;
+  transition: fill 0.2s ease-in-out;
+}

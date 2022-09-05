@@ -1,0 +1,66 @@
+.textContainer {
+  &:hover {
+    .thread,
+    .reply {
+      display: block;
+    }
+  }
+}
+
+.textInner {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  .thread,
+  .reply {
+    cursor: pointer;
+    display: none;
+    margin-left: 15px;
+  }
+}
+.text {
+  line-height: 23px;
+  font-size: 14px;
+  color: #424242;
+  background: #fff;
+  margin-left: 0;
+  word-break: break-all;
+}
+
+.extraBox {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin: 8px 0;
+
+  .extraFlag {
+    color: #ccc;
+    font-weight: 100;
+    transform: rotateY(180deg);
+    margin-right: 5px;
+    font-size: 18px;
+  }
+  .extraMain {
+    display: flex;
+    flex-direction: column;
+	align-items: flex-start;
+    .threadMessage {
+      color: #006cff;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .replyMessage {
+      display: inline-block;
+      background: #ccc;
+      padding: 4px;
+      font-size: 10px;
+      border-radius: 4px;
+      color: #20222c;
+	  word-break: break-all;
+    }
+    .loading > div {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.chatContainerClass {
+  background-color: #fff;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex: 1;
+  border-left: 1px solid rgba(0, 0, 0, 0.08);
+}
+.mobileStyle {
+  position: fixed;
+  border: none;
+}

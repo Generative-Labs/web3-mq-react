@@ -1,0 +1,32 @@
+.avatarContainer {
+  flex-shrink: 0;
+  color: #fff;
+  margin-right: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+}
+.circle {
+  border-radius: 50%;
+}
+.rounded {
+  border-radius: 4px;
+}
+.square {
+  border-radius: 0;
+}
+.avatarFallback {
+  background-color: #006cff;
+}
+.imgLoaded {
+  background-color: none;
+}
+.avatarFallback {
+  display: block;
+  width: inherit;
+  height: inherit;
+  object-fit: cover;
+  text-align: center;
+}

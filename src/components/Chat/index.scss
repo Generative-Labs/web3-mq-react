@@ -1,0 +1,14 @@
+html,
+body {
+  overflow: hidden;
+}
+div {
+  box-sizing: border-box;
+}
+.chatContainer {
+  display: flex;
+  height: 100%;
+}
+.mobileStyle {
+  flex-direction: column-reverse;
+}

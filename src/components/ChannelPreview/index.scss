@@ -1,0 +1,78 @@
+.channelPreviewContainer {
+  background-color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 10px 24px;
+  transition: background-color 0.1s ease-in-out;
+  
+  &:hover {
+    background-color: rgba(165, 166, 246, 0.1);
+  }
+  &.selected {
+    background-color: rgba(165, 166, 246, 0.1);
+  }
+
+  &.mobileStyle{
+	  padding: 10px 24px;
+  }
+}
+.wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;  
+  position: relative;
+}
+.unread {
+  position: absolute;
+  right: 0;
+  top: 20px;
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  line-height: 20px;
+  border-radius: 50%;
+  background-color: rgba(96, 93, 236, 0.5);
+  font-size: 10px;
+  font-weight: 700;
+  color: #000;
+}
+.previewTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+.title {
+  font-weight: 500;
+  font-size: 15px;
+  max-width: 190px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  &.dark {
+    color: white;
+  }
+  &.light {
+    color: #000000;
+  }
+}
+
+.updateTime {
+  font-size: 11px;
+  color: #858688;
+}
+.lastMessage {
+  text-align: left;
+  font-size: 13px;
+  line-height: 16px;
+  margin: 0;
+  color: #858688;
+  height: 16px;
+  max-width: 190px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

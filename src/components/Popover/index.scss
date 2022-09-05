@@ -1,0 +1,64 @@
+.popover {
+  position: relative;
+
+  &:hover .popoverBubble {
+   display: block;
+  }
+
+  .popoverBubble {
+    position: absolute;
+    left: 50%;
+	top:-7px;
+    transition: display 0.2s linear;
+    transform: translate(-50%, -100%);
+	display: none;
+
+    .popoverInner {
+      color: #424242;
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 500;
+      border: 1px solid #616161;
+      border-radius: 8px;
+      padding: 5px 10px;
+      line-height: 16px;
+      background: #fff;
+    }
+    .popoverArrow {
+      position: absolute;
+      bottom: 1px;
+	  left:50%;
+      transform: translateY(100%) translate(-50%);
+      display: block;
+      width: 22px;
+      height: 22px;
+      overflow: hidden;
+      background: 0 0;
+      pointer-events: none;
+      .popoverArrowContent {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 11.31px;
+        height: 11.31px;
+        margin: auto;
+        background-color: #fff;
+        pointer-events: auto;
+        border-radius: 0 0 3px;
+        pointer-events: none;
+        border: 1px solid #616161;
+        transform: translateY(-11px) rotate(45deg);
+        &:before {
+          position: absolute;
+          top: -11.31px;
+          left: -11.31px;
+          width: 34px;
+          height: 34px;
+          background-repeat: no-repeat;
+          background-position: -10px -10px;
+          content: '';
+        }
+      }
+    }
+  }
+}

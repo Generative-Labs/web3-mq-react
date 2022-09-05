@@ -1,0 +1,105 @@
+ul {
+  padding: 0;
+  margin: 0;
+  li {
+    list-style: none;
+  }
+}
+.receiveNotificationContainer {
+  display: flex;
+  margin-left: 10px;
+  .iconBtn {
+    cursor: pointer;
+    margin-right: auto;
+    svg {
+      width: 27px;
+      height: 36px;
+    }
+  }
+  .iconCount {
+    height: 24px;
+    width: 24px;
+    text-align: center;
+    line-height: 24px;
+    border-radius: 50%;
+    background-color: rgba(96, 93, 236, 0.9);
+    font-size: 10px;
+    font-weight: 700;
+    color: #000;
+    margin-left: -8px;
+    margin-top: -5px;
+  }
+}
+.modalHead {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 30px;
+  width: 100%;
+  box-shadow: 0 4px 4px #c0c0c0;
+  // box-shadow: 0 4px 4px rgb(0 0 0 / 10%);
+  .title {
+    font-family: 'Helvetica Neue';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 20px;
+    color: #252423;
+  }
+  .closeBtn {
+    position: absolute;
+    right: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    height: 16px;
+    &:hover {
+      color: #777;
+    }
+  }
+}
+.modalBody {
+  width: 100%;
+  height: calc(100% - 60px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  .loadingContainer {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.notificationSimpleContainer {
+  display: flex;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 16px;
+  margin-top: 22px;
+  box-shadow: 0 1px 0 #e4e8ee;
+  .avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 16px;
+  }
+  .notification {
+    width: 100%;
+    .dataInner {
+      display: flex;
+      justify-content: space-between;
+      line-height: 20px;
+      font-weight: 700;
+      color: #242424;
+      font-size: 14px;
+    }
+    .textContainer {
+      font-family: helvetica neue, sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      width: 100%;
+      font-size: 12px;
+      line-height: 20px;
+      color: #424242;
+    }
+  }
+}

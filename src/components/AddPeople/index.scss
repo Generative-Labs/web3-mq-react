@@ -1,0 +1,80 @@
+.icon {
+  cursor: pointer;
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+  span {
+    margin-left: 5px;
+  }
+}
+.inviteBtn {
+  color: #5a67e2;
+  font-size: 18px;
+  &:hover {
+    color: #949bde;
+  }
+}
+.selectMain {
+  display: flex;
+  padding: 16px;
+  align-items: center;
+  box-shadow: 0 7px 9px rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.03);
+}
+.label {
+  width: 50px;
+}
+.selectWarp {
+  flex: 1;
+  flex-wrap: wrap;
+  display: flex;
+  .input {
+    margin: 2px;
+    flex: 1;
+    outline: none;
+    border: none;
+    min-height: 28px;
+    font-size: 17px;
+    color: rgba(0, 0, 0, 0.9);
+  }
+}
+.selectItem {
+  cursor: pointer;
+  padding: 5px 10px;
+  margin: 2px;
+  font-size: 17px;
+  color: rgba(0, 0, 0, 0.9);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  background: #f1f1f1;
+  opacity: 0.9;
+  margin-right: 5px;
+  .name {
+    margin-right: 5px;
+  }
+}
+.listContainer {
+  padding: 16px;
+}
+.listTitle {
+  margin: 5px 0 15px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
+}
+.listWarp {
+  overflow-y: scroll;
+  max-height: 420px;
+}
+.listItem {
+  cursor: pointer;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  .name {
+    margin-left: 10px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #000;
+  }
+}

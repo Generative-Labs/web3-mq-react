@@ -1,0 +1,97 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+}
+.dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 600px;
+  height: 600px;
+  background-color: #fff;
+  border-radius: 8px;
+}
+.mobileStyle {
+  border-radius: unset;
+  height: 100%;
+  width: 100%;
+  min-height: 600px;
+  min-width: 375px;
+}
+
+.titleContainer {
+  padding: 20px 30px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.title {
+  font-weight: bold;
+  position: absolute;
+  left: 50%;
+  font-size: 20px;
+  transform: translateX(-50%);
+}
+
+.closeBtn {
+  cursor: pointer;
+  font-size: 16px;
+  height: 16px;
+  &:hover {
+    color: #777;
+  }
+}
+.rightBtn {
+  cursor: pointer;
+  position: absolute;
+  right: 30px;
+}
+
+.enter {
+  opacity: 0;
+}
+.enterActive {
+  transition: opacity 250ms ease-in-out;
+  opacity: 1;
+}
+.enterDone {
+  opacity: 1;
+}
+.exit {
+  opacity: 1;
+}
+.exitActive {
+  opacity: 0;
+  transition: opacity 250ms ease-in-out;
+}
+.exitDone {
+  opacity: 0;
+}
+
+// content animation
+.contentEnter {
+  top: 100%;
+}
+.contentEnterActive {
+  transition: top 200ms ease-in-out;
+  top: 50%;
+}
+.contentEnterDone {
+  top: 50%;
+}
+.contentExit {
+  top: 50%;
+}
+.contentExitActive {
+  transition: top 200ms ease-in-out;
+  top: 100%;
+}
+.contentExitDone {
+  top: 100%;
+}
