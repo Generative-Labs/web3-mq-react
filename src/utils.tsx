@@ -1,5 +1,3 @@
-import type { ChannelResponse, MemberUserInfo, UserInfo } from 'web2-mq';
-
 export const getShortAddress = (address: string = '') => {
   let strLength = address.length;
   return address.substring(0, 5) + '...' + address.substring(strLength - 4, strLength);
@@ -59,7 +57,7 @@ export const dateTransform = (time: number): string => {
   return new Date(time / 1000000).toLocaleString() || '';
 };
 
-export const formatUserInfoData = (data: UserInfo) => {
+export const formatUserInfoData = (data: any) => {
   let avatar, title, user_id;
 
   avatar =
@@ -88,7 +86,7 @@ export const formatUserInfoData = (data: UserInfo) => {
  * channel格式化
  * @param channel
  */
-export const formatMessageData = (channel: ChannelResponse) => {
+export const formatMessageData = (channel: any) => {
   let latestMsg,
     displayTitle = '',
     avatarUrl: string[] = [],
@@ -117,7 +115,7 @@ export const formatMessageData = (channel: ChannelResponse) => {
     displayTitle = opensea_coll_name;
     avatarUrl = [opensea_coll_cover];
   } else {
-    members.forEach((element: MemberUserInfo) => {
+    members.forEach((element: any) => {
       if (name) {
         displayTitle = name;
       } else {

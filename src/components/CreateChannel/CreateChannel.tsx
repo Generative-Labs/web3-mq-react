@@ -31,12 +31,12 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   }, [showCreateChannel]);
 
   const startChat = async () => {
-    if (selectedUsers.length > 0) {
-      await client.channel.createRoom({
-        user_ids: selectedUsers.map((item) => item.userId),
-      });
-      setShowCreateChannel(false);
-    }
+    // if (selectedUsers.length > 0) {
+    //   await client.channel.createRoom({
+    //     user_ids: selectedUsers.map((item) => item.userId),
+    //   });
+    //   setShowCreateChannel(false);
+    // }
   };
 
   return (

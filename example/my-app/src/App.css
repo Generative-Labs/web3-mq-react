@@ -1,8 +1,5 @@
-.channelContainer {
-  height: 100vh;
-  display: grid;
-  background-color: #fafafa;
-  grid-template-rows: min-content;
+.App {
+  text-align: center;
 }
 
 .App-logo {
@@ -17,6 +14,7 @@
 }
 
 .App-header {
+  background-color: #282c34;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

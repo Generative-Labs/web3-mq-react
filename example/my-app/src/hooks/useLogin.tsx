@@ -1,58 +1,42 @@
-import { useState } from 'react';
-import { getLoginRandomSecret, login } from 'web2-mq';
-import { Buffer } from 'buffer';
+import { useCallback, useMemo, useState } from 'react';
+import { Client, KeyPairsType } from 'web3-mq';
 
 const useLogin = () => {
-  const [token, setToken] = useState(localStorage.getItem('ACCESS_TOKEN'));
-
-  const signMetamask = async () => {
-    let address: string = '';
-    //@ts-ignore
-    const requestPermissionsRes = await window.ethereum.request({
-      method: 'wallet_requestPermissions',
-      params: [{ eth_accounts: {} }],
-    });
-    if (!requestPermissionsRes) {
-      return null;
+  const hasKeys = useMemo(() => {
+    const PrivateKey = localStorage.getItem('PRIVATE_KEY') || '';
+    const PublicKey = localStorage.getItem('PUBLICKEY') || '';
+    if (PrivateKey && PublicKey) {
+      return { PrivateKey, PublicKey };
     }
+    return null;
+  }, []);
 
-    //@ts-ignore
-    let accounts = await window.ethereum.request({
-      method: 'eth_accounts',
-    });
-    if (!accounts) {
-      return null;
-    }
-    address = accounts[0];
+  const [keys, setKeys] = useState<KeyPairsType | null>(hasKeys);
+  const [fastestUrl, setFastUrl] = useState<string | null>(null);
 
-    const { data: secret } = await getLoginRandomSecret({
-      wallet_address: address,
+  const init = async () => {
+    const fastUrl = await Client.init({
+      connectUrl: localStorage.getItem('FAST_URL'),
+      app_key: 'vAUJTFXbBZRkEDRE',
+      env: 'dev',
     });
-    const msg = `0x${Buffer.from(secret, 'utf8').toString('hex')}`;
-    // @ts-ignore
-    const signRes = await ethereum.request({
-      method: 'personal_sign',
-      params: [msg, address, 'swapchat'],
-    });
-    //
-    // login_random_secret: string;
-    // signature: string;
-    // wallet_address: string;
-    // appid?: string;
-
-    const { access_token } = await login({
-      login_random_secret: secret,
-      signature: signRes,
-      wallet_address: address,
-    });
-    setToken(access_token);
+    localStorage.setItem('FAST_URL', fastUrl);
+    setFastUrl(fastUrl);
   };
+
+  const signMetaMask = async () => {
+    const { PrivateKey, PublicKey } = await Client.register.signMetaMask('https://www.web3mq.com');
+    localStorage.setItem('PRIVATE_KEY', PrivateKey);
+    localStorage.setItem('PUBLICKEY', PublicKey);
+    setKeys({ PrivateKey, PublicKey });
+  };
+
   const logout = () => {
     localStorage.clear();
-    setToken('');
+    setKeys(null);
   };
 
-  return { token, signMetamask, logout };
+  return { keys, fastestUrl, init, signMetaMask, logout };
 };
 
 export default useLogin;

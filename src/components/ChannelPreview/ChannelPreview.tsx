@@ -1,13 +1,12 @@
 import React from 'react';
 import { formatMessageData } from '../../utils';
 import { ChannelPreviewMessenger } from './ChannelPreviewMessenger';
-import type { ChannelResponse } from 'web2-mq';
 
 export type ChannelPreviewProps = {
   Preview?: React.ComponentType<ChannelPreviewProps>;
-  channel: ChannelResponse;
-  changeActiveChannelEvent: (channel: ChannelResponse) => void;
-  activeChannel: ChannelResponse | null;
+  channel: any;
+  changeActiveChannelEvent: (channel: any) => void;
+  activeChannel: any | null;
 };
 export const ChannelPreview = (props: ChannelPreviewProps) => {
   const {

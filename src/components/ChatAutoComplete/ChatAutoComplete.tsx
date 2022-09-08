@@ -36,7 +36,7 @@ export const ChatAutoComplete = (props: PropsWithChildren<ChatAutoCompleteProps>
 
   const userName = useMemo(() => {
     const uid = replyMsgInfo?.from_uid;
-    return uid ? client.channel.activeMember[uid].user_name : '';
+    // return uid ? client.channel.activeMember[uid].user_name : '';
   }, [replyMsgInfo]);
 
   const handleEvent = useCallback(
@@ -77,7 +77,7 @@ export const ChatAutoComplete = (props: PropsWithChildren<ChatAutoCompleteProps>
               }}
             />
             <div className={ss.dataInner}>
-              <span className={ss.name}>{userName}</span>
+              {/* <span className={ss.name}>{userName}</span> */}
               <span className={ss.time}>{dateTransform(replyMsgInfo.created_at)}</span>
             </div>
             <div className={ss.content}>{replyMsgInfo?.msg_contents}</div>

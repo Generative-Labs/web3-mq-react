@@ -1,5 +1,4 @@
 import type { Reducer } from 'react';
-import type { ChannelResponse } from 'web2-mq';
 
 import type { ChannelState, MessageItem } from '../../context/ChannelStateContext';
 
@@ -34,7 +33,7 @@ export type ChannelStateReducerAction =
     }
   | {
       type: 'setActiveChannel';
-      activeChannel: ChannelResponse | null;
+      activeChannel: any | null;
     }
   | {
       type: 'setOpenAllThread';

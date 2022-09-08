@@ -1,4 +1,4 @@
-import type { Client } from 'web2-mq';
+import type { Client } from 'web3-mq';
 import { useEffect, useState } from 'react';
 import { debounce } from '../../../utils';
 
@@ -9,19 +9,21 @@ const defaultNoUser = {
   createdAt: 0,
 };
 
+// @ts-ignore
 export const useSearchUser = (client: Client) => {
   const [content, setContent] = useState<string>('');
   const [searchResult, setSearchResult] = useState<Array<any>>([]);
   const [selectedUsers, setSelectUsers] = useState<Array<any>>([]);
-  
+
   const resetSearchUser = () => {
     setContent('');
     setSelectUsers([]);
     setSearchResult([]);
   };
 
+  // @ts-ignore
   const findUsers = async (content: string) => {
-    return await client.user.queryUsers(content);
+    // return await client.user.queryUsers(content);
   };
 
   const debounceFind = debounce<any[]>(findUsers, 800, true);
@@ -39,7 +41,7 @@ export const useSearchUser = (client: Client) => {
   }, [content]);
 
   const selectedSearchUser = (user: any) => {
-    if (selectedUsers.find(item => item.userId === user.userId)) {
+    if (selectedUsers.find((item) => item.userId === user.userId)) {
       return;
     }
     if (content || user.userId === '-1') {
@@ -62,6 +64,6 @@ export const useSearchUser = (client: Client) => {
     selectedUsers,
     selectedSearchUser,
     deleteSelectUser,
-    resetSearchUser
+    resetSearchUser,
   };
 };

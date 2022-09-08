@@ -3,15 +3,14 @@ import cx from 'classnames';
 
 import { Avatar as DefaultAvatar } from '../Avatar';
 import ss from './index.scss';
-import type { UserInfo } from 'web2-mq';
 
 export type ContactPreviewUIComponentProps = {
   Avatar?: React.ComponentType;
-  contact?: UserInfo,
+  contact?: any,
   active?: boolean;
   avatarUrl?: string;
   title?: string;
-  setActiveContact?: (contact: UserInfo) => void;
+  setActiveContact?: (contact: any) => void;
 };
 
 const UnMemoizedContactPreviewMessenger = (props: ContactPreviewUIComponentProps) => {
@@ -25,7 +24,7 @@ const UnMemoizedContactPreviewMessenger = (props: ContactPreviewUIComponentProps
   } = props;
 
   const onSetActiveChannel = () => {
-    setActiveContact && setActiveContact(contact as UserInfo);
+    setActiveContact && setActiveContact(contact as any);
   };
 
   return (

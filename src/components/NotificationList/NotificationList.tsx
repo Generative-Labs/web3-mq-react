@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { ActiveSenderItem } from 'web2-mq';
 import { dateTransform } from '../../utils';
 import { useChatContext } from '../../context/ChatContext';
 import { usePaginatedNotifications } from './hooks/usePaginatedNotifications';
@@ -41,15 +40,15 @@ export const NotificationList = () => {
 
   const activeSender = useMemo(() => {
     const { contactList } = client.contact;
-    const chcheObj: ActiveSenderItem = {};
+    const chcheObj: any = {};
     notifyArr.forEach((id) => {
-      const senderInfo = contactList?.filter((contact: { user_id: string; }) => contact.user_id === id)[0];
-      senderInfo &&
-        (chcheObj[id] = {
-          avatar: senderInfo['avatar'],
-          user_id: senderInfo['user_id'],
-          user_name: senderInfo['user_name'],
-        });
+      // const senderInfo = contactList?.filter((contact: { user_id: string; }) => contact.user_id === id)[0];
+      // senderInfo &&
+      //   (chcheObj[id] = {
+      //     avatar: senderInfo['avatar'],
+      //     user_id: senderInfo['user_id'],
+      //     user_name: senderInfo['user_name'],
+      //   });
     });
     return chcheObj;
   }, [JSON.stringify(notifyArr), isContactUpdate]);

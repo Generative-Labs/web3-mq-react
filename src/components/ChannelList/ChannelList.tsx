@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useEffect, useRef } from 'react';
-import type { ChannelResponse } from 'web2-mq';
 
 import { ChannelListMessenger, ChannelListMessengerProps } from './ChannelListMessenger';
 import { usePaginatedChannels } from './hooks/usePaginatedChannels';
@@ -49,7 +48,7 @@ export const ChannelList = (props: PropsWithChildren<ChannelListProps>) => {
     };
   }, []);
 
-  const renderChannel = (item: ChannelResponse) => {
+  const renderChannel = (item: any) => {
     const previewProps = {
       channel: item,
       Preview,

@@ -14,7 +14,7 @@ const UnMemoizedAllThreadList = () => {
   const { allThreadList, threadLoading, openAllThread } = useChannelStateContext('AllThreadList');
   const { closeAllThreadList, handleOpenThread } = useChannelActionContext('AllThreadList');
   const { ThreadHeader } = useComponentContext('AllThreadList');
-  const { activeMember = {} } = client.channel;
+  const { activeMember = {} } = client.channel as any;
 
   const handleClose = useCallback((event: React.MouseEvent) => {
     if (event.target === event.currentTarget) {

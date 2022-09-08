@@ -25,7 +25,7 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
   const { appType, client } = useChatContext('MessageHeader');
 
   const handleClose = useCallback(() => {
-    client.channel.setActiveChannel(null);
+    // client.channel.setActiveChannel(null);
   }, []);
 
   if (!activeChannel) {

@@ -1,6 +1,5 @@
 import React from 'react';
 import cx from 'classnames';
-import type { ChannelResponse } from 'web2-mq';
 
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { AvatarGroup } from '../AvatarGroup';
@@ -9,14 +8,14 @@ import ss from './index.scss';
 
 export type ChannelPreviewUIComponentProps = {
   Avatar?: React.ComponentType;
-  channel: ChannelResponse;
+  channel: any;
   unread: number;
   lastMessage: string;
   displayTitle: string;
   updatedAt: string;
   active: boolean;
   avatarUrl: string[];
-  setActiveChannel?: (channel: ChannelResponse) => void;
+  setActiveChannel?: (channel: any) => void;
 };
 
 const UnMemoizedChannelPreviewMessenger = (props: ChannelPreviewUIComponentProps) => {

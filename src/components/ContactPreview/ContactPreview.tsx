@@ -1,13 +1,12 @@
 import React, { useEffect } from 'react';
 import { ContactPreviewMessenger } from './ContactPreviewMessenger';
 import { formatUserInfoData } from '../../utils';
-import type { UserInfo } from 'web2-mq';
 
 export type ContactPreviewProps = {
   Preview?: React.ComponentType<ContactPreviewProps>;
-  contact: UserInfo;
-  activeContact: UserInfo | null;
-  changeActiveContactEvent: (contact: UserInfo) => void;
+  contact: any;
+  activeContact: any | null;
+  changeActiveContactEvent: (contact: any) => void;
 };
 export const ContactPreview = (props: ContactPreviewProps) => {
   const {

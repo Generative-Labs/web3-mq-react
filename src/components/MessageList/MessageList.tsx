@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
-import type { EventTypes } from 'web2-mq';
+import type { EventTypes } from 'web3-mq';
 
 import { useMessageListElements } from './hooks/useMessageListElements';
 import { useMessageLoadMore } from './hooks/useMessageLoadMore';
@@ -51,25 +51,25 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
   const handleEvent = useCallback(
     (event: { type: EventTypes; data?: any }) => {
       const { type, data } = event;
-      if (type === 'message.new') {
-        const { from_uid, to } = data;
-        const userId = client.user.userInfo.user_id;
-        // 判断是否是自己发的
-        if (userId === from_uid) {
-          scrollBottom('smooth');
-          setMsgCount(0);
-          return;
-        }
-        // 新消息是否是当前聊天室的
-        if (activeChannel?.room_id === to) {
-          // 是否在底部
-          if (isScreenBottm()) {
-            scrollBottom('smooth');
-          } else {
-            setMsgCount(++msgCount);
-          }
-        }
-      }
+      // if (type === 'message.new') {
+      //   const { from_uid, to } = data;
+      //   const userId = client.user.userInfo.user_id;
+      //   // 判断是否是自己发的
+      //   if (userId === from_uid) {
+      //     scrollBottom('smooth');
+      //     setMsgCount(0);
+      //     return;
+      //   }
+      //   // 新消息是否是当前聊天室的
+      //   if (activeChannel?.room_id === to) {
+      //     // 是否在底部
+      //     if (isScreenBottm()) {
+      //       scrollBottom('smooth');
+      //     } else {
+      //       setMsgCount(++msgCount);
+      //     }
+      //   }
+      // }
     },
     [activeChannel, msgCount, isScreenBottm],
   );
@@ -91,12 +91,12 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
     }
   }, [loading]);
 
-  useEffect(() => {
-    client.on('message.new', handleEvent);
-    return () => {
-      client.off('message.new', handleEvent);
-    };
-  }, [msgCount]);
+  // useEffect(() => {
+  //   client.on('message.new', handleEvent);
+  //   return () => {
+  //     client.off('message.new', handleEvent);
+  //   };
+  // }, [msgCount]);
 
   useEffect(() => {
     autoLoadMoreFromScrollHeight();

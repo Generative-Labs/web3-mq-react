@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { Client, ChannelResponse, EventTypes } from 'web2-mq';
+import type { Client, EventTypes } from 'web3-mq';
 
 import { AppTypeEnum } from '../../../context/ChatContext';
 
@@ -14,9 +14,9 @@ const PAGE = {
 };
 
 export const usePaginatedChannels = (client: Client, appType: AppTypeEnum) => {
-  const [channels, setChannels] = useState<ChannelResponse[]>([]);
+  const [channels, setChannels] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [activeChannel, setActiveChannel] = useState<ChannelResponse | null>(null);
+  const [activeChannel, setActiveChannel] = useState<any | null>(null);
   const [status, setStatus] = useState<StatusType>({
     error: false,
     loading: false,
@@ -28,7 +28,7 @@ export const usePaginatedChannels = (client: Client, appType: AppTypeEnum) => {
     setRefreshing(false);
   };
 
-  const changeActiveChannelEvent = (channel: ChannelResponse) => {
+  const changeActiveChannelEvent = (channel: any) => {
     client.channel.setActiveChannel(channel);
   };
 

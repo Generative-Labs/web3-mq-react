@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { EventTypes, UserInfo, Client } from 'web2-mq';
+import type { EventTypes, Client } from 'web3-mq';
 
 type StatusType = {
   error: boolean;
@@ -12,9 +12,9 @@ const PAGE = {
 };
 
 export const usePaginatedContacts = (client: Client) => {
-  const [contacts, setContacts] = useState<UserInfo[]>([]);
+  const [contacts, setContacts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [activeContact, setActiveContact] = useState<UserInfo | null>(null);
+  const [activeContact, setActiveContact] = useState<any | null>(null);
   const [status, setStatus] = useState<StatusType>({
     error: false,
     loading: false,
@@ -22,12 +22,13 @@ export const usePaginatedContacts = (client: Client) => {
 
   const queryContacts = async () => {
     setRefreshing(true);
-    await client.contact.queryContacts(PAGE);
+    // await client.contact.queryContacts(PAGE);
     setRefreshing(false);
   };
 
-  const changeActiveContactEvent = (contact: UserInfo) => {
-    client.contact.setActiveContact(contact);
+  // @ts-ignore
+  const changeActiveContactEvent = (contact: any) => {
+    // client.contact.setActiveContact(contact);
   };
 
   const loadNextPage = () => {
@@ -41,7 +42,7 @@ export const usePaginatedContacts = (client: Client) => {
   const handleEvent = useCallback((props: { type: EventTypes }) => {
     const { type } = props;
 
-    const { contactList, activeContact } = client.contact;
+    const { contactList } = client.contact;
     if (!contactList) {
       return;
     }
@@ -60,7 +61,7 @@ export const usePaginatedContacts = (client: Client) => {
       ...status,
       loading: false,
     });
-    setContacts((contacts: UserInfo[]) => [...contacts, ...contactList]);
+    setContacts((contacts: any[]) => [...contacts, ...contactList]);
   }, []);
 
   useEffect(() => {

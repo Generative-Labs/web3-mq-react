@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import type { UserInfo } from 'web2-mq';
 
 import { Avatar } from '../Avatar';
 import { SelectArrowIcon, CloseBtnIcon, CheckedIcon } from '../../icons';
@@ -9,7 +8,7 @@ import { useChatContext } from '../../context/ChatContext';
 import ss from './index.scss';
 
 interface IProps {
-  onChange: (data: UserInfo[]) => void;
+  onChange: (data: any[]) => void;
 }
 
 export const SelectUser: React.FC<IProps> = (props) => {
@@ -20,16 +19,16 @@ export const SelectUser: React.FC<IProps> = (props) => {
   const { contactList } = client.contact;
 
   const handleCheck = useCallback(
-    (item: UserInfo, type: string) => {
+    (item: any, type: string) => {
       if (type === 'delete') {
         setSelectedArr(() => {
-          const newData = selectedArr.filter((el: UserInfo) => el.user_id !== item.user_id);
+          const newData = selectedArr.filter((el: any) => el.user_id !== item.user_id);
           onChange && onChange(newData);
           return newData;
         });
       }
       if (type === 'check') {
-        setSelectedArr((prevState: UserInfo[]) => {
+        setSelectedArr((prevState: any[]) => {
           const newData = [...prevState, ...[item]];
           onChange && onChange(newData);
           return newData;
@@ -40,7 +39,7 @@ export const SelectUser: React.FC<IProps> = (props) => {
   );
 
   const SelectItem = useCallback(
-    (item: UserInfo) => (
+    (item: any) => (
       <div className={ss.selectItemWarp} key={item.user_id}>
         <Avatar size={20} image={item.avatar} />
         <div className={ss.name}>{item.user_name}</div>
@@ -51,7 +50,7 @@ export const SelectUser: React.FC<IProps> = (props) => {
   );
 
   const CheckBoxItem = useCallback(
-    (item: UserInfo) => {
+    (item: any) => {
       const isCheck = selectedArr.includes(item);
       return (
         <div

@@ -1,5 +1,4 @@
 import React, { useCallback, useState } from 'react';
-import type { MemberUserInfo, UserInfo } from 'web2-mq';
 
 import { AddPeopleIcon, CloseBtnIcon } from '../../icons';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
@@ -12,7 +11,7 @@ import { Loading } from '../Loading';
 
 import ss from './index.scss';
 
-type MembersType = MemberUserInfo | UserInfo;
+type MembersType = any;
 
 const UnMemoizedAddPeople: React.FC = () => {
   const [isFocus, setIsFocus] = useState<boolean>(false);
@@ -46,7 +45,7 @@ const UnMemoizedAddPeople: React.FC = () => {
     const ids = selectItem.map((member) => member.user_id);
     setLoading(true);
     try {
-      await client.channel.addMembers(ids);
+      // await client.channel.addMembers(ids);
       resetStatus();
     } catch (error) {
       setLoading(false);

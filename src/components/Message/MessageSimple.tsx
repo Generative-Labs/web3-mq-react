@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useMemo, useRef } from 'react';
 import cx from 'classnames';
-import { MsgTypeEnum } from 'web2-mq';
 
 import { Avatar } from '../Avatar';
 import { Profile } from '../Profile';
@@ -20,7 +19,7 @@ export const MessageSimple = () => {
   const { client, appType } = useChatContext('MessageSimple');
   const [isShow, setIsShow] = useState<boolean>(false);
   const { created_at, from_uid, msg_type, belong_to_thread_id, is_opensea_item_thread } = message;
-  const { activeMember = {} } = client.channel;
+  const { activeMember = {} } = client.channel as any;
   const messageRef = useRef<HTMLDivElement | null>(null);
 
   const longPressEvents = uselongPressEvents({
@@ -35,15 +34,15 @@ export const MessageSimple = () => {
   }
 
   const MessageInner = useCallback(() => {
-    if (msg_type === MsgTypeEnum.text) {
-      if (is_opensea_item_thread && isThread) {
-        return <NftItemCard />;
-      }
-      return <Text />;
-    }
-    if (msg_type === MsgTypeEnum.sudoSwapCard) {
-      return <SudoSwapCard />;
-    }
+    // if (msg_type === MsgTypeEnum.text) {
+    //   if (is_opensea_item_thread && isThread) {
+    //     return <NftItemCard />;
+    //   }
+    //   return <Text />;
+    // }
+    // if (msg_type === MsgTypeEnum.sudoSwapCard) {
+    //   return <SudoSwapCard />;
+    // }
     return <div className={ss.otherMsgType}>暂不支持此消息类型</div>;
   }, []);
 

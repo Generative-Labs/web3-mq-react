@@ -6,7 +6,7 @@ import React, {
   useCallback,
   useRef,
 } from 'react';
-import type { EventTypes } from 'web2-mq';
+import type { EventTypes } from 'web3-mq';
 import cx from 'classnames';
 
 import {
@@ -45,10 +45,10 @@ export const Channel = (props: PropsWithChildren<ChannelProps>) => {
   const handleEvent = useCallback((event: { type: EventTypes; data?: any }) => {
     const { type } = event;
     if (type === 'message.getList') {
-      dispatch({ type: 'setMessageList', messageList: client.messages.messageList });
+      // dispatch({ type: 'setMessageList', messageList: client.messages.messageList });
     }
     if (type === 'message.getThreadList') {
-      dispatch({ type: 'setThreadList', threadList: client.messages.threadList });
+      // dispatch({ type: 'setThreadList', threadList: client.messages.threadList });
     }
     if (type === 'channel.activeChange' || type === 'contact.activeChange') {
       dispatch({ type: 'setActiveChannel', activeChannel: client.channel.activeChannel });
@@ -57,7 +57,7 @@ export const Channel = (props: PropsWithChildren<ChannelProps>) => {
       getMessageList();
     }
     if (type === 'message.openAllThread') {
-      dispatch({ type: 'setAllThreadList', allThreadList: client.messages.allThreadList });
+      // dispatch({ type: 'setAllThreadList', allThreadList: client.messages.allThreadList });
     }
   }, []);
 
@@ -83,7 +83,7 @@ export const Channel = (props: PropsWithChildren<ChannelProps>) => {
     }
     dispatch({ type: 'openThread', message });
     dispatch({ type: 'setThreadLoading', threadLoading: true });
-    await client.messages.openThread(message);
+    // await client.messages.openThread(message);
     dispatch({ type: 'setThreadLoading', threadLoading: false });
   };
 
@@ -97,7 +97,7 @@ export const Channel = (props: PropsWithChildren<ChannelProps>) => {
   }, []);
 
   const closeThread = () => {
-    client.messages.openThread(null);
+    // client.messages.openThread(null);
     dispatch({ type: 'openThread', message: null });
     dispatch({ type: 'setThreadList', threadList: null });
   };
@@ -105,22 +105,22 @@ export const Channel = (props: PropsWithChildren<ChannelProps>) => {
   const handleOpenAllThread = async () => {
     dispatch({ type: 'setOpenAllThread', openAllThread: true });
     dispatch({ type: 'setThreadLoading', threadLoading: true });
-    await client.messages.openAllThread();
+    // await client.messages.openAllThread();
     dispatch({ type: 'setThreadLoading', threadLoading: false });
   };
 
   const closeAllThreadList = () => {
     dispatch({ type: 'setOpenAllThread', openAllThread: false });
-    client.messages.openAllThread(null);
+    // client.messages.openAllThread(null);
   };
 
   const getMessageList = async () => {
-    const { messages, channel } = client;
-    if (channel.activeChannel) {
-      dispatch({ type: 'setMsgLoading', msgLoading: true });
-      await messages.getMessageList({ room_id: channel.activeChannel.room_id });
-      dispatch({ type: 'setMsgLoading', msgLoading: false });
-    }
+    // const { messages, channel } = client;
+    // if (channel.activeChannel) {
+    //   dispatch({ type: 'setMsgLoading', msgLoading: true });
+    //   await messages.getMessageList({ room_id: channel.activeChannel.room_id });
+    //   dispatch({ type: 'setMsgLoading', msgLoading: false });
+    // }
   };
 
   const ChannelStateContextValue: ChannelStateContextValue = useMemo(

@@ -48,14 +48,13 @@ export const MobileTabMaps: TabType[] = [
     title: 'Profile',
     icon: <ProfileIcon />,
     type: 'profile',
-    component: (
-      <Profile isTab hasLogout userInfo={JSON.parse(localStorage.getItem('USER_INFO') || '{}')} />
-    ),
+    component: <Profile isTab hasLogout />,
   },
 ];
 
 export const DashBoard = () => {
   const { appType } = useChatContext();
+
   if (appType !== AppTypeEnum['pc']) {
     return <MobileBar tabMaps={MobileTabMaps} />;
   }

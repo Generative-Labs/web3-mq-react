@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useEffect, useRef } from 'react';
-import type { UserInfo } from 'web2-mq';
 
 import { ContactListMessenger, ContactListMessengerProps } from './ContactListMessenger';
 import { usePaginatedContacts } from './hooks/usePaginatedContacts';
@@ -45,7 +44,7 @@ export const ContactList = (props: PropsWithChildren<ContactListProps>) => {
       client.off('contact.activeChange');
     };
   }, []);
-  const renderContact = (item: UserInfo) => {
+  const renderContact = (item: any) => {
     const previewProps = {
       contact: item,
       Preview,

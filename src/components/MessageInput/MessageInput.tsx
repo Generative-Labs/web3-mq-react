@@ -25,7 +25,8 @@ export const MessageInput = (props: PropsWithChildren<MessageInputProps>) => {
 
   const sendMessage = useCallback(
     (text: string) => {
-      client.messages.sendMessage(text, isThread, !isThread ? replyMsgInfo : null);
+      console.log(text);
+      // client.messages.sendMessage(text, isThread, !isThread ? replyMsgInfo : null);
       replyMsgInfo && !isThread && closeReply();
     },
     [replyMsgInfo, isThread],

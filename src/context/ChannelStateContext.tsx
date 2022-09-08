@@ -1,7 +1,6 @@
 import React, { PropsWithChildren, useContext } from 'react';
-import type { ChannelResponse, MessageResponse } from 'web2-mq';
 
-export type MessageItem = MessageResponse;
+export type MessageItem = any;
 
 export type ChannelState = {
   messageList: MessageItem[] | null;
@@ -9,7 +8,7 @@ export type ChannelState = {
   allThreadList: MessageItem[] | null;
   message: MessageItem | null;
   replyMsgInfo: MessageItem | null;
-  activeChannel: ChannelResponse | null;
+  activeChannel: any | null;
   openAllThread: boolean;
   msgLoading: boolean;
   threadLoading: boolean;

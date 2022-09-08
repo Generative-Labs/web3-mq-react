@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useContext } from 'react';
-import type { Client } from 'web2-mq';
+import type { Client, SearchUsersResponse } from 'web3-mq';
 
 export type ListComponentType = 'room' | 'chat';
 
@@ -12,6 +12,7 @@ export enum AppTypeEnum {
 export type ChatContextValue = {
   client: Client;
   appType: AppTypeEnum;
+  userInfo: SearchUsersResponse | null;
   showCreateChannel: boolean;
   showListTypeView: ListComponentType;
   setShowCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;

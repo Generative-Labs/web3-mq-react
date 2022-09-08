@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import type { UserInfo } from 'web2-mq';
 
 import useToggle from '../../hooks/useToggle';
 import { useInput } from '../../hooks/useInput';
@@ -39,7 +38,7 @@ export const Notify = () => {
     }
   }, [visible]);
 
-  const handleSelectUser = useCallback((item: UserInfo[]) => {
+  const handleSelectUser = useCallback((item: any[]) => {
     const ids = item.map((users) => users.user_id);
     setSsers(ids);
   }, []);
@@ -51,12 +50,12 @@ export const Notify = () => {
   const handleSubmitChat = async () => {
     for (let i = 0; i < users.length; i++) {
       let user_id = users[i];
-      let { roomId, existRoomInfo } = await client.channel.getRoomByBulk({
-        user_id: user_id,
-      });
-      if (roomId) {
-        client.messages.sendMessageByBulk(value, roomId);
-      }
+      // let { roomId, existRoomInfo } = await client.channel.getRoomByBulk({
+      //   user_id: user_id,
+      // });
+      // if (roomId) {
+      //   client.messages.sendMessageByBulk(value, roomId);
+      // }
     }
   };
 
@@ -65,14 +64,14 @@ export const Notify = () => {
       return;
     }
     if (via === RadioEnum.notification) {
-      await client.notify.sendNotify({ ids: users, text: value });
+      // await client.notify.sendNotify({ ids: users, text: value });
     }
     if (via === RadioEnum.chat) {
       await handleSubmitChat();
     }
     if (via === RadioEnum.all) {
       handleSubmitChat();
-      await client.notify.sendNotify({ ids: users, text: value });
+      // await client.notify.sendNotify({ ids: users, text: value });
     }
     hide();
   }, [via, users, value]);

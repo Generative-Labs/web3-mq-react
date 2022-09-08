@@ -11,6 +11,7 @@ export const useMessageLoadMore = (isThread: boolean): MessageLoadMore => {
   const noMoreRef = useRef<boolean>(false);
 
   const { client } = useChatContext('useMessageLoadMore');
+  //@ts-ignore
   const { loadMoreMessageList, loadMoreThreadList } = client.messages;
 
   const loadMoreFn = isThread ? loadMoreThreadList : loadMoreMessageList;
