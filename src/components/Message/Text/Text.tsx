@@ -6,7 +6,7 @@ import ss from './index.scss';
 
 export const Text: React.FC = () => {
   const { isThread, message, handleOpenThread } = useMessageContext('MessageInnerText');
-  const { is_thread, msg_contents, reply_to_msg_id } = message;
+  const { is_thread, content, reply_to_msg_id } = message;
 
   const renderReplyMessage = useCallback(
     () => (
@@ -68,7 +68,7 @@ export const Text: React.FC = () => {
   return (
     <div className={ss.textContainer}>
       <div className={ss.textInner}>
-        <div className={ss.text}>{msg_contents}</div>
+        <div className={ss.text}>{content}</div>
       </div>
       <ExtraBox />
     </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatMessageData } from '../../utils';
+// import { formatMessageData } from '../../utils';
 import { ChannelPreviewMessenger } from './ChannelPreviewMessenger';
 
 export type ChannelPreviewProps = {
@@ -16,25 +16,26 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
     changeActiveChannelEvent,
   } = props;
 
-  const isActive = activeChannel?.room_id === channel.room_id;
+  const isActive = activeChannel?.topic === channel.topic;
 
-  const { latestMsg, displayTitle, avatarUrl, updatedAt, unread } = formatMessageData(channel);
+  const { topic } = channel;
+  // const { latestMsg, displayTitle, avatarUrl, updatedAt, unread } = formatMessageData(channel);
 
-  if (typeof latestMsg === 'object') {
-    return null;
-  }
+  // if (typeof latestMsg === 'object') {
+  //   return null;
+  // }
 
   return (
     <Preview
       {...props}
       active={isActive}
       channel={channel}
-      unread={unread}
-      displayTitle={displayTitle}
-      lastMessage={latestMsg}
-      updatedAt={updatedAt}
+      unread={0}
+      displayTitle={topic}
+      lastMessage={'latestMsg'}
+      updatedAt={'updatedAt'}
       setActiveChannel={changeActiveChannelEvent}
-      avatarUrl={avatarUrl}
+      avatarUrl={[]}
     />
   );
 };

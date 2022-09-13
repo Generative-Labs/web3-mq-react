@@ -7,7 +7,7 @@ import { CreateChannelIcon } from '../../icons/CreateChannelIcon';
 import ss from './index.scss';
 
 export const ChannelHead: React.FC = React.memo(() => {
-  const { appType, showCreateChannel, setShowCreateChannel } = useChatContext();
+  const { client, appType, showCreateChannel, setShowCreateChannel } = useChatContext();
 
   return (
     <div
@@ -18,7 +18,8 @@ export const ChannelHead: React.FC = React.memo(() => {
         <button
           className={ss.btn}
           onClick={() => {
-            setShowCreateChannel(!showCreateChannel);
+            client.channel.createRoom();
+            // setShowCreateChannel(!showCreateChannel);
           }}
         >
           <CreateChannelIcon />

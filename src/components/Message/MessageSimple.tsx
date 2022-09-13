@@ -34,6 +34,7 @@ export const MessageSimple = () => {
   }
 
   const MessageInner = useCallback(() => {
+    return <Text />;
     // if (msg_type === MsgTypeEnum.text) {
     //   if (is_opensea_item_thread && isThread) {
     //     return <NftItemCard />;
@@ -43,7 +44,7 @@ export const MessageSimple = () => {
     // if (msg_type === MsgTypeEnum.sudoSwapCard) {
     //   return <SudoSwapCard />;
     // }
-    return <div className={ss.otherMsgType}>暂不支持此消息类型</div>;
+    // return <div className={ss.otherMsgType}>暂不支持此消息类型</div>;
   }, []);
 
   return (

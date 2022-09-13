@@ -52,7 +52,7 @@ export const ChannelList = (props: PropsWithChildren<ChannelListProps>) => {
     const previewProps = {
       channel: item,
       Preview,
-      key: item.room_id,
+      key: item.topic,
       activeChannel,
       changeActiveChannelEvent,
     };

@@ -44,35 +44,19 @@ export const Channel = (props: PropsWithChildren<ChannelProps>) => {
 
   const handleEvent = useCallback((event: { type: EventTypes; data?: any }) => {
     const { type } = event;
-    if (type === 'message.getList') {
-      // dispatch({ type: 'setMessageList', messageList: client.messages.messageList });
-    }
-    if (type === 'message.getThreadList') {
-      // dispatch({ type: 'setThreadList', threadList: client.messages.threadList });
-    }
     if (type === 'channel.activeChange' || type === 'contact.activeChange') {
       dispatch({ type: 'setActiveChannel', activeChannel: client.channel.activeChannel });
       closeThread();
       closeAllThreadList();
-      getMessageList();
-    }
-    if (type === 'message.openAllThread') {
-      // dispatch({ type: 'setAllThreadList', allThreadList: client.messages.allThreadList });
     }
   }, []);
 
   useEffect(() => {
-    client.on('message.getList', handleEvent);
-    client.on('message.getThreadList', handleEvent);
-    client.on('message.openAllThread', handleEvent);
     client.on('channel.activeChange', handleEvent);
     client.on('contact.activeChange', handleEvent);
     return () => {
-      client.off('message.getList');
-      client.off('message.getThreadList');
       client.off('channel.activeChange');
       client.off('contact.activeChange');
-      client.off('message.openAllThread');
     };
   }, []);
 

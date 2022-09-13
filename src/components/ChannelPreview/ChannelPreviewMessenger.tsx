@@ -2,7 +2,8 @@ import React from 'react';
 import cx from 'classnames';
 
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
-import { AvatarGroup } from '../AvatarGroup';
+// import { AvatarGroup } from '../AvatarGroup';
+import { Avatar } from '../Avatar';
 
 import ss from './index.scss';
 
@@ -20,7 +21,7 @@ export type ChannelPreviewUIComponentProps = {
 
 const UnMemoizedChannelPreviewMessenger = (props: ChannelPreviewUIComponentProps) => {
   const {
-    Avatar = AvatarGroup,
+    // Avatar = AvatarGroup,
     lastMessage,
     unread,
     displayTitle,
@@ -51,7 +52,7 @@ const UnMemoizedChannelPreviewMessenger = (props: ChannelPreviewUIComponentProps
       })}
       onClick={onSetActiveChannel}
     >
-      <Avatar name="user1" images={avatarUrl} size={40} shape="rounded" />
+      <Avatar name="user1" size={40} shape="rounded" />
       <div className={ss.wrapper}>
         <div className={ss.previewTop}>
           <div className={ss.title}>{displayTitle}</div>

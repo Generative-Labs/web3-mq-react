@@ -30,8 +30,10 @@ export const UnMemoizedPaginator = (props: PropsWithChildren<PaginatorProps>) =>
       const el = element.current;
       const { scrollHeight, clientHeight, scrollTop } = el;
       if (reverse && scrollTop === 0) {
-        const hasMore = await loadNextPage();
-        !hasMore && (el.scrollTop = getCurrentHeight(el) - scrollHeight);
+        await loadNextPage();
+        setTimeout(() => {
+          el.scrollTop = getCurrentHeight(el) - scrollHeight;
+        });
       }
       if (!reverse && scrollHeight - scrollTop === clientHeight) {
         loadNextPage();

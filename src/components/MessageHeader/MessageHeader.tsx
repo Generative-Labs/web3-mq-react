@@ -4,7 +4,7 @@ import cx from 'classnames';
 import { Avatar } from '../Avatar';
 import { AvatarGroup } from '../AvatarGroup';
 import { AddPeople } from '../AddPeople';
-import { formatMessageData } from '../../utils';
+// import { formatMessageData } from '../../utils';
 import { ArrowLeft, ThreadIcon } from '../../icons';
 import { useChannelStateContext } from '../../context/ChannelStateContext';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
@@ -25,21 +25,18 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
   const { appType, client } = useChatContext('MessageHeader');
 
   const handleClose = useCallback(() => {
-    // client.channel.setActiveChannel(null);
+    client.channel.setActiveChannel(null);
   }, []);
 
   if (!activeChannel) {
     return null;
   }
-  const { avatarUrl, displayTitle, is_1v1 } = formatMessageData(activeChannel);
 
-  const {
-    avatarName = displayTitle,
-    avatarImg = avatarUrl,
-    title = displayTitle,
-    avatarSize = 32,
-  } = props;
-  
+  const { topic } = activeChannel;
+  // const { avatarUrl, displayTitle, is_1v1 } = formatMessageData(activeChannel);
+
+  const { avatarName = 'displayTitle', avatarImg = '', title = topic, avatarSize = 32 } = props;
+
   return (
     <div
       className={cx(ss.messageHeaderContainer, { [ss.mobileStyle]: appType !== AppTypeEnum['pc'] })}
@@ -50,11 +47,12 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
             <ArrowLeft />
           </div>
         )}
-        <AvatarGroup name={avatarName} images={avatarImg} size={avatarSize} shape="rounded" />
+        {/* <AvatarGroup name={avatarName} images={avatarImg} size={avatarSize} shape="rounded" /> */}
+        <Avatar name={avatarName} size={avatarSize} shape="rounded" />
         <div className={ss.title}>{title}</div>
       </div>
       <div className={ss.operationBar}>
-        {!is_1v1 && <AddPeople />}
+        {/* {!is_1v1 && <AddPeople />} */}
         <div className={ss.icon} onClick={handleOpenAllThread}>
           <ThreadIcon />
           {appType === AppTypeEnum['pc'] && <span>All Thread</span>}
