@@ -12,6 +12,7 @@ import {
   MessageInput,
 } from 'web3-mq-react';
 import 'web3-mq-react/dist/css/index.css';
+import MsgInput from './components/MsgInput';
 
 import Login from './components/Login';
 import useLogin from './hooks/useLogin';
@@ -48,7 +49,7 @@ const App: React.FC = () => {
         <Window>
           <MessageHeader avatarSize={40} />
           <MessageList />
-          <MessageInput />
+          <MessageInput Input={MsgInput} />
         </Window>
         {/* <Thread />
         <AllThreadList /> */}

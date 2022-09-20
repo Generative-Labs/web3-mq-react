@@ -17,7 +17,7 @@ type IProps = {
 
 const UnMemoizedRadioGroup: React.FC<IProps> = (props) => {
   const { value = [], onChange, className, style } = props;
-  const [selected, setSelected] = useState<string>('1');
+  const [selected, setSelected] = useState<string>('3');
 
   const handleSelect = useCallback(
     (item) => {

@@ -70,12 +70,14 @@ ul {
     justify-content: center;
   }
 }
+.chatUl > :nth-child(1) {
+  margin-top: 22px;
+}
 .notificationSimpleContainer {
   display: flex;
   width: 100%;
   box-sizing: border-box;
   padding: 16px;
-  margin-top: 22px;
   box-shadow: 0 1px 0 #e4e8ee;
   .avatar {
     width: 30px;

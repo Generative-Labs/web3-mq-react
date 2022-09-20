@@ -25,7 +25,9 @@ const useLogin = () => {
   };
 
   const signMetaMask = async () => {
-    const { PrivateKey, PublicKey } = await Client.register.signMetaMask('https://www.web3mq.com');
+    const { PrivateKey, PublicKey } = await Client.register.signMetaMask({
+      signContentURI: 'https://www.web3mq.com'
+    });
     localStorage.setItem('PRIVATE_KEY', PrivateKey);
     localStorage.setItem('PUBLICKEY', PublicKey);
     setKeys({ PrivateKey, PublicKey });

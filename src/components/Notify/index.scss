@@ -57,9 +57,8 @@
     color: #616161;
     margin: 24px 0 12px;
   }
-  textarea {
+  textarea, > input:nth-of-type(1) {
     font-family: 'Helvetica Neue';
-    min-height: 130px;
     border: 1px solid #dedede;
     border-radius: 8px;
     width: 100%;
@@ -71,6 +70,9 @@
     line-height: 16px;
     color: rgba(0, 0, 0, 0.9);
     outline: none;
+  }
+  textarea {
+    min-height: 130px;
   }
   .title {
     font-family: 'Helvetica Neue';
@@ -101,7 +103,7 @@
 }
 
 // selectUser Component style
-.selectUserContainer {
+.selectUserContainer, .selectTopicContainer {
   max-width: 540px;
   display: flex;
   align-items: center;
@@ -174,6 +176,16 @@
   align-items: center;
   &:hover {
     background-color: #f3f2f1;
+  }
+  .name {
+    margin: 0px 12px;
+  }
+  .id {
+    margin-right: 12px;
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 .unChecked {

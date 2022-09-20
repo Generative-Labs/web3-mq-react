@@ -6,6 +6,7 @@ import { useChatContext } from '../../context/ChatContext';
 import { BulkMessageIcon, CloseBtnIcon } from '../../icons';
 import { Modal } from '../Modal';
 import { SelectUser } from './SelectUser';
+import { SelectTopic } from './SelectTopic';
 import { RadioGroup, IValueType } from '../RadioGroup';
 
 import ss from './index.scss';
@@ -17,15 +18,16 @@ enum RadioEnum {
 }
 
 const radioGroup: IValueType[] = [
-  { id: RadioEnum.all, name: 'All' },
-  { id: RadioEnum.chat, name: 'Chat' },
+  // { id: RadioEnum.all, name: 'All' },
+  // { id: RadioEnum.chat, name: 'Chat' },
   { id: RadioEnum.notification, name: 'Notification' },
 ];
 
 export const Notify = () => {
-  const { client } = useChatContext('Notify');
-  const [users, setSsers] = useState<string[]>([]);
-  const [via, setVia] = useState<string>(RadioEnum.all);
+  const { client, appType } = useChatContext('Notify');
+  const [topics, setSsers] = useState<string[]>([]);
+  const [via, setVia] = useState<string>(RadioEnum.notification);
+  const [title, setTitle] = useState<string>('');
   const { visible, show, hide } = useToggle();
   const { input, setValue } = useInput('');
   const { value } = input;
@@ -33,13 +35,13 @@ export const Notify = () => {
   useEffect(() => {
     if (!visible) {
       setSsers([]);
-      setVia('1');
+      setVia('3');
       setValue('');
     }
   }, [visible]);
 
-  const handleSelectUser = useCallback((item: any[]) => {
-    const ids = item.map((users) => users.user_id);
+  const handleSelectTopic = useCallback((item: any[]) => {
+    const ids = item.map((topic) => topic.topicid);
     setSsers(ids);
   }, []);
 
@@ -48,8 +50,8 @@ export const Notify = () => {
   }, []);
 
   const handleSubmitChat = async () => {
-    for (let i = 0; i < users.length; i++) {
-      let user_id = users[i];
+    for (let i = 0; i < topics.length; i++) {
+      let user_id = topics[i];
       // let { roomId, existRoomInfo } = await client.channel.getRoomByBulk({
       //   user_id: user_id,
       // });
@@ -60,21 +62,21 @@ export const Notify = () => {
   };
 
   const handleSubmit = useCallback(async () => {
-    if (users.length === 0 || !value) {
+    if (topics.length === 0 || !value) {
       return;
     }
     if (via === RadioEnum.notification) {
-      // await client.notify.sendNotify({ ids: users, text: value });
+      await client.topic.publishTopicMessage({ topicid: topics[0], title: title, content: value });
     }
     if (via === RadioEnum.chat) {
-      await handleSubmitChat();
+      // await handleSubmitChat();
     }
     if (via === RadioEnum.all) {
-      handleSubmitChat();
+      // handleSubmitChat();
       // await client.notify.sendNotify({ ids: users, text: value });
     }
     hide();
-  }, [via, users, value]);
+  }, [via, topics, value]);
 
   const ModalHead = useCallback(
     () => (
@@ -95,14 +97,16 @@ export const Notify = () => {
           <div>messaging</div>
         </div>
       </div>
-      <Modal visible={visible} closeModal={hide} modalHeader={<ModalHead />}>
+      <Modal appType={appType} visible={visible} closeModal={hide} modalHeader={<ModalHead />} >
         <div className={ss.modalBody}>
           <div className={ss.title}>
             Sending a message to multiple contacts or group chats at the same time
           </div>
           <div className={ss.label}>Send to</div>
-          <SelectUser onChange={handleSelectUser} />
-          <div className={ss.label}>Message</div>
+          <SelectTopic onChange={handleSelectTopic} />
+          <div className={ss.label}>Title</div>
+          <input placeholder="Write something..." value={title} onChange={(e) => setTitle(e.target.value)} />
+          <div className={ss.label}>Content</div>
           <textarea placeholder="Write something..." {...input} />
           <div className={ss.label}>Send via</div>
           <RadioGroup className={ss.radioGroup} value={radioGroup} onChange={handleSelectVia} />

@@ -5,6 +5,7 @@ import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { CreateChannelIcon } from '../../icons/CreateChannelIcon';
 
 import ss from './index.scss';
+import { NotificationList } from '../NotificationList';
 
 export const ChannelHead: React.FC = React.memo(() => {
   const { client, appType, showCreateChannel, setShowCreateChannel } = useChatContext();
@@ -15,6 +16,7 @@ export const ChannelHead: React.FC = React.memo(() => {
     >
       <div className={ss.header}>
         <span className={ss.title}>Chats</span>
+        <NotificationList />
         <button
           className={ss.btn}
           onClick={() => {
