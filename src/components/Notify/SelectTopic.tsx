@@ -74,13 +74,18 @@ export const SelectTopic: React.FC<IProps> = (props) => {
   );
 
   const ShowDownList = useCallback(() => {
-    if (!createTopicList || createTopicList.length === 0) {
+    if (!createTopicList) {
       return null;
     }
+
     return (
       <div className={ss.showListWarp}>
         <div style={{ display: visible ? 'block' : 'none' }} className={ss.showList} >
-          {createTopicList.map(CheckBoxItem)}
+          { createTopicList.length === 0 ? (
+            <div className={ss.emptyContent}>no data list yet</div>
+          ) : (
+            createTopicList.map(CheckBoxItem)
+          )}
         </div>
       </div>
     );

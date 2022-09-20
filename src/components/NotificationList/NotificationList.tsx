@@ -22,23 +22,14 @@ export const NotificationList = () => {
   } = usePaginatedNotifications(client);
   
   useEffect(() => {
-    client.on('notification.getMySubscribeList', handleEvent);
     client.on('notification.messageNew', handleEvent);
     client.on('notification.getList', handleEvent);
     // client.on('contact.getList', handleEvent);
     return () => {
-      client.off('notification.getMySubscribeList', handleEvent);
       client.off('notification.messageNew');
       client.off('notification.getList');
       // client.off('contact.getList', handleEvent);
     };
-  }, []);
-
-  useEffect(() => {
-    const init = async() => {
-      let sub = await client.topic.getMySubscribeTopicList({page: 1, size: 20});
-    };
-    init();
   }, []);
 
   const activeSender = useMemo(() => {

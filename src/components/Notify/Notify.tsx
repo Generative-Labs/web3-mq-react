@@ -25,7 +25,7 @@ const radioGroup: IValueType[] = [
 
 export const Notify = () => {
   const { client, appType } = useChatContext('Notify');
-  const [topics, setSsers] = useState<string[]>([]);
+  const [topics, setTopics] = useState<string[]>([]);
   const [via, setVia] = useState<string>(RadioEnum.notification);
   const [title, setTitle] = useState<string>('');
   const { visible, show, hide } = useToggle();
@@ -34,7 +34,7 @@ export const Notify = () => {
 
   useEffect(() => {
     if (!visible) {
-      setSsers([]);
+      setTopics([]);
       setVia('3');
       setValue('');
     }
@@ -42,7 +42,7 @@ export const Notify = () => {
 
   const handleSelectTopic = useCallback((item: any[]) => {
     const ids = item.map((topic) => topic.topicid);
-    setSsers(ids);
+    setTopics(ids);
   }, []);
 
   const handleSelectVia = useCallback((item: IValueType) => {

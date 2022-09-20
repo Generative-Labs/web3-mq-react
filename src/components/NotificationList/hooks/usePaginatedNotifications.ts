@@ -18,8 +18,6 @@ export const usePaginatedNotifications = (client: Client) => {
     //   // setUnReadCount(_unReadCount);
     //   return;
     // }
-    if (type === 'notification.getMySubscribeList') {
-    }
     if (type === 'notification.getList') {
       // notifyRef.current = Array.from(new Set(notificationList.map((item) => item.sender_id)));
       setNotifications(notificationList);

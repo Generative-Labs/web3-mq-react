@@ -194,3 +194,11 @@
   border: 1px solid #616161;
   border-radius: 4px;
 }
+.emptyContent {
+  display: flex;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #616161;
+}
