@@ -37,6 +37,9 @@ export const usePaginatedMessages = (client: Client, scrollBottom: () => void) =
       }
       if (type === 'message.getList') {
         setMessages(messageList);
+        setTimeout(() => {
+          scrollBottom();
+        });
       }
       if (type === 'message.delivered') {
         const list = messages || [];
