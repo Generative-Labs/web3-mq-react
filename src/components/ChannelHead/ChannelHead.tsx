@@ -20,8 +20,7 @@ export const ChannelHead: React.FC = React.memo(() => {
         <button
           className={ss.btn}
           onClick={() => {
-            client.channel.createRoom();
-            // setShowCreateChannel(!showCreateChannel);
+            setShowCreateChannel(!showCreateChannel);
           }}
         >
           <CreateChannelIcon />

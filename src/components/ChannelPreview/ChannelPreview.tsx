@@ -16,9 +16,9 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
     changeActiveChannelEvent,
   } = props;
 
-  const isActive = activeChannel?.topic === channel.topic;
+  const isActive = activeChannel?.chatid === channel.chatid;
 
-  const { topic } = channel;
+  const { chatid, chat_name, avatar_url, avatar_base64  } = channel;
   // const { latestMsg, displayTitle, avatarUrl, updatedAt, unread } = formatMessageData(channel);
 
   // if (typeof latestMsg === 'object') {
@@ -31,11 +31,11 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
       active={isActive}
       channel={channel}
       unread={0}
-      displayTitle={topic}
+      displayTitle={chat_name || chatid}
       lastMessage={'latestMsg'}
       updatedAt={'updatedAt'}
       setActiveChannel={changeActiveChannelEvent}
-      avatarUrl={[]}
+      avatarUrl={avatar_base64 || avatar_url}
     />
   );
 };

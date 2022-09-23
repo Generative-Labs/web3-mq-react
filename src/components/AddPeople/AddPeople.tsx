@@ -1,10 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { AddPeopleIcon, CloseBtnIcon } from '../../icons';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { useChannelStateContext } from '../../context/ChannelStateContext';
 import useToggle from '../../hooks/useToggle';
-
+import { usePaginatedMembers } from './hooks/usePaginatedMembers';
 import { Avatar } from '../Avatar';
 import { Modal } from '../Modal';
 import { Loading } from '../Loading';
@@ -12,6 +12,7 @@ import { Loading } from '../Loading';
 import ss from './index.scss';
 
 type MembersType = any;
+
 
 const UnMemoizedAddPeople: React.FC = () => {
   const [isFocus, setIsFocus] = useState<boolean>(false);
@@ -23,12 +24,19 @@ const UnMemoizedAddPeople: React.FC = () => {
 
   const { contactList } = client.contact;
 
-  const filterContactList = useCallback((contactList, chatRoomMember) => {
-    const memberIds = chatRoomMember.map((item: MembersType) => {
-      return item.user_id;
+  const {
+    memberList,
+    memberListloading,
+    loadMoreLoading,
+    loadNextPage,
+  } =  usePaginatedMembers(client, visible);
+
+  const filterContactList = useCallback((contactList, memberList) => {
+    const memberIds = memberList.map((item: MembersType) => {
+      return item.userid;
     });
 
-    return contactList.filter((item: MembersType) => !memberIds.includes(item.user_id));
+    return contactList.filter((item: MembersType) => !memberIds.includes(item.userid));
   }, []);
 
   const resetStatus = useCallback(() => {
@@ -42,10 +50,10 @@ const UnMemoizedAddPeople: React.FC = () => {
     if (selectItem.length === 0) {
       return;
     }
-    const ids = selectItem.map((member) => member.user_id);
+    const ids = selectItem.map((member) => member.userid);
     setLoading(true);
     try {
-      // await client.channel.addMembers(ids);
+      await client.channel.inviteGroupMember(ids);
       resetStatus();
     } catch (error) {
       setLoading(false);
@@ -57,15 +65,14 @@ const UnMemoizedAddPeople: React.FC = () => {
       return null;
     }
 
-    const { members: chatRoomMember } = activeChannel;
-    const members = isFocus ? filterContactList(contactList, chatRoomMember) : chatRoomMember;
+    const members = isFocus ? filterContactList(contactList, memberList) : memberList;
 
     return (
       <div className={ss.listWarp}>
         {members.map((item: MembersType) => (
           <div
             className={ss.listItem}
-            key={item.user_id}
+            key={item.userid}
             onClick={() => {
               if (isFocus && !selectItem.includes(item)) {
                 setSelectItem([...selectItem, item]);
@@ -73,12 +80,12 @@ const UnMemoizedAddPeople: React.FC = () => {
             }}
           >
             <Avatar image={item.avatar} />
-            <div className={ss.name}>{item.user_name}</div>
+            <div className={ss.name}>{item.userid}</div>
           </div>
         ))}
       </div>
     );
-  }, [activeChannel, contactList, isFocus, selectItem.length]);
+  }, [activeChannel, contactList, isFocus, selectItem.length, memberList]);
 
   return (
     <div className={ss.addPeopleContainer}>
@@ -105,13 +112,13 @@ const UnMemoizedAddPeople: React.FC = () => {
           <div className={ss.label}>To</div>
           <div className={ss.selectWarp}>
             {selectItem.map((item) => (
-              <div className={ss.selectItem} key={item.user_id}>
-                <div className={ss.name}>{item.user_name}</div>
+              <div className={ss.selectItem} key={item.userid}>
+                <div className={ss.name}>{item.userid}</div>
                 <CloseBtnIcon
                   style={{ fontSize: 10 }}
                   onClick={() => {
                     setSelectItem(
-                      selectItem.filter((selectObj) => selectObj.user_name !== item.user_name),
+                      selectItem.filter((selectObj) => selectObj.userid !== item.userid),
                     );
                   }}
                 />
@@ -121,7 +128,7 @@ const UnMemoizedAddPeople: React.FC = () => {
               className={ss.input}
               type="text"
               onFocus={() => setIsFocus(true)}
-              //   onBlur={() => setIsFocus(false)}
+              // onBlur={() => setIsFocus(false)}
             />
           </div>
         </div>

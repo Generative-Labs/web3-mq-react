@@ -168,3 +168,24 @@ export function dateFormat(time: number, format?: string) {
     return rt > 10 || !isAddZero(o) ? rt : `0${rt}`;
   });
 }
+/**
+ * File格式转换
+*/
+export const fileParse = (file: File, type = 'base64'): Promise<any> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    switch (type) {
+    case 'base64':
+      reader.readAsDataURL(file);
+      break;
+    case 'buffer':
+      reader.readAsArrayBuffer(file);
+      break;
+    default:
+      throw new Error('Woring');
+    }
+    reader.onload = (ev) => {
+      resolve(ev);
+    };
+  });
+};

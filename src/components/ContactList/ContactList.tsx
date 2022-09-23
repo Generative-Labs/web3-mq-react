@@ -48,7 +48,7 @@ export const ContactList = (props: PropsWithChildren<ContactListProps>) => {
     const previewProps = {
       contact: item,
       Preview,
-      key: item.user_id,
+      key: item.userid,
       activeContact,
       changeActiveContactEvent,
     };

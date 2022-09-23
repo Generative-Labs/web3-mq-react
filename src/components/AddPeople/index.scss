@@ -51,6 +51,10 @@
   margin-right: 5px;
   .name {
     margin-right: 5px;
+    max-width: 150px;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
   }
 }
 .listContainer {

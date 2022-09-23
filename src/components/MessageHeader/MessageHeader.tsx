@@ -32,10 +32,11 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
     return null;
   }
 
-  const { topic } = activeChannel;
+  const { chatid, chat_type, chat_name, avatar_url, avatar_base64 } = activeChannel;
+
   // const { avatarUrl, displayTitle, is_1v1 } = formatMessageData(activeChannel);
 
-  const { avatarName = 'displayTitle', avatarImg = '', title = topic, avatarSize = 32 } = props;
+  const { avatarName = 'displayTitle', avatarImg = avatar_url || avatar_base64, title = chat_name || chatid, avatarSize = 32 } = props;
 
   return (
     <div
@@ -48,11 +49,11 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
           </div>
         )}
         {/* <AvatarGroup name={avatarName} images={avatarImg} size={avatarSize} shape="rounded" /> */}
-        <Avatar name={avatarName} size={avatarSize} shape="rounded" />
+        <Avatar name={avatarName} size={avatarSize} shape="rounded" image={avatarImg} />
         <div className={ss.title}>{title}</div>
       </div>
       <div className={ss.operationBar}>
-        {/* {!is_1v1 && <AddPeople />} */}
+        {chat_type === 'group' && <AddPeople />}
         <div className={ss.icon} onClick={handleOpenAllThread}>
           <ThreadIcon />
           {appType === AppTypeEnum['pc'] && <span>All Thread</span>}

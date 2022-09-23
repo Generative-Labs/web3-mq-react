@@ -15,7 +15,7 @@ export type ChannelPreviewUIComponentProps = {
   displayTitle: string;
   updatedAt: string;
   active: boolean;
-  avatarUrl: string[];
+  avatarUrl: string;
   setActiveChannel?: (channel: any) => void;
 };
 
@@ -52,7 +52,7 @@ const UnMemoizedChannelPreviewMessenger = (props: ChannelPreviewUIComponentProps
       })}
       onClick={onSetActiveChannel}
     >
-      <Avatar name="user1" size={40} shape="rounded" />
+      <Avatar name="user1" size={40} shape="rounded" image={avatarUrl} />
       <div className={ss.wrapper}>
         <div className={ss.previewTop}>
           <div className={ss.title}>{displayTitle}</div>

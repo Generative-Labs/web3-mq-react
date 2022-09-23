@@ -22,7 +22,7 @@ export const usePaginatedContacts = (client: Client) => {
 
   const queryContacts = async () => {
     setRefreshing(true);
-    // await client.contact.queryContacts(PAGE);
+    await client.contact.getContactList(PAGE);
     setRefreshing(false);
   };
 
@@ -49,6 +49,9 @@ export const usePaginatedContacts = (client: Client) => {
     // if (!activeContact && contactList.length !== 0) {
     //   changeActiveContactEvent(contactList[0]);
     // }
+    if (type === 'contact.getList') {
+      setContacts(contactList);
+    }
     if (type === 'contact.activeChange') {
       setActiveContact(activeContact);
       return;
@@ -61,7 +64,7 @@ export const usePaginatedContacts = (client: Client) => {
       ...status,
       loading: false,
     });
-    setContacts((contacts: any[]) => [...contacts, ...contactList]);
+    // setContacts((contacts: any[]) => [...contacts, ...contactList]);
   }, []);
 
   useEffect(() => {

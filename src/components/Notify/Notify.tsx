@@ -12,9 +12,9 @@ import { RadioGroup, IValueType } from '../RadioGroup';
 import ss from './index.scss';
 
 enum RadioEnum {
-  all = '1',
-  chat = '2',
-  notification = '3',
+  // all = '1',
+  // chat = '2',
+  notification = '1',
 }
 
 const radioGroup: IValueType[] = [
@@ -35,7 +35,7 @@ export const Notify = () => {
   useEffect(() => {
     if (!visible) {
       setTopics([]);
-      setVia('3');
+      setVia('1');
       setValue('');
     }
   }, [visible]);
@@ -68,13 +68,13 @@ export const Notify = () => {
     if (via === RadioEnum.notification) {
       await client.topic.publishTopicMessage({ topicid: topics[0], title: title, content: value });
     }
-    if (via === RadioEnum.chat) {
-      // await handleSubmitChat();
-    }
-    if (via === RadioEnum.all) {
-      // handleSubmitChat();
-      // await client.notify.sendNotify({ ids: users, text: value });
-    }
+    // if (via === RadioEnum.chat) {
+    //   await handleSubmitChat();
+    // }
+    // if (via === RadioEnum.all) {
+    //   handleSubmitChat();
+    //   await client.notify.sendNotify({ ids: users, text: value });
+    // }
     hide();
   }, [via, topics, value]);
 

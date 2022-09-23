@@ -24,13 +24,14 @@ export const ContactPreview = (props: ContactPreviewProps) => {
     // });
   }, []);
 
-  const isActive = activeContact?.user_id === contact.user_id;
-  const { avatar, title } = formatUserInfoData(contact);
+  const isActive = activeContact?.userid === contact.userid;
+  const { avatar = '', userid } = contact;
+  // const { avatar, title } = formatUserInfoData(contact);
   return (
     <Preview
       active={isActive}
       avatarUrl={avatar}
-      title={title}
+      title={userid}
       setActiveContact={changeActiveContactEvent}
       {...props}
     />
