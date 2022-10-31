@@ -6,7 +6,7 @@ import { Profile } from '../Profile';
 import { Text } from './Text';
 import { SudoSwapCard } from './SudoSwapCard';
 import { NftItemCard } from './NftItemCard';
-import { dateTransform } from '../../utils';
+import { dateTransform, getShortAddress } from '../../utils';
 import { useMessageContext } from '../../context/MessageContext';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { ActionBtns } from '../Message/ActionBtns';
@@ -73,10 +73,11 @@ export const MessageSimple = () => {
         })}
       >
         <div className={ss.dataInner}>
-          {activeMember[from_uid]?.user_name && (
+          {/* {activeMember[from_uid]?.user_name && (
             <span className={ss.name}>{activeMember[from_uid]?.user_name || ''}</span>
-          )}
-          <span>{dateTransform(created_at)}</span>
+          )} */}
+          <span className={ss.name}>{activeMember[from_uid]?.user_name || getShortAddress(message.senderId)}</span>
+          <span>{message.date}&nbsp;{message.timestamp}</span>
         </div>
         <MessageInner />
       </div>

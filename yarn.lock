@@ -5398,10 +5398,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-web3-mq@^1.2.41:
-  version "1.2.41"
-  resolved "https://registry.yarnpkg.com/web3-mq/-/web3-mq-1.2.41.tgz#5bdc6fdc4d780683d58f3e34880f5af6dd796573"
-  integrity sha512-WjZpQ5Q+dvx8JybuiXesQ7ZooC10ImJkqse6VRmghEhUcEch000WQN/118nrBx9Pb668Swmuavws+0HOWTgeCg==
+web3-mq@^1.2.45:
+  version "1.2.45"
+  resolved "https://registry.yarnpkg.com/web3-mq/-/web3-mq-1.2.45.tgz#ccc52b56d2bb8ed5b85b7909992197b86631da09"
+  integrity sha512-f2m0mzxBHTbc3Rr9bqGFQ3vmtz54twVlQ9Q3fzSV3ftHrJdYb4vVKQmFLYnmgUAwWcF4R5wIhBDRkuz+nmusgQ==
   dependencies:
     "@noble/ed25519" "^1.6.1"
     "@protobuf-ts/plugin" "^2.7.0"
