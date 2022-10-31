@@ -1,4 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
+import cx from 'classnames';
+
 import { dateFormat } from '../../utils';
 import { useChatContext } from '../../context/ChatContext';
 import { usePaginatedNotifications } from './hooks/usePaginatedNotifications';
@@ -7,20 +9,15 @@ import { NotifyIcon, CloseBtnIcon } from '../../icons';
 import { Avatar } from '../Avatar';
 import { Modal } from '../Modal';
 
-
 import ss from './index.scss';
 
 export const NotificationList = () => {
   const listRef = useRef<HTMLDivElement | null>(null);
   const { client, appType } = useChatContext();
   const { visible, show, hide } = useToggle();
-  const {
-    notifications,
-    unReadCount,
-    handleEvent,
-    readNotification,
-  } = usePaginatedNotifications(client);
-  
+  const { notifications, unReadCount, handleEvent, handleFirendRequest, readNotification } =
+    usePaginatedNotifications(client);
+
   useEffect(() => {
     client.on('notification.messageNew', handleEvent);
     client.on('notification.getList', handleEvent);
@@ -46,7 +43,7 @@ export const NotificationList = () => {
     // });
     return chcheObj;
   }, []);
-  
+
   const ModalHead = useCallback(
     () => (
       <div className={ss.modalHead}>
@@ -57,32 +54,53 @@ export const NotificationList = () => {
     [],
   );
 
-  // 渲染列表列
-  const NotificationPreview = useMemo(
-    () => {
-      if (!notifications) return;
-      return notifications.map((notification, index) => {
-        return (
-          <li 
-            key={index}
-            className={ss.notificationSimpleContainer}
+  const OpreateBtns = useCallback((props: { notification: any }) => {
+    const { type, content } = props.notification;
+    const userid = content.split(' ')[0];
+    if (type === 'system.friend_request') {
+      return (
+        <div className={ss.opreateBtnsContainer}>
+          <button
+            className={cx(ss.btnItem, ss.agree)}
+            onClick={() => {
+              handleFirendRequest(userid, 'agree');
+            }}
           >
-            <Avatar />
-            <div className={ss.notification}>
-              <div className={ss.dataInner}>
-                <div>{notification.title}</div>
-                <div>{dateFormat(notification.timestamp, 'Y/M/D H:I:S')}</div>
-              </div>
-              <div className={ss.textContainer}>
-                {notification.content}
-              </div>
+            Agree
+          </button>
+          <button
+            className={cx(ss.btnItem, ss.refused)}
+            onClick={() => {
+              handleFirendRequest(userid, 'reject');
+            }}
+          >
+            Refused
+          </button>
+        </div>
+      );
+    }
+    return null;
+  }, []);
+
+  // 渲染列表列
+  const NotificationPreview = useMemo(() => {
+    if (!notifications) return;
+    return notifications.map((notification, index) => {
+      return (
+        <li key={index} className={ss.notificationSimpleContainer}>
+          <Avatar />
+          <div className={ss.notification}>
+            <div className={ss.dataInner}>
+              <div>{notification.title}</div>
+              <div>{dateFormat(notification.timestamp, 'Y/M/D H:I:S')}</div>
             </div>
-          </li>
-        );
-      }); 
-    },
-    [JSON.stringify(notifications)]
-  );
+            <div className={ss.textContainer}>{notification.content}</div>
+            <OpreateBtns notification={notification} />
+          </div>
+        </li>
+      );
+    });
+  }, [JSON.stringify(notifications)]);
 
   const handleModalShow = () => {
     show();
@@ -92,12 +110,10 @@ export const NotificationList = () => {
   return (
     <div className={ss.receiveNotificationContainer}>
       <NotifyIcon className={ss.iconBtn} onClick={handleModalShow} />
-      { unReadCount && <div className={ss.iconCount}>{unReadCount <= 99 ? unReadCount : '99+'}</div> } 
-      <Modal appType={appType} visible={visible} closeModal={hide} modalHeader={<ModalHead />} >
+      {unReadCount && <div className={ss.iconCount}>{unReadCount <= 99 ? unReadCount : '99+'}</div>}
+      <Modal appType={appType} visible={visible} closeModal={hide} modalHeader={<ModalHead />}>
         <div className={ss.modalBody} ref={listRef}>
-          <ul className={ss.chatUl}>
-            {NotificationPreview}
-          </ul>
+          <ul className={ss.chatUl}>{NotificationPreview}</ul>
         </div>
       </Modal>
     </div>

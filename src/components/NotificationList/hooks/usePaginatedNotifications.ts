@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import type { Client, EventTypes } from 'web3-mq';
+import type { Client, EventTypes, operationFriendParams } from 'web3-mq';
 
 type StatusType = {
   error: boolean;
@@ -24,6 +24,11 @@ export const usePaginatedNotifications = (client: Client) => {
     }
   }, []);
 
+  const handleFirendRequest = async (targetIUserid: string, action: any) => {
+    const data = await client.contact.operationFriend(targetIUserid, action);
+    console.log(data);
+  };
+
   const readNotification = async () => {
     // await client.notify.changeNotificationStatus()
   };
@@ -32,6 +37,7 @@ export const usePaginatedNotifications = (client: Client) => {
     notifications,
     unReadCount,
     handleEvent,
+    handleFirendRequest,
     readNotification,
   };
 };
