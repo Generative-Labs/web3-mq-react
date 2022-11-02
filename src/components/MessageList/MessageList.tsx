@@ -20,11 +20,17 @@ export type MessageListProps = {
 const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
   const { isThread = false } = props;
   const listRef = useRef<HTMLDivElement | null>(null);
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  // const messagesEndRef = useRef<HTMLDivElement | null>(null);
   // let [msgCount, setMsgCount] = useState<number>(0);
 
   const scrollBottom = useCallback((behavior: 'auto' | 'smooth' = 'auto') => {
-    messagesEndRef.current?.scrollIntoView({ behavior });
+    // messagesEndRef.current?.scrollIntoView({ behavior });
+    const el = listRef.current;
+    if (el) {
+      const { scrollHeight, clientHeight } = el;
+      el.style.scrollBehavior = behavior;
+      el.scrollTop = scrollHeight - clientHeight;
+    };
   }, []);
 
   const { client } = useChatContext('MessageList');
@@ -126,7 +132,7 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
       >
         <ul className={ss.chatUl}>{elements}</ul>
       </Paginator>
-      <div ref={messagesEndRef} />
+      {/* <div ref={messagesEndRef} /> */}
       {/* <RenderChatDown /> */}
     </div>
   );
