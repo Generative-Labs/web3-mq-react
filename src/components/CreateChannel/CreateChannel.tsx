@@ -25,8 +25,8 @@ enum RadioEnum {
 
 const radioGroup: IValueType[] = [
   { id: RadioEnum.addFriends, name: 'addFriends' },
-  { id: RadioEnum.createTopic, name: 'createTopic' },
-  { id: RadioEnum.subscribeTopic, name: 'subscribeTopic' },
+  // { id: RadioEnum.createTopic, name: 'createTopic' },
+  // { id: RadioEnum.subscribeTopic, name: 'subscribeTopic' },
   { id: RadioEnum.createRoom, name: 'createRoom' },
 ];
 
@@ -84,12 +84,12 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
     if (selectType === RadioEnum.addFriends) {
       await client.contact.sendFriend(value);
     }
-    if (selectType === RadioEnum.createTopic) {
-      await client.topic.createTopic(value);
-    }
-    if (selectType === RadioEnum.subscribeTopic) {
-      await client.topic.subscribeTopic(value);
-    }
+    // if (selectType === RadioEnum.createTopic) {
+    //   await client.topic.createTopic(value);
+    // }
+    // if (selectType === RadioEnum.subscribeTopic) {
+    //   await client.topic.subscribeTopic(value);
+    // }
     if (selectType === RadioEnum.createRoom) {
       let avatarUrl;
       if (selectFile) {
