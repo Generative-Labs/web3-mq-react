@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { RoomsIcon, ChatsIcon, ProfileIcon } from '../../icons';
@@ -8,6 +8,13 @@ import MobileBar from './MobileBar';
 import { ChannelList } from '../ChannelList';
 import { ContactList } from '../ContactList';
 import { Profile } from '../Profile';
+import { Main } from 'components/Main';
+
+export type DashBoardProps = {
+  defaultType?: string;
+  PCTabMaps?: TabType[],
+  MobileTabMaps?: TabType[],
+};
 
 export type TabType = {
   title: string;
@@ -16,7 +23,7 @@ export type TabType = {
   component: React.ReactNode;
 };
 
-export const PCTabMaps: TabType[] = [
+const defaultPCTabMaps: TabType[] = [
   {
     title: 'Rooms',
     icon: <RoomsIcon />,
@@ -31,7 +38,7 @@ export const PCTabMaps: TabType[] = [
   },
 ];
 
-export const MobileTabMaps: TabType[] = [
+const defaultMobileTabMaps: TabType[] = [
   {
     title: 'Rooms',
     icon: <RoomsIcon />,
@@ -52,11 +59,26 @@ export const MobileTabMaps: TabType[] = [
   },
 ];
 
-export const DashBoard = () => {
-  const { appType } = useChatContext();
+export const DashBoard: FC<DashBoardProps> = (props) => {
+  const { defaultType = 'room', MobileTabMaps, PCTabMaps } = props;
+  const { appType, setShowListTypeView } = useChatContext();
 
-  if (appType !== AppTypeEnum['pc']) {
-    return <MobileBar tabMaps={MobileTabMaps} />;
-  }
-  return <PCBar tabMaps={PCTabMaps} />;
+  const tabMaps = useMemo(() => {
+    return appType !== AppTypeEnum['pc'] ? (MobileTabMaps || defaultMobileTabMaps) : (PCTabMaps || defaultPCTabMaps);
+  }, [appType]);
+
+  useEffect(() => {
+    setShowListTypeView(defaultType);
+  },[]);
+
+  return (
+    <>
+      {appType !== AppTypeEnum['pc'] ? (
+        <MobileBar tabMaps={tabMaps} />
+      ) : (
+        <PCBar tabMaps={tabMaps} />
+      )}
+      <Main tabMaps={tabMaps} />
+    </>
+  );
 };

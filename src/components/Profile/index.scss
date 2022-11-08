@@ -1,5 +1,8 @@
 .profileContainer {
-  // position: relative;
+  position: static;
+}
+.isRelative {
+  position: relative
 }
 .avatarNode {
   cursor: pointer;

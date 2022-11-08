@@ -57,16 +57,25 @@ export const MessageSimple = () => {
       ref={messageRef}
       {...longPressEvents}
     >
-      <Profile
-        userInfo={activeMember[from_uid] || {}}
-        AvatarNode={
-          <Avatar
-            name="user"
-            image={activeMember[from_uid]?.avatar || ''}
-            size={appType !== AppTypeEnum['pc'] ? 30 : 40}
-          />
-        }
-      />
+      {appType === AppTypeEnum['pc'] ? (
+        <Profile
+          userInfo={activeMember[from_uid] || {}}
+          AvatarNode={
+            <Avatar
+              name="user"
+              image={activeMember[from_uid]?.avatar || ''}
+              size={40}
+            />
+          }
+        />
+      ): (
+        <Avatar
+          name="user"
+          image={activeMember[from_uid]?.avatar || ''}
+          size={30} 
+        />
+      )}
+     
       <div
         className={cx(ss.message, {
           [ss.hideMessageMargin]: isThread,

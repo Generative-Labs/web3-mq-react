@@ -1,43 +1,45 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import cx from 'classnames';
 import { ChannelHead } from '../ChannelHead';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { CreateChannel } from '../CreateChannel';
-import { PCTabMaps, MobileTabMaps } from '../DashBoard';
+import type { TabType } from '../DashBoard';
 
 import ss from './index.scss';
 
 type IProps = {
-  style?: React.CSSProperties;
-  className?: string;
+  tabMaps: TabType[]
 };
 
 export const Main: React.FC<IProps> = (props) => {
-  const { className, style } = props;
+  const { tabMaps } = props;
   const { appType, showListTypeView, containerId } = useChatContext('Main');
 
-  const tabMaps = useMemo(
-    () => (appType !== AppTypeEnum['pc'] ? MobileTabMaps : PCTabMaps),
-    [appType],
-  );
+  // const tabMaps = useMemo(
+  //   () => (appType !== AppTypeEnum['pc'] ? MobileTabMaps : PCTabMaps),
+  //   [appType],
+  // );
+
+  const ListElement = useMemo(() => (
+    tabMaps.map((item) => (
+      <div
+        key={item.type}
+        className={cx(ss.listItem, { [ss.hide]: item.type !== showListTypeView })}
+      >
+        {item.component}
+      </div>
+    ))
+  ), [showListTypeView, tabMaps]);
 
   return (
     <div
-      style={style}
-      className={cx(ss.mainContainer, className, {
+      className={cx(ss.mainContainer, {
         [ss.mobileStyle]: appType !== AppTypeEnum['pc'],
         [ss.hasContainerId]: containerId,
       })}
     >
       <ChannelHead />
-      {tabMaps.map((item) => (
-        <div
-          key={item.type}
-          className={cx(ss.listItem, { [ss.hide]: item.type !== showListTypeView })}
-        >
-          {item.component}
-        </div>
-      ))}
+      {ListElement}
       <CreateChannel />
     </div>
   );

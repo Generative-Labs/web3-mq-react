@@ -44,7 +44,7 @@ const App: React.FC = () => {
   return (
     <Chat client={client} appType={appType} logout={logout}>
       <DashBoard />
-      <Main />
+      {/* <Main /> */}
       <Channel>
         <Window>
           <MessageHeader avatarSize={40} />

@@ -114,7 +114,12 @@ export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
   }, [appType, isTab]);
 
   return (
-    <div className={ss.profileContainer} ref={selectRef}>
+    <div 
+      className={cx(ss.profileContainer, {
+        [ss.isRelative]: appType === AppTypeEnum['pc']
+      })} 
+      ref={selectRef}
+    >
       {AvatarNode && (
         <div className={ss.avatarNode} onClick={toggle}>
           {AvatarNode}

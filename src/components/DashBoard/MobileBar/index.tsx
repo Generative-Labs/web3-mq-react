@@ -19,7 +19,7 @@ const MobileBar: React.FC<IProps> = (props) => {
         return (
           <div
             onClick={() =>
-              setShowListTypeView && setShowListTypeView(tabItem.type as ListComponentType)
+              setShowListTypeView && setShowListTypeView(tabItem.type)
             }
             key={tabItem.title}
             className={cx(ss.tabItem, { [ss.selected]: showListTypeView === tabItem.type })}
