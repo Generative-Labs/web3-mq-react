@@ -14,7 +14,7 @@ type IProps = {
 
 export const Main: React.FC<IProps> = (props) => {
   const { className, style } = props;
-  const { appType, showListTypeView } = useChatContext('Main');
+  const { appType, showListTypeView, containerId } = useChatContext('Main');
 
   const tabMaps = useMemo(
     () => (appType !== AppTypeEnum['pc'] ? MobileTabMaps : PCTabMaps),
@@ -26,6 +26,7 @@ export const Main: React.FC<IProps> = (props) => {
       style={style}
       className={cx(ss.mainContainer, className, {
         [ss.mobileStyle]: appType !== AppTypeEnum['pc'],
+        [ss.hasContainerId]: containerId,
       })}
     >
       <ChannelHead />

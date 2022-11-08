@@ -29,13 +29,14 @@ import { ThreadHeader as DefaultThreadHeader } from '../Thread/ThreadHeader';
 import ss from './index.scss';
 
 export type ChannelProps = {
+  className?: string;
   Message?: ComponentContextValue['Message'];
   Input?: ComponentContextValue['Input'];
   ThreadHeader?: ComponentContextValue['ThreadHeader'];
 };
 
 export const Channel = (props: PropsWithChildren<ChannelProps>) => {
-  const { children } = props;
+  const { children, className } = props;
   const currentState = useRef(initialState);
   const [state, dispatch] = useReducer<ChannelStateReducer>(channelReducer, initialState);
   const { client, appType } = useChatContext('Message');
@@ -142,9 +143,13 @@ export const Channel = (props: PropsWithChildren<ChannelProps>) => {
     }
     return (
       <div
-        className={cx(ss.chatContainerClass, {
-          [ss.mobileStyle]: appType !== AppTypeEnum['pc'],
-        })}
+        className={cx(
+          ss.chatContainerClass,
+          {
+            [ss.mobileStyle]: appType !== AppTypeEnum['pc'],
+          },
+          className,
+        )}
       >
         {children}
       </div>

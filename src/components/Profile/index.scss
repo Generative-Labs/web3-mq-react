@@ -1,5 +1,5 @@
 .profileContainer {
-  position: relative;
+  // position: relative;
 }
 .avatarNode {
   cursor: pointer;
@@ -125,7 +125,8 @@
   height: 100%;
   width: 100%;
   box-shadow: none;
-  position: fixed;
+  // position: fixed;
+  position: absolute;
   top: 0;
 }
 .isTab {

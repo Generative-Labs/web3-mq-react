@@ -11,6 +11,7 @@ export enum AppTypeEnum {
 
 export type ChatContextValue = {
   client: Client;
+  containerId: string;
   appType: AppTypeEnum;
   userInfo: SearchUsersResponse | null;
   showCreateChannel: boolean;

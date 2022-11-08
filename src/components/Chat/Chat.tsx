@@ -10,6 +10,7 @@ import ss from './index.scss';
 
 export type ChatProps = {
   client: Client;
+  containerId?: string;
   className?: string;
   appType?: AppTypeEnum;
   style?: React.CSSProperties;
@@ -19,6 +20,7 @@ export type ChatProps = {
 const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
   const {
     children,
+    containerId = '',
     client,
     appType = AppTypeEnum['pc'],
     className = '',
@@ -42,6 +44,7 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
   const chatContextValue: ChatContextValue = useMemo(
     () => ({
       client,
+      containerId,
       appType,
       userInfo,
       showCreateChannel,
