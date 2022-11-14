@@ -14,9 +14,7 @@ export type ChatContextValue = {
   containerId: string;
   appType: AppTypeEnum;
   userInfo: SearchUsersResponse | null;
-  showCreateChannel: boolean;
   showListTypeView: ListComponentType | string;
-  setShowCreateChannel: React.Dispatch<React.SetStateAction<boolean>>;
   setShowListTypeView: (listType: ListComponentType | string) => void;
   logout: () => void;
 };

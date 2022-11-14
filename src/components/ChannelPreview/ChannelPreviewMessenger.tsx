@@ -31,16 +31,13 @@ const UnMemoizedChannelPreviewMessenger = (props: ChannelPreviewUIComponentProps
     active,
     avatarUrl,
   } = props;
-  const { setShowCreateChannel, showCreateChannel, appType } = useChatContext();
+  const { appType } = useChatContext();
 
   // useEffect(() => {
   //   onSetActiveChannel();
   // }, []);
 
   const onSetActiveChannel = () => {
-    if (showCreateChannel) {
-      setShowCreateChannel(!showCreateChannel);
-    }
     setActiveChannel && setActiveChannel(channel);
   };
 

@@ -2,7 +2,6 @@ import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } f
 import cx from 'classnames';
 import type { Client, SearchUsersResponse } from 'web3-mq';
 import { ChatProvider, ChatContextValue, AppTypeEnum } from '../../context/ChatContext';
-import { useChat } from './hooks/useChat';
 
 import { useShowListTypeView } from './hooks/useShowListTypeView';
 
@@ -28,7 +27,6 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
     logout,
   } = props;
 
-  const { showCreateChannel, setShowCreateChannel } = useChat();
   const { showListTypeView, setShowListTypeView } = useShowListTypeView();
   const [userInfo, setUserInfo] = useState<SearchUsersResponse | null>(null);
 
@@ -47,13 +45,11 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
       containerId,
       appType,
       userInfo,
-      showCreateChannel,
       showListTypeView,
-      setShowCreateChannel,
       setShowListTypeView,
       logout,
     }),
-    [showCreateChannel, showListTypeView, appType, userInfo], // channel id变化需要重新render
+    [showListTypeView, appType, userInfo], // channel id变化需要重新render
   );
 
   return (

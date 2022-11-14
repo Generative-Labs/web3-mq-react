@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import cx from 'classnames';
 import { ChannelHead } from '../ChannelHead';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';

@@ -3,12 +3,14 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { ChannelSelectItem as SearchBox, SearchItemProps } from './ChannelSelectItem';
 import { RadioGroup, IValueType } from '../RadioGroup';
 import { toast } from '../Toast';
+import { Modal } from '../Modal';
+
 import { useChatContext } from '../../context';
 import { useInput } from '../../hooks/useInput';
-// import { useSearchUser } from './hooks/useSearchUser';
-import { Modal } from '../Modal';
+
+import { CreateChannelIcon } from '../../icons/CreateChannelIcon';
+
 import { fileParse } from '../../utils';
-// import { CloseBtnIcon } from '../../icons';
 
 import ss from './CreateChannel.scss';
 
@@ -32,7 +34,8 @@ const radioGroup: IValueType[] = [
 
 const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   const { ChannelSelectItem = SearchBox } = props;
-  const { client, showCreateChannel, setShowCreateChannel, appType } = useChatContext();
+  const { client, appType } = useChatContext();
+  const [ showCreateChannel, setShowCreateChannel ] = useState<boolean>(false);
   const [selectType, setSelectType] = useState<string>(RadioEnum.addFriends);
   const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
   const { input, setValue } = useInput('');
@@ -124,75 +127,86 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   };
 
   return (
-    <Modal
-      appType={appType}
-      visible={showCreateChannel}
-      dialogClassName={ss.createChannelModal}
-      closeModal={() => {
-        // resetSearchUser();
-        setShowCreateChannel(false);
-      }}
-    >
-      <div className={ss.createChannelContainer}>
-        <div className={ss.label}>Select Type</div>
-        <RadioGroup className={ss.radioGroup} value={radioGroup} onChange={handleSelectType} />
-        <div className={ss.label}>{showLabelAndPlaceholder}</div>
-        <input type="text" placeholder={`input ${showLabelAndPlaceholder}`} {...input} />
-        {selectType === RadioEnum.createRoom && (
-          <>
-            <div className={ss.label}> upload avatar</div>
-            <input
-              type="file"
-              accept="image/*"
-              placeholder="select image"
-              onChange={handleFileChange}
-            />
-          </>
-        )}
-        <div className={ss.submitBtn} onClick={handleSubmit}>
-          Send
-        </div>
-        {/* <div className={ss.container}>
-          <div className={ss.leftBox}>
-            <div className={ss.to}>To:</div>
-            <div className={ss.inputContainer}>
-              <div className={ss.selectedUsers}>
-                {selectedUsers.map((user) => (
-                  <div key={user.userId} className={ss.spanBox}>
-                    <div className={ss.username}>{user.userName}</div>
-                    <div className={ss.clear} onClick={() => deleteSelectUser(user)}>
-                      <CloseBtnIcon style={{ fontSize: 10 }} />
-                    </div>
-                  </div>
-                ))}
-              </div>
+    <>
+      <button
+        className={ss.btn}
+        onClick={() => {
+          setShowCreateChannel(!showCreateChannel);
+        }}
+      >
+        <CreateChannelIcon />
+      </button>
+      <Modal
+        appType={appType}
+        visible={showCreateChannel}
+        dialogClassName={ss.createChannelModal}
+        closeModal={() => {
+          // resetSearchUser();
+          setShowCreateChannel(false);
+        }}
+      >
+        <div className={ss.createChannelContainer}>
+          <div className={ss.label}>Select Type</div>
+          <RadioGroup className={ss.radioGroup} value={radioGroup} onChange={handleSelectType} />
+          <div className={ss.label}>{showLabelAndPlaceholder}</div>
+          <input type="text" placeholder={`input ${showLabelAndPlaceholder}`} {...input} />
+          {selectType === RadioEnum.createRoom && (
+            <>
+              <div className={ss.label}> upload avatar</div>
               <input
-                className={ss.inputElement}
-                onChange={(e) => setContent(e.target.value)}
-                value={content}
-                placeholder={selectedUsers.length > 0 ? '' : 'Start typing for suggestions'}
+                type="file"
+                accept="image/*"
+                placeholder="select image"
+                onChange={handleFileChange}
               />
+            </>
+          )}
+          <div className={ss.submitBtn} onClick={handleSubmit}>
+            Send
+          </div>
+          {/* <div className={ss.container}>
+            <div className={ss.leftBox}>
+              <div className={ss.to}>To:</div>
+              <div className={ss.inputContainer}>
+                <div className={ss.selectedUsers}>
+                  {selectedUsers.map((user) => (
+                    <div key={user.userId} className={ss.spanBox}>
+                      <div className={ss.username}>{user.userName}</div>
+                      <div className={ss.clear} onClick={() => deleteSelectUser(user)}>
+                        <CloseBtnIcon style={{ fontSize: 10 }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <input
+                  className={ss.inputElement}
+                  onChange={(e) => setContent(e.target.value)}
+                  value={content}
+                  placeholder={selectedUsers.length > 0 ? '' : 'Start typing for suggestions'}
+                />
+              </div>
             </div>
-          </div>
-          <div className={ss.rightBox}>
-            <button disabled={selectedUsers.length <= 0} onClick={startChat} className={ss.btn}>
-              Start Chat
-            </button>
-          </div>
-        </div> */}
-        {/* <div className={ss.main}>
-          <div className={ss.mainContainer}>
-            {searchResult.map((user) => (
-              <ChannelSelectItem
-                key={user.userId}
-                onClick={(user) => selectedSearchUser(user)}
-                user={user}
-              />
-            ))}
-          </div>
-        </div> */}
-      </div>
-    </Modal>
+            <div className={ss.rightBox}>
+              <button disabled={selectedUsers.length <= 0} onClick={startChat} className={ss.btn}>
+                Start Chat
+              </button>
+            </div>
+          </div> */}
+          {/* <div className={ss.main}>
+            <div className={ss.mainContainer}>
+              {searchResult.map((user) => (
+                <ChannelSelectItem
+                  key={user.userId}
+                  onClick={(user) => selectedSearchUser(user)}
+                  user={user}
+                />
+              ))}
+            </div>
+          </div> */}
+        </div>
+      </Modal>
+    </>
+    
   );
 };
 export const CreateChannel = React.memo(UnMemoizedCreateChannel);
