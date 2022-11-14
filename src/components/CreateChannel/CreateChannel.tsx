@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
 
 import { ChannelSelectItem as SearchBox, SearchItemProps } from './ChannelSelectItem';
 import { RadioGroup, IValueType } from '../RadioGroup';
 import { toast } from '../Toast';
 import { useChatContext } from '../../context';
 import { useInput } from '../../hooks/useInput';
-import { useSearchUser } from './hooks/useSearchUser';
+// import { useSearchUser } from './hooks/useSearchUser';
 import { Modal } from '../Modal';
 import { fileParse } from '../../utils';
-import { CloseBtnIcon } from '../../icons';
+// import { CloseBtnIcon } from '../../icons';
 
 import ss from './CreateChannel.scss';
 
@@ -101,23 +101,15 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
     setShowCreateChannel(false);
   }, [value, selectType, selectFile]);
 
-  const showLabelAndPlaceholder = useCallback(
-    (type: 'label' | 'placeholder') => {
-      return type === 'label'
-        ? selectType === '1'
-          ? 'input userid'
-          : selectType === '2'
-            ? 'input topic name'
-            : selectType === '3'
-              ? 'input topicid'
-              : 'input group name'
-        : selectType === '1'
-          ? 'userid'
-          : selectType === '2'
-            ? 'topic name'
-            : selectType === '3'
-              ? 'topicid'
-              : 'group name';
+  const showLabelAndPlaceholder = useMemo(
+    () => {
+      if (selectType === '1') {
+        return 'userid';
+      } else if (selectType === '2') {
+        return 'topicid';
+      } else {
+        return 'group name';
+      }
     },
     [selectType],
   );
@@ -144,8 +136,8 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
       <div className={ss.createChannelContainer}>
         <div className={ss.label}>Select Type</div>
         <RadioGroup className={ss.radioGroup} value={radioGroup} onChange={handleSelectType} />
-        <div className={ss.label}>{showLabelAndPlaceholder('label')}</div>
-        <input type="text" placeholder={showLabelAndPlaceholder('placeholder')} {...input} />
+        <div className={ss.label}>{showLabelAndPlaceholder}</div>
+        <input type="text" placeholder={`input ${showLabelAndPlaceholder}`} {...input} />
         {selectType === RadioEnum.createRoom && (
           <>
             <div className={ss.label}> upload avatar</div>

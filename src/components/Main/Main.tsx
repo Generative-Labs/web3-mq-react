@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import cx from 'classnames';
 import { ChannelHead } from '../ChannelHead';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
@@ -15,22 +15,6 @@ export const Main: React.FC<IProps> = (props) => {
   const { tabMaps } = props;
   const { appType, showListTypeView, containerId } = useChatContext('Main');
 
-  // const tabMaps = useMemo(
-  //   () => (appType !== AppTypeEnum['pc'] ? MobileTabMaps : PCTabMaps),
-  //   [appType],
-  // );
-
-  const ListElement = useMemo(() => (
-    tabMaps.map((item) => (
-      <div
-        key={item.type}
-        className={cx(ss.listItem, { [ss.hide]: item.type !== showListTypeView })}
-      >
-        {item.component}
-      </div>
-    ))
-  ), [showListTypeView, tabMaps]);
-
   return (
     <div
       className={cx(ss.mainContainer, {
@@ -39,7 +23,14 @@ export const Main: React.FC<IProps> = (props) => {
       })}
     >
       <ChannelHead />
-      {ListElement}
+      {tabMaps.map(item => (
+        <div
+          key={item.type}
+          className={cx(ss.listItem, { [ss.hide]: item.type !== showListTypeView })}
+        >
+          {item.component}
+        </div>
+      ))}
       <CreateChannel />
     </div>
   );
