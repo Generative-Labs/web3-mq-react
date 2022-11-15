@@ -1,20 +1,21 @@
 import React from 'react';
 import cx from 'classnames';
-import { ChannelHead } from '../ChannelHead';
+import { ChannelHead as DefaultChannelHead } from '../ChannelHead';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
-import { CreateChannel } from '../CreateChannel';
 import type { TabType } from '../DashBoard';
 
 import ss from './index.scss';
 
 type IProps = {
-  tabMaps: TabType[]
+  tabMaps: TabType[],
+  ChannelHead?: React.ComponentType<any>
 };
 
 export const Main: React.FC<IProps> = (props) => {
-  const { tabMaps } = props;
+  const { tabMaps, ChannelHead: propChannelHead } = props;
   const { appType, showListTypeView, containerId } = useChatContext('Main');
-
+  const ChannelHeadUI = propChannelHead || DefaultChannelHead;
+  
   return (
     <div
       className={cx(ss.mainContainer, {
@@ -22,7 +23,7 @@ export const Main: React.FC<IProps> = (props) => {
         [ss.hasContainerId]: containerId,
       })}
     >
-      <ChannelHead />
+      <ChannelHeadUI />
       {tabMaps.map(item => (
         <div
           key={item.type}
@@ -31,7 +32,6 @@ export const Main: React.FC<IProps> = (props) => {
           {item.component}
         </div>
       ))}
-      <CreateChannel />
     </div>
   );
 };

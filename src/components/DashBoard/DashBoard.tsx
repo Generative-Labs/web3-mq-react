@@ -14,6 +14,7 @@ export type DashBoardProps = {
   defaultType?: string;
   PCTabMaps?: TabType[],
   MobileTabMaps?: TabType[],
+  ChannelHead?: React.ComponentType<any>
 };
 
 export type TabType = {
@@ -60,7 +61,7 @@ const defaultMobileTabMaps: TabType[] = [
 ];
 
 export const DashBoard: FC<DashBoardProps> = (props) => {
-  const { defaultType = 'room', MobileTabMaps, PCTabMaps } = props;
+  const { defaultType = 'room', MobileTabMaps, PCTabMaps, ChannelHead } = props;
   const { appType, setShowListTypeView } = useChatContext();
 
   const tabMaps = useMemo(() => {
@@ -78,7 +79,7 @@ export const DashBoard: FC<DashBoardProps> = (props) => {
       ) : (
         <PCBar tabMaps={tabMaps} />
       )}
-      <Main tabMaps={tabMaps} />
+      <Main tabMaps={tabMaps} ChannelHead={ChannelHead} />
     </>
   );
 };

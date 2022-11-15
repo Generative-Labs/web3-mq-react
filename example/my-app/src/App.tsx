@@ -3,7 +3,6 @@ import { Client } from 'web3-mq';
 import {
   Chat,
   Channel,
-  Main,
   DashBoard,
   AppTypeEnum,
   Window,
