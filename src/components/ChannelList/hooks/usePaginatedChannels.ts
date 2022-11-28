@@ -28,8 +28,8 @@ export const usePaginatedChannels = (client: Client, appType: AppTypeEnum) => {
     setRefreshing(false);
   };
 
-  const changeActiveChannelEvent = (channel: any) => {
-    client.channel.setActiveChannel(channel);
+  const changeActiveChannelEvent = async (channel: any) => {
+    await client.channel.setActiveChannel(channel);
   };
 
   const loadNextPage = () => {
@@ -40,7 +40,7 @@ export const usePaginatedChannels = (client: Client, appType: AppTypeEnum) => {
     queryChannels();
   };
 
-  const handleEvent = useCallback((props: { type: EventTypes }) => {
+  const handleEvent = useCallback(async (props: { type: EventTypes }) => {
     const { type } = props;
     const { channelList, activeChannel } = client.channel;
     if (!channelList) {

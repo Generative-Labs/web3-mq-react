@@ -31,7 +31,7 @@ export const usePaginatedMessages = (client: Client, scrollBottom: () => void) =
   const handleEvent = useCallback(
     (props: { type: EventTypes }) => {
       const { type } = props;
-      const { messageList, msg_text } = client.message;
+      const { messageList } = client.message;
       if (!messageList) {
         return;
       }
@@ -42,8 +42,7 @@ export const usePaginatedMessages = (client: Client, scrollBottom: () => void) =
         });
       }
       if (type === 'message.delivered') {
-        const list = messages || [];
-        setMessages([...list, { content: msg_text, id: list.length + 1 }]);
+        setMessages(messageList);
         setTimeout(() => {
           scrollBottom();
         });

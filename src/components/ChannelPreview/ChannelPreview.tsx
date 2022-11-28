@@ -18,7 +18,7 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
 
   const isActive = activeChannel?.chatid === channel.chatid;
 
-  const { chatid, chat_name, avatar_url, avatar_base64  } = channel;
+  const { chatid, chat_name, avatar_url, avatar_base64, unread  } = channel;
   // const { latestMsg, displayTitle, avatarUrl, updatedAt, unread } = formatMessageData(channel);
 
   // if (typeof latestMsg === 'object') {
@@ -30,7 +30,7 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
       {...props}
       active={isActive}
       channel={channel}
-      unread={0}
+      unread={unread || 0}
       displayTitle={chat_name || chatid}
       lastMessage={'latestMsg'}
       updatedAt={'updatedAt'}
