@@ -15,7 +15,6 @@ import { Avatar } from '../Avatar';
 import { copyText } from '../../utils';
 import useToggle from '../../hooks/useToggle';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
-// import { useMessageContext } from '../../context/MessageContext';
 import { toast } from '../Toast';
 
 import ss from './index.scss';
@@ -24,22 +23,21 @@ type IProps = {
   userInfo?: SearchUsersResponse;
   AvatarNode?: React.ReactNode;
   isTab?: boolean;
+  isSelf?: boolean;
   hasLogout?: boolean;
 };
 
 export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
-  const { AvatarNode, userInfo: propsUserInfo, isTab = false, hasLogout = false } = props;
-  const { userInfo: contextUserInfo, appType, logout } = useChatContext('Profile');
+  const { AvatarNode, userInfo: propsUserInfo, isTab = false, isSelf = false, hasLogout = false } = props;
+  const { client, userInfo: contextUserInfo, appType, logout } = useChatContext('Profile');
   const [copied, setCopied] = useState<boolean>(false);
   const selectRef = useRef<HTMLDivElement | null>(null);
   const { visible, toggle, hide } = useToggle();
-  // const { message } = useMessageContext('MessageSimple');
 
-  // const isSelf = client.user.userInfo.user_id === message?.from_uid;
   // const members = client.channel.activeChannel?.members || [];
 
   const userInfo = propsUserInfo || contextUserInfo;
-  const { avatar_url = '', nickname = '', wallet_address = '' } = userInfo || {};
+  const { avatar_url = '', nickname = '', wallet_address = '', userid } = userInfo || {};
 
   const copy = useCallback(async () => {
     const res = await copyText(wallet_address);
@@ -81,9 +79,9 @@ export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
   }, []);
 
   const OperaBar = useCallback(() => {
-    // if (isSelf || hasLogout) {
-    //   return null;
-    // }
+    if (isSelf || hasLogout) {
+      return null;
+    }
     return (
       <div className={ss.opreraContainer}>
         <div className={ss.item} onClick={addContact}>

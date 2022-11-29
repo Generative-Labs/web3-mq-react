@@ -34,7 +34,7 @@ const radioGroup: IValueType[] = [
 
 const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   const { ChannelSelectItem = SearchBox } = props;
-  const { client, appType } = useChatContext();
+  const { client, appType, containerId } = useChatContext();
   const [ showCreateChannel, setShowCreateChannel ] = useState<boolean>(false);
   const [selectType, setSelectType] = useState<string>(RadioEnum.addFriends);
   const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
@@ -138,6 +138,7 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
       </button>
       <Modal
         appType={appType}
+        containerId={containerId}
         visible={showCreateChannel}
         dialogClassName={ss.createChannelModal}
         closeModal={() => {

@@ -60,6 +60,7 @@ export const MessageSimple = () => {
       {appType === AppTypeEnum['pc'] ? (
         <Profile
           userInfo={activeMember[from_uid] || {}}
+          isSelf={client.keys.userid === message.senderId}
           AvatarNode={
             <Avatar
               name="user"

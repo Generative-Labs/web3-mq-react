@@ -24,7 +24,7 @@ const radioGroup: IValueType[] = [
 ];
 
 export const Notify = () => {
-  const { client, appType } = useChatContext('Notify');
+  const { client, appType, containerId } = useChatContext('Notify');
   const [topics, setTopics] = useState<string[]>([]);
   const [via, setVia] = useState<string>(RadioEnum.notification);
   const [title, setTitle] = useState<string>('');
@@ -97,7 +97,7 @@ export const Notify = () => {
           <div>messaging</div>
         </div>
       </div>
-      <Modal appType={appType} visible={visible} closeModal={hide} modalHeader={<ModalHead />} >
+      <Modal appType={appType} containerId={containerId} visible={visible} closeModal={hide} modalHeader={<ModalHead />} >
         <div className={ss.modalBody}>
           <div className={ss.title}>
             Sending a message to multiple contacts or group chats at the same time

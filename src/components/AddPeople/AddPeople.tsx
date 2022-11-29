@@ -18,7 +18,7 @@ const UnMemoizedAddPeople: React.FC = () => {
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<MembersType[]>([]);
-  const { appType, client } = useChatContext('MessageHeader');
+  const { appType, client, containerId } = useChatContext('MessageHeader');
   const { activeChannel } = useChannelStateContext('MessageHeader');
   const { visible, show, hide } = useToggle();
 
@@ -97,6 +97,7 @@ const UnMemoizedAddPeople: React.FC = () => {
         appType={appType}
         visible={visible}
         closeModal={resetStatus}
+        containerId={containerId}
         rightBtn={
           loading ? (
             <Loading />

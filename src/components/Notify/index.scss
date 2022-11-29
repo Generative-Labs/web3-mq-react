@@ -88,8 +88,7 @@
   position: absolute;
   left: 30px;
   bottom: 30px;
-  width: 100%;
-  max-width: 540px;
+  width: calc(100% - 60px);
   cursor: pointer;
   background-color: #605dec;
   border-radius: 49px;

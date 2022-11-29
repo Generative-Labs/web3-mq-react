@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import cx from 'classnames';
 
-import { useChatContext ,AppTypeEnum } from '../../context/ChatContext';
+import { AppTypeEnum } from '../../context/ChatContext';
 import { CloseBtnIcon } from '../../icons';
 
 import ss from './index.scss';
@@ -11,6 +11,7 @@ interface IProps {
   visible: boolean;
   appType?: AppTypeEnum;
   closeModal: () => void;
+  containerId?: string;
   modalHeader?: React.ReactNode;
   style?: React.CSSProperties;
   className?: string;
@@ -24,6 +25,7 @@ export const Modal = React.memo((props: PropsWithChildren<IProps>) => {
     visible,
     appType = AppTypeEnum['pc'],
     closeModal,
+    containerId = '',
     modalHeader,
     rightBtn = null,
     children,
@@ -35,7 +37,6 @@ export const Modal = React.memo((props: PropsWithChildren<IProps>) => {
   const [active, setActive] = useState<boolean>(false);
   const [aniClassName, setAniClassName] = useState<string>('');
   const [contentClassName, setContentClassName] = useState<string>('');
-  const { containerId } = useChatContext();
   const bodyOverflow = useRef(window.getComputedStyle(document.body).overflow);
 
   const onTransitionEnd = () => {

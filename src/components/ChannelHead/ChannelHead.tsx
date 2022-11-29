@@ -9,14 +9,14 @@ import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import ss from './index.scss';
 
 export const ChannelHead: React.FC = React.memo(() => {
-  const { appType } = useChatContext();
+  const { appType, showListTypeView } = useChatContext();
 
   return (
     <div
       className={cx(ss.channelHeadContainer, { [ss.mobileStyle]: appType !== AppTypeEnum['pc'] })}
     >
       <div className={ss.header}>
-        <span className={ss.title}>Chats</span>
+        <span className={ss.title}>{showListTypeView !== 'chat' ? 'Chats' : 'Contacts'}</span>
         <NotificationList />
         <CreateChannel />
       </div>

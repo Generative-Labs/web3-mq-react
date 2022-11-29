@@ -13,7 +13,7 @@ import ss from './index.scss';
 
 export const NotificationList = () => {
   const listRef = useRef<HTMLDivElement | null>(null);
-  const { client, appType } = useChatContext();
+  const { client, appType, containerId } = useChatContext();
   const { visible, show, hide } = useToggle();
   const { notifications, unReadCount, handleEvent, handleFirendRequest, readNotification } =
     usePaginatedNotifications(client);
@@ -111,7 +111,7 @@ export const NotificationList = () => {
     <div className={ss.receiveNotificationContainer}>
       <NotifyIcon className={ss.iconBtn} onClick={handleModalShow} />
       {unReadCount && <div className={ss.iconCount}>{unReadCount <= 99 ? unReadCount : '99+'}</div>}
-      <Modal appType={appType} visible={visible} closeModal={hide} modalHeader={<ModalHead />}>
+      <Modal appType={appType} containerId={containerId} visible={visible} closeModal={hide} modalHeader={<ModalHead />}>
         <div className={ss.modalBody} ref={listRef}>
           <ul className={ss.chatUl}>{NotificationPreview}</ul>
         </div>
