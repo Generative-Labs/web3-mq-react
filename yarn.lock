@@ -5403,10 +5403,10 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
-web3-mq@^1.2.50:
-  version "1.2.50"
-  resolved "https://registry.yarnpkg.com/web3-mq/-/web3-mq-1.2.50.tgz#ed458cab8711233a4bba15b8f1b36fb535ecec31"
-  integrity sha512-ERXtvZgjQXyB0wzT9aqpr0VtWinpVUpNzZyw+R7G2OK/U2bmYhTxaCQz1//cyzwyOC7ilMhfGFAB3S7XzJNgQA==
+web3-mq@^1.2.51:
+  version "1.2.51"
+  resolved "https://registry.yarnpkg.com/web3-mq/-/web3-mq-1.2.51.tgz#714818b2de941f80c9c3c7197b2b9b991d74baa7"
+  integrity sha512-2/OwUoyTP1zIiUk5v/WCfhsTqMCeUvxFtAvqtOaAeItNAhzg04YpbDIYPJOfTYCTv3x3A6UmrEwNZHkc+dWi9Q==
   dependencies:
     "@noble/ed25519" "^1.6.1"
     "@protobuf-ts/plugin" "^2.7.0"
