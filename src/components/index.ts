@@ -26,3 +26,4 @@ export * from './Toast';
 export * from './Popover';
 export * from './Notify';
 export * from './RadioGroup';
+export * from './Button';

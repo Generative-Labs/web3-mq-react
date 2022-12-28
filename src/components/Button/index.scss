@@ -1,0 +1,54 @@
+@import '../../style/index.scss';
+
+.buttonContainer {
+  padding: 7px 16px;
+  border-radius: 8px;
+  font-size: 16px;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+  background-image: none;
+  border: none;
+  cursor: pointer;
+  &.disabled,
+  &[disabled] {
+    cursor: not-allowed;
+    opacity: 0.8;
+    background-color: rgba(26, 26, 26, 0.05);
+    color: rgba(26, 26, 26, 0.3);
+    box-shadow: none;
+    > * {
+      pointer-events: none;
+    }
+  }
+}
+.primary {
+  @include themeify {
+    background-color: themed(purple_1);
+    color: themed(white_1);
+  }
+}
+.danger {
+  @include themeify {
+    background-color: themed(red_4);
+    color: themed(white_1);
+    &.disabled,
+    &[disabled] {
+      cursor: not-allowed;
+      opacity: 0.8;
+      background-color: #fdebee;
+      color: #f88b9d;
+      box-shadow: none;
+      > * {
+        pointer-events: none;
+      }
+    }
+  }
+}
+.large {
+  padding: 7px 20px;
+  font-size: 20px;
+}
+.small {
+  font-size: 14px;
+}

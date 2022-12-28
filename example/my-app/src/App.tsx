@@ -25,6 +25,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     init();
+    document.getElementsByTagName('body')[0].setAttribute('data-theme', 'light');
     window.addEventListener('resize', () => {
       setAppType(window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc']);
     });
@@ -43,7 +44,6 @@ const App: React.FC = () => {
   return (
     <Chat client={client} appType={appType} logout={logout}>
       <DashBoard />
-      {/* <Main /> */}
       <Channel>
         <Window>
           <MessageHeader avatarSize={40} />
