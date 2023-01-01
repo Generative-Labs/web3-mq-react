@@ -1,9 +1,4 @@
 $light: (
-  white_1: #fff,
-  purple_1: #4f46e6,
-  purple_2: #726beb,
-  red_4: #f6647c,
-  red_5: #f43e5c,
   // Gray
   Gray_50: #fdfdfd,
   Gray_100: #f4f4f5,
@@ -17,7 +12,7 @@ $light: (
   Gray_900: #18181b,
   // Green
   Green_50: #f2fdf5,
-  z Green_100: #defce9,
+  Green_100: #defce9,
   Green_200: #bbf7d0,
   Green_300: #85efac,
   Green_400: #4ade80,
@@ -98,8 +93,8 @@ $light: (
 );
 
 $dark: (
-  red_4: #ccc,
-  red_5: #000,
+  Primary_color: #ffffff,
+  White_color: #000000,
 );
 
 $themes: (
