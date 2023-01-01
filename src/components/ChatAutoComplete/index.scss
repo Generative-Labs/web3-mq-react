@@ -1,17 +1,25 @@
+@import "../../style/index.scss";
+
 .messageInput {
   width: 100%;
-  padding: 14px 15px;
+  padding: 10px 16px;
   box-sizing: border-box;
   resize: none;
-  background: #ffffff;
-  font-size: 14px;
   line-height: 16px;
   min-height: 0px;
-  color: rgba(0, 0, 0, 0.9);
-  border-radius: 4px;
-  border: 1px solid rgba(0, 0, 0, 0.16);
+  border-radius: 8px;
+  border: 1px solid;
   outline: none;
+  font-family: Inter, sans-serif;
+  @include themeify {
+    border-color: themed(Gray_200);
+    background-color: themed(White_color);
+    color: themed(Primary_color);
+    font-size: themed(Headline_font-size);
+    font-weight: themed(Regular_font-weight);
+  }
 }
+
 .chatAutoCompleteContainer {
   display: inline-flex;
   align-items: center;
@@ -21,6 +29,7 @@
     .messageInput {
       padding: 10px 15px;
     }
+
     svg {
       margin-left: 10px;
     }
@@ -28,72 +37,78 @@
 
   .replyMessageBox {
     flex: 1;
-    border: 1px solid #f2f2f2;
-    border-radius: 4px;
-    &:focus-within + .sendmessageIcon svg {
-      fill: #000;
-    }
-    .replyHistoryMessage {
-      border: 1px solid #f0f0f0;
-      box-shadow: 0px 0.15px 0.45px rgba(0, 0, 0, 0.11), 0px 0.8px 1.8px rgba(0, 0, 0, 0.13);
-      border-radius: 3px;
-      margin: 13px 13px 0;
-      padding: 4px 28px 4px 17px;
-      position: relative;
-
-      .name {
-        font-weight: 700;
-        font-size: 14px;
-        line-height: 16px;
-        color: #252423;
-        margin-right: 12px;
+    border: 1px solid;
+    border-radius: 8px;
+    @include themeify {
+      border-color: themed(Gray_200);
+      background-color: themed(White_color);
+      color: themed(Primary_color);
+      font-size: themed(Headline_font-size);
+      font-weight: themed(Regular_font-weight);
+      &:focus-within + .sendmessageIcon svg {
+        fill: themed(Gray_900);
       }
-
-      .time {
-        font-weight: 500;
-        font-size: 12px;
-        color: #4c5667;
-      }
-
-      .content {
-        font-size: 14px;
-        color: #252423;
-      }
-
-      &:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 4px;
-        width: 3px;
-        height: 90%;
-        background: #605dec;
+      .replyHistoryMessage {
+        border: 1px solid themed(Gray_200);
         border-radius: 3px;
-        margin: auto 0;
-      }
-      svg {
-        position: absolute;
-        right: 6px;
-        top: 6px;
-        width: 12px;
-        height: 12px;
-        transform: scale(0.9);
-        cursor: pointer;
-        transition: fill 0.2s ease-in-out;
-        transition: fill 0.2s ease-in-out;
+        margin: 13px 13px 0;
+        padding: 4px 28px 4px 17px;
+        position: relative;
+
+        .name {
+          font-weight: themed(Bold_font-weight);
+          font-size: themed(Body_font-size);
+          line-height: 16px;
+          color: themed(Gray_900);
+          margin-right: 12px;
+        }
+
+        .time {
+          font-weight: themed(Medium_font-weight);
+          font-size: themed(Caption1_font-size);
+          color: themed(Gray_400);
+        }
+
+        .content {
+          font-size: themed(Body_font-size);
+          color: themed(Gray_900);
+        }
+
+        &:before {
+          content: '';
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          left: 4px;
+          width: 3px;
+          height: 90%;
+          background: themed(Violet_500);
+          border-radius: 3px;
+          margin: auto 0;
+        }
+
+        svg {
+          position: absolute;
+          right: 6px;
+          top: 6px;
+          width: 12px;
+          height: 12px;
+          transform: scale(0.9);
+          cursor: pointer;
+          transition: fill 0.2s ease-in-out;
+        }
       }
     }
+
     textarea {
       border: none;
     }
   }
 }
+
 .sendmessageIcon svg {
   cursor: pointer;
-  margin-left: 20px;
-  width: 23px;
-  height: 20px;
-  transition: fill 0.2s ease-in-out;
+  margin-left: 16px;
+  height: 27px;
   transition: fill 0.2s ease-in-out;
 }

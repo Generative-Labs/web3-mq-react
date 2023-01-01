@@ -19,7 +19,7 @@ const useLogin = () => {
     const fastUrl = await Client.init({
       connectUrl: localStorage.getItem('FAST_URL'),
       app_key: 'vAUJTFXbBZRkEDRE',
-      env: 'dev',
+      env: 'test',
     });
     localStorage.setItem('FAST_URL', fastUrl);
     setFastUrl(fastUrl);

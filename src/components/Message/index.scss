@@ -1,9 +1,13 @@
+@import "../../style/index.scss";
 .messageSimpleContainer {
   display: flex;
   align-items: flex-start;
   padding: 16px 24px;
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: 1px solid;
   position: relative;
+  @include themeify{
+    border-color: themed(Gray_100);
+  }
 
   &.mobileStyle {
     padding: 10px 16px;
@@ -29,30 +33,33 @@
 }
 .dataInner {
   span {
+    @include themeify{
+      font-size: themed(Caption1_font-size);
+      color: themed(Gray_400);
+    }
     white-space: nowrap;
-    font-size: 11px;
-    color: #4c5667;
-    font-weight: 500;
     display: inline-block;
     line-height: 23px;
   }
   .name {
-    font-weight: 700;
     margin-right: 8px;
-    color: #000;
-    font-size: 14px;
+    @include themeify{
+      font-size: themed(Body_font-size);
+      font-weight: themed(Bold_font-weight);
+      color: themed(Gray_900);
+    }
   }
 }
 
 .hideMessageMargin {
   margin: 0 !important;
 }
-.otherMsgType {
-  min-height: 32px;
-  padding: 5px 10px;
-  font-size: 14px;
-  color: #666;
-}
+//.otherMsgType {
+//  min-height: 32px;
+//  padding: 5px 10px;
+//  font-size: 14px;
+//  color: #666;
+//}
 
 .actionBtns {
   position: absolute;

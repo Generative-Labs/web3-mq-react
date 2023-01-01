@@ -1,3 +1,5 @@
+@import "../../style/index.scss";
+
 .modal {
   // position: fixed;
   position: absolute;
@@ -5,19 +7,23 @@
   left: 0;
   bottom: 0;
   right: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.24);
   z-index: 99;
 }
+
 .dialog {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-width: 600px;
-  height: 600px;
-  background-color: #fff;
-  border-radius: 8px;
+  width: 420px;
+  height: 480px;
+  border-radius: 18px;
+  @include themeify {
+    background-color: themed(White_color);
+  }
 }
+
 .mobileStyle {
   border-radius: unset;
   height: 100%;
@@ -27,27 +33,34 @@
 }
 
 .titleContainer {
-  padding: 20px 30px;
+  padding: 14px 16px;
+  height: 50px;
   display: flex;
   align-items: center;
   position: relative;
 }
+
 .title {
-  font-weight: bold;
   position: absolute;
   left: 50%;
-  font-size: 20px;
   transform: translateX(-50%);
+  @include themeify {
+    font-weight: themed(Medium_font-weight);
+    font-size: themed(title3_font-size);
+    color: themed(Primary_color);
+  }
 }
 
 .closeBtn {
   cursor: pointer;
   font-size: 16px;
   height: 16px;
+
   &:hover {
     color: #777;
   }
 }
+
 .rightBtn {
   cursor: pointer;
   position: absolute;
@@ -57,20 +70,25 @@
 .enter {
   opacity: 0;
 }
+
 .enterActive {
   transition: opacity 250ms ease-in-out;
   opacity: 1;
 }
+
 .enterDone {
   opacity: 1;
 }
+
 .exit {
   opacity: 1;
 }
+
 .exitActive {
   opacity: 0;
   transition: opacity 250ms ease-in-out;
 }
+
 .exitDone {
   opacity: 0;
 }
@@ -79,20 +97,25 @@
 .contentEnter {
   top: 100%;
 }
+
 .contentEnterActive {
   transition: top 200ms ease-in-out;
   top: 50%;
 }
+
 .contentEnterDone {
   top: 50%;
 }
+
 .contentExit {
   top: 50%;
 }
+
 .contentExitActive {
   transition: top 200ms ease-in-out;
   top: 100%;
 }
+
 .contentExitDone {
   top: 100%;
 }

@@ -1,21 +1,28 @@
+@import "../../style/index.scss";
+
 ul {
   padding: 0;
   margin: 0;
+
   li {
     list-style: none;
   }
 }
+
 .receiveNotificationContainer {
   display: flex;
   margin-left: 10px;
+
   .iconBtn {
     cursor: pointer;
     margin-right: auto;
+
     svg {
       width: 27px;
       height: 36px;
     }
   }
+
   .iconCount {
     height: 24px;
     width: 24px;
@@ -30,39 +37,48 @@ ul {
     margin-top: -5px;
   }
 }
+
 .modalHead {
   display: flex;
   position: relative;
   justify-content: center;
   align-items: center;
-  padding: 20px 30px;
+  padding: 14px 16px;
   width: 100%;
-  box-shadow: 0 4px 4px #c0c0c0;
+  height: 50px;
+  //box-shadow: 0 4px 4px #c0c0c0;
   // box-shadow: 0 4px 4px rgb(0 0 0 / 10%);
   .title {
-    font-family: 'Helvetica Neue';
+    font-family: Inter, sans-serif;
     font-style: normal;
-    font-weight: 700;
-    font-size: 18px;
     line-height: 20px;
-    color: #252423;
+    @include themeify {
+      font-weight: themed(Medium_font-weight);
+      font-size: themed(title3_font-size);
+      color: themed(Primary_color);
+    }
   }
+
   .closeBtn {
     position: absolute;
     right: 30px;
     cursor: pointer;
     font-size: 16px;
     height: 16px;
-    &:hover {
-      color: #777;
+    @include themeify {
+      &:hover {
+        color: themed(Gray_500);
+      }
     }
   }
 }
+
 .modalBody {
   width: 100%;
   height: calc(100% - 60px);
   overflow-x: hidden;
   overflow-y: auto;
+
   .loadingContainer {
     height: 100%;
     display: flex;
@@ -70,59 +86,70 @@ ul {
     justify-content: center;
   }
 }
-.chatUl > :nth-child(1) {
-  margin-top: 22px;
-}
+
+//.chatUl > :nth-child(1) {
+//  margin-top: 22px;
+//}
 .notificationSimpleContainer {
   display: flex;
   width: 100%;
   box-sizing: border-box;
   padding: 16px;
-  box-shadow: 0 1px 0 #e4e8ee;
   word-break: break-all;
+
   .avatar {
     width: 30px;
     height: 30px;
     margin-right: 16px;
   }
+
   .notification {
     width: 100%;
+
     .dataInner {
       display: flex;
       justify-content: space-between;
       line-height: 20px;
-      font-weight: 700;
-      color: #242424;
-      font-size: 14px;
+      font-family: Inter, sans-serif;
+      @include themeify {
+        .title {
+          font-weight: themed(Bold_font-weight);
+          font-size: themed(Headline_font-size);
+          color: themed(Primary_color);
+        }
+        .date {
+          font-weight: themed(Regular_font-weight);
+          font-size: themed(Tips_font-size);
+          color: themed(Gray_400);
+        }
+      }
     }
+
     .textContainer {
-      font-family: helvetica neue, sans-serif;
+      font-family: Inter, sans-serif;
       font-style: normal;
-      font-weight: 400;
       width: 100%;
-      font-size: 12px;
       line-height: 20px;
-      color: #424242;
       word-wrap: break-all;
+      @include themeify {
+        font-weight: themed(Regular_font-weight);
+        font-size: themed(Tips_font-size);
+        color: themed(Gray_600);
+      }
     }
   }
 }
 
 .opreateBtnsContainer {
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   gap: 20px;
+
   .btnItem {
     width: 80px;
     height: 30px;
     border: none;
     color: #fff;
     border-radius: 5px;
-  }
-  .agree {
-    background-color: rgb(59, 246, 59);
-  }
-  .refused {
-    background-color: rgb(239, 48, 48);
   }
 }

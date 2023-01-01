@@ -91,7 +91,7 @@ const UnMemoizedAddPeople: React.FC = () => {
     <div className={ss.addPeopleContainer}>
       <div className={ss.icon} onClick={show}>
         <AddPeopleIcon />
-        {appType === AppTypeEnum['pc'] && <span>Add People</span>}
+        {appType === AppTypeEnum['pc'] && <div>Add People</div>}
       </div>
       <Modal
         appType={appType}

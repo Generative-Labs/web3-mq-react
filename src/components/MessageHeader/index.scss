@@ -1,44 +1,62 @@
+@import '../../style/index.scss';
+
 .messageHeaderContainer {
-  padding: 0 24px;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.9);
-  border-bottom: 1px solid #f2f2f2;
+  padding: 20px 16px;
   min-height: 80px;
-  font-weight: bold;
-  color: #000;
+
   &.mobileStyle {
     padding: 0 16px;
   }
+
+  @include themeify {
+    border-bottom: 1px solid themed(Gray_100);
+    background-color: themed(White_color);
+  }
 }
+
 .warp {
   display: flex;
   align-items: center;
 }
+
 .operationBar {
   display: flex;
   align-items: center;
-  font-weight: 400;
-  font-size: 12px;
-  color: #424242;
-}
-.icon {
-  cursor: pointer;
-  margin-left: 15px;
-  display: flex;
-  align-items: center;
-  span {
-    margin-left: 5px;
+  @include themeify {
+    color: themed(Gray_900);
+    font-weight: themed(Medium_font-weight);
+    font-size: themed(Body_font-size);
   }
 }
+
+.icon {
+  cursor: pointer;
+  margin-left: 24px;
+  display: flex;
+  align-items: center;
+  height: 24px;
+
+  div:first-child {
+    margin-right: 8px;
+  }
+}
+
 .title {
   max-width: 190px;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  @include themeify {
+    color: themed(Gray_900);
+    font-size: themed(Body_font-size);
+    font-weight: themed(Medium_font-weight);
+  }
 }
+
 .close {
   width: 23px;
   height: 22px;

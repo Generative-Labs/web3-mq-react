@@ -27,7 +27,7 @@ const PCBar: React.FC<IProps> = (props) => {
               key={tabItem.title}
               className={cx(ss.tabItem, { [ss.selected]: showListTypeView === tabItem.type })}
             >
-              <div className={ss.icon}>{tabItem.icon}</div>
+              <div className={cx(ss.icon, { [ss.selected]: showListTypeView === tabItem.type })}>{tabItem.icon}</div>
               <div className={ss.title}>{tabItem.title}</div>
             </div>
           );

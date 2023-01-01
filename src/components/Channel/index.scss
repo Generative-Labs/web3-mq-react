@@ -1,10 +1,12 @@
+@import "../../style/index.scss";
 .chatContainerClass {
-  background-color: #fff;
   height: 100%;
   width: 100%;
   display: flex;
   flex: 1;
-  border-left: 1px solid rgba(0, 0, 0, 0.08);
+  @include themeify{
+    background-color: themed(White_color);
+  }
 }
 .mobileStyle {
   // position: fixed;

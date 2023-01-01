@@ -1,10 +1,41 @@
+@import "../../../style/index.scss";
 .actionBtns {
-  background: #605dec;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-radius: 8px;
   padding: 0 12px;
+  @include themeify{
+    background: themed(Violet_500);
+    .btn {
+      height: 36px;
+      color: themed(White_color);
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: themed(Caption1_font-size);
+
+      .com {
+        width: 14px;
+        height: 22px;
+        display: flex;
+        align-items: center;
+      }
+
+      .msg {
+        max-width: 50px;
+      }
+
+      &:not(:last-child) {
+        margin-right: 14px;
+      }
+
+      svg path{
+        fill: themed(White_color);
+        width: 14px;
+      }
+    }
+  }
 
   &.mobileStyle {
     position: absolute;
@@ -22,35 +53,6 @@
       &:not(:last-child) {
         margin-right: 7px;
       }
-    }
-  }
-
-  .btn {
-    height: 36px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-size: 12px;
-
-    .com {
-      width: 14px;
-      height: 22px;
-      display: flex;
-      align-items: center;
-    }
-
-    .msg {
-      max-width: 50px;
-    }
-
-    &:not(:last-child) {
-      margin-right: 14px;
-    }
-
-    svg {
-      fill: #fff;
-      width: 14px;
     }
   }
 }

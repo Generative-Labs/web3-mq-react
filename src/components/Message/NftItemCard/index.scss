@@ -1,15 +1,19 @@
+@import "../../../style/index.scss";
+
 .nftContainer {
   height: 78px;
   margin-top: 10px;
 }
 
 .nftBox {
-  border: 1px solid #E1E1E1;
   border-radius: 4px;
   width: 100%;
   height: 100%;
   padding: 12px;
   display: flex;
+  @include themeify {
+    border: 1px solid themed(Gray_100);
+  }
 
   img {
     height: 100%;
@@ -19,33 +23,33 @@
 }
 
 .nftInfo {
-  div:nth-of-type(1) {
-    font-family: 'Helvetica Neue', sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 16px;
-    color: #242424;
-    height: 22px;
-    line-height: 22px;
-  }
-
-  div:nth-of-type(2), div:nth-of-type(3) {
-    font-family: 'SF Pro Text', sans-serif;
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    height: 18px;
-    line-height: 18px;
-    margin-top: 2px;
-
-    span:nth-of-type(1) {
-      color: #616161;
+  @include themeify {
+    div:nth-of-type(1) {
+      font-family: Inter, sans-serif;
+      font-style: normal;
+      height: 22px;
+      line-height: 22px;
+      font-weight: themed(Bold_font-weight);
+      font-size: themed(Headline_font-size);
+      color: themed(Gray_800);
     }
+    div:nth-of-type(2), div:nth-of-type(3) {
+      font-family: Inter, sans-serif;
+      font-style: normal;
+      font-weight: themed(Regular_font-weight);
+      font-size: themed(Caption1_font-size);
+      height: 18px;
+      line-height: 18px;
+      margin-top: 2px;
 
-    span:nth-of-type(2) {
-      font-weight: 600;
-      color: #242424;
+      span:nth-of-type(1) {
+        color: themed(Gray_700);
+      }
+
+      span:nth-of-type(2) {
+        font-weight: themed(Bold_font-weight);
+        color: themed(Gray_800);
+      }
     }
   }
-
 }

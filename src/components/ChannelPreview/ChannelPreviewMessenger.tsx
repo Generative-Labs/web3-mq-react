@@ -55,8 +55,10 @@ const UnMemoizedChannelPreviewMessenger = (props: ChannelPreviewUIComponentProps
           <div className={ss.title}>{displayTitle}</div>
           <div className={ss.updateTime}>{updatedAt}</div>
         </div>
-        <div className={ss.lastMessage}>{lastMessage}</div>
-        {unread !== 0 && <div className={ss.unread}>{unread}</div>}
+        <div className={ss.previewBottom}>
+          <div className={ss.lastMessage}>{lastMessage}</div>
+          {unread !== 0 && <div className={ss.unread}>{unread}</div>}
+        </div>
       </div>
     </div>
   );

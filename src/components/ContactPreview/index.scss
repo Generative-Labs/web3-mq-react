@@ -1,16 +1,19 @@
+@import "../../style/index.scss";
 .channelPreviewContainer {
   height: 56px;
-  background-color: #fff;
   display: flex;
   align-items: center;
-  padding:9px 24px;
+  padding:8px 16px;
   cursor: pointer;
   transition: background-color 0.1s ease-in-out;
-  &:hover {
-	background-color: rgba(165, 166, 246, 0.1);
-  }
-  &.selected {
-    background-color: rgba(165, 166, 246, 0.1);
+  @include themeify{
+    background-color: themed(White_color);
+    &:hover {
+      background-color: themed(Gray_100);
+    }
+    &.selected {
+      background-color: themed(Gray_100);
+    }
   }
 }
 .wrapper {
@@ -20,35 +23,10 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-.previewTop {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 15px;
-  margin-bottom: 4px;
-}
-.title {
-  font-weight: 500;
-  font-size: 15px;
-  &.dark {
-    color: white;
+  font-family: Inter, sans-serif;
+  @include themeify{
+    font-size: themed(Body_font-size);
+    font-weight: themed(Medium_font-weight);
+    color: themed(Gray_900);
   }
-  &.light {
-    color: #000000;
-  }
-}
-
-.updateTime {
-  font-size: 11px;
-  color: #858688;
-}
-.lastMessage {
-  text-align: left;
-  font-size: 13px;
-  line-height: 16px;
-  margin: 0;
-  color: #858688;
-  height: 16px;
-  max-width: 200px;
 }

@@ -2,53 +2,65 @@
 
 .buttonContainer {
   padding: 7px 16px;
-  font-size: 16px;
   white-space: nowrap;
   text-align: center;
   vertical-align: middle;
   background-image: none;
   border: none;
   cursor: pointer;
-  border-radius: getDefaultValue(buttonBorderRadius);
-  &.disabled,
-  &[disabled] {
-    cursor: not-allowed;
-    opacity: 0.8;
-    background-color: rgba(26, 26, 26, 0.05);
-    color: rgba(26, 26, 26, 0.3);
-    box-shadow: none;
-    > * {
-      pointer-events: none;
-    }
-  }
-}
-.primary {
+  border-radius: 6px;
   @include themeify {
-    background-color: themed(purple_1);
-    color: themed(white_1);
-  }
-}
-.danger {
-  @include themeify {
-    background-color: themed(red_4);
-    color: themed(white_1);
+    font-size: themed(Headline_font-size);
     &.disabled,
     &[disabled] {
       cursor: not-allowed;
       opacity: 0.8;
-      background-color: #fdebee;
-      color: #f88b9d;
+      background-color: themed(Violet_50);
+      color: themed(Violet_400);
       box-shadow: none;
+
       > * {
         pointer-events: none;
       }
     }
   }
 }
+
+.primary {
+  @include themeify {
+    background-color: themed(Violet_500);
+    color: themed(White_color);
+  }
+}
+
+.danger {
+  @include themeify {
+    background-color: themed(Red_500);
+    color: themed(White_color);
+    &.disabled,
+    &[disabled] {
+      cursor: not-allowed;
+      opacity: 0.8;
+      background-color: themed(Red_50);
+      color: themed(Red_400);
+      box-shadow: none;
+
+      > * {
+        pointer-events: none;
+      }
+    }
+  }
+}
+
 .large {
   padding: 7px 20px;
-  font-size: 20px;
+  @include themeify {
+    font-size: themed(Headline_font-size);
+  }
 }
+
 .small {
-  font-size: 14px;
+  @include themeify {
+    font-size: themed(Body_font-size);
+  }
 }

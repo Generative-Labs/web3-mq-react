@@ -2,7 +2,6 @@ export * from './EthLogoIcon';
 export * from './TransferIcon';
 export * from './ChatsIcon';
 export * from './CloseBtn';
-export * from './DefaultAvatarIcon';
 export * from './MoreBtnIcon';
 export * from './RoomsIcon';
 export * from './SendIcon';

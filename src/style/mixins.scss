@@ -1,5 +1,4 @@
 @import './theme.scss';
-@import './variables.scss';
 
 @mixin themeify {
   @each $theme-name, $theme-map in $themes {
@@ -19,18 +18,4 @@
 // 声明一个根据Key获取颜色的函数
 @function themed($key) {
   @return map-get($theme-map, $key);
-}
-
-
-//@mixin variables {
-//  @each $theme-name, $theme-map in $radius {
-//    $theme-map: $theme-map !global;
-//    body[data-theme='#{$theme-name}'] & {
-//      @content;
-//    }
-//  }
-//}
-
-@function getDefaultValue($key) {
-  @return map-get($variables, $key)
 }

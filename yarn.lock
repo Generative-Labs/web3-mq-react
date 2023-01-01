@@ -1240,7 +1240,7 @@
 
 "@noble/ed25519@^1.6.1":
   version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@noble/ed25519/-/ed25519-1.7.1.tgz#6899660f6fbb97798a6fbd227227c4589a454724"
+  resolved "https://registry.npmjs.org/@noble/ed25519/-/ed25519-1.7.1.tgz"
   integrity sha512-Rk4SkJFaXZiznFyC/t77Q0NKS4FL7TLJJsVG2V2oiEq3kJVeTdxysEe/yRWSpnWMe808XRDJ+VFh5pt/FN5plw==
 
 "@nodelib/fs.scandir@2.1.5":
@@ -1282,7 +1282,7 @@
 
 "@protobuf-ts/plugin-framework@^2.8.2":
   version "2.8.2"
-  resolved "https://registry.yarnpkg.com/@protobuf-ts/plugin-framework/-/plugin-framework-2.8.2.tgz#8699938576f68d01a9a937aa383db8fdcef6f64d"
+  resolved "https://registry.npmjs.org/@protobuf-ts/plugin-framework/-/plugin-framework-2.8.2.tgz"
   integrity sha512-ivcJdNVB3Iee8044f8erZGBgmB6ZfQbbKyxRgDBXRVKYxsruLr432WcT5upw9autK9OnlSVLaebi8kDneFXd2g==
   dependencies:
     "@protobuf-ts/runtime" "^2.8.2"
@@ -1290,7 +1290,7 @@
 
 "@protobuf-ts/plugin@^2.7.0":
   version "2.8.2"
-  resolved "https://registry.yarnpkg.com/@protobuf-ts/plugin/-/plugin-2.8.2.tgz#f65f4362721e6a3bb3ce04f6d9760901e576eaa7"
+  resolved "https://registry.npmjs.org/@protobuf-ts/plugin/-/plugin-2.8.2.tgz"
   integrity sha512-rTPxaeKBfUar8ubKxbVdv4XL6AcGA0OOgHNHFyrfODP7Epy80omwuvgFJex1YpeNFJxm/FZXXj5Z+nHuhYEqJg==
   dependencies:
     "@protobuf-ts/plugin-framework" "^2.8.2"
@@ -1301,19 +1301,19 @@
 
 "@protobuf-ts/protoc@^2.8.2":
   version "2.8.2"
-  resolved "https://registry.yarnpkg.com/@protobuf-ts/protoc/-/protoc-2.8.2.tgz#45809eda3037caff300b9061262444ae7ad891ec"
+  resolved "https://registry.npmjs.org/@protobuf-ts/protoc/-/protoc-2.8.2.tgz"
   integrity sha512-1e+rOgp22ElyqRWunSc8bhatJcvRe90AGPceVn67IFYzybvfKl17vP1igHddeYkN0dzOucnOrwqn2v1jnDfE2w==
 
 "@protobuf-ts/runtime-rpc@^2.8.2":
   version "2.8.2"
-  resolved "https://registry.yarnpkg.com/@protobuf-ts/runtime-rpc/-/runtime-rpc-2.8.2.tgz#8af6d5eab44e2fc92cfe9a83a5c351b5f2fcdfbe"
+  resolved "https://registry.npmjs.org/@protobuf-ts/runtime-rpc/-/runtime-rpc-2.8.2.tgz"
   integrity sha512-vum/Y7AXdUTWGFu7dke/jCSB9dV3Oo3iVPcce3j7KudpzzWarDkEGvXjKv3Y8zJPj5waToyxwBNSb7eo5Vw5WA==
   dependencies:
     "@protobuf-ts/runtime" "^2.8.2"
 
 "@protobuf-ts/runtime@^2.8.2":
   version "2.8.2"
-  resolved "https://registry.yarnpkg.com/@protobuf-ts/runtime/-/runtime-2.8.2.tgz#5d5424a6ae7fb846c3f4d0f2dd6448db65bb69d6"
+  resolved "https://registry.npmjs.org/@protobuf-ts/runtime/-/runtime-2.8.2.tgz"
   integrity sha512-PVxsH81y9kEbHldxxG/8Y3z2mTXWQytRl8zNS0mTPUjkEC+8GUX6gj6LsA8EFp25fAs9V0ruh+aNWmPccEI9MA==
 
 "@rollup/plugin-alias@^3.1.9":
@@ -1679,7 +1679,7 @@ aws4@^1.8.0:
 
 axios@^0.27.2:
   version "0.27.2"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
+  resolved "https://registry.npmjs.org/axios/-/axios-0.27.2.tgz"
   integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
   dependencies:
     follow-redirects "^1.14.9"
@@ -2677,7 +2677,7 @@ flatted@^3.1.0:
 
 follow-redirects@^1.14.9:
   version "1.15.2"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
+  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.2.tgz"
   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
 
 forever-agent@~0.6.1:
@@ -2687,7 +2687,7 @@ forever-agent@~0.6.1:
 
 form-data@^4.0.0:
   version "4.0.0"
-  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
+  resolved "https://registry.npmjs.org/form-data/-/form-data-4.0.0.tgz"
   integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
   dependencies:
     asynckit "^0.4.0"
@@ -3065,7 +3065,7 @@ icss-utils@^5.0.0:
 
 idb@^7.1.1:
   version "7.1.1"
-  resolved "https://registry.yarnpkg.com/idb/-/idb-7.1.1.tgz#d910ded866d32c7ced9befc5bfdf36f572ced72b"
+  resolved "https://registry.npmjs.org/idb/-/idb-7.1.1.tgz"
   integrity sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==
 
 ignore@^4.0.6:
@@ -3258,7 +3258,7 @@ js-base64@^2.4.3:
 
 js-sha3@^0.8.0:
   version "0.8.0"
-  resolved "https://registry.yarnpkg.com/js-sha3/-/js-sha3-0.8.0.tgz#b9b7a5da73afad7dedd0f8c463954cbde6818840"
+  resolved "https://registry.npmjs.org/js-sha3/-/js-sha3-0.8.0.tgz"
   integrity sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
@@ -5296,7 +5296,7 @@ typescript@4.5.5:
 
 typescript@^3.9:
   version "3.9.10"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
+  resolved "https://registry.npmjs.org/typescript/-/typescript-3.9.10.tgz"
   integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
 unicode-canonical-property-names-ecmascript@^2.0.0:
@@ -5405,7 +5405,7 @@ verror@1.10.0:
 
 web3-mq@^1.2.51:
   version "1.2.51"
-  resolved "https://registry.yarnpkg.com/web3-mq/-/web3-mq-1.2.51.tgz#714818b2de941f80c9c3c7197b2b9b991d74baa7"
+  resolved "https://registry.npmjs.org/web3-mq/-/web3-mq-1.2.51.tgz"
   integrity sha512-2/OwUoyTP1zIiUk5v/WCfhsTqMCeUvxFtAvqtOaAeItNAhzg04YpbDIYPJOfTYCTv3x3A6UmrEwNZHkc+dWi9Q==
   dependencies:
     "@noble/ed25519" "^1.6.1"
