@@ -98,7 +98,7 @@ const UnMemoizedAddPeople: React.FC = () => {
         visible={visible}
         closeModal={resetStatus}
         containerId={containerId}
-        rightBtn={
+        leftBtn={
           loading ? (
             <Loading />
           ) : (

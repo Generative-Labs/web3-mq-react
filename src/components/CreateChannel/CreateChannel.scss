@@ -21,7 +21,7 @@
   min-width: 420px;
   width: 420px;
   height: 480px;
-  font-family: 'Inter';
+  font-family: 'Inter', sans-serif;
   overflow: hidden;
   &.mobileStyle {
     width: 100%;
@@ -48,17 +48,27 @@
       font-weight: themed(Medium_font-weight);
     }
   }
-  .closeBtn, .backBtn {
-    display: flex;
-    flex: 1;
-    justify-content: center;
-    align-items: center;
-    width: 20px;
-    height: 20px;
+  .backBtn {
+    position: absolute;
+    left: 30px;
     cursor: pointer;
+    font-size: 16px;
+    height: 16px;
     @include themeify {
-      font-size: themed(Headline_font-size);
-      color: themed(Gray_400);
+      &:hover {
+        color: themed(Gray_500);
+      }
+    }
+  }
+
+
+  .closeBtn {
+    position: absolute;
+    right: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    height: 16px;
+    @include themeify {
       &:hover {
         color: themed(Gray_500);
       }
@@ -69,7 +79,7 @@
 .createChannelContainer {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 50px);
+  height: calc(100% - 65px);
   overflow-y: hidden;
 }
 
@@ -87,6 +97,7 @@
 .opreraBar {
   display: flex;
   padding: 16px 16px;
+  font-family: "Inter", sans-serif;
   &.hide {
     display: none;
   }
@@ -170,7 +181,7 @@
   display: flex;
   flex-direction: column;
   height: calc(100% - 124px);
-  font-family: 'Inter';
+  font-family: 'Inter', sans-serif;
   letter-spacing: 0em;
   text-align: left;
   &.hide {

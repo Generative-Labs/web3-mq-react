@@ -78,16 +78,6 @@ export const Notify = () => {
     hide();
   }, [via, topics, value]);
 
-  const ModalHead = useCallback(
-    () => (
-      <div className={ss.modalHead}>
-        <div className={ss.title}>Bulk messaging</div>
-        <CloseBtnIcon onClick={hide} className={ss.closeBtn} />
-      </div>
-    ),
-    [],
-  );
-
   return (
     <div className={ss.notifyContainer}>
       <div className={ss.modalBtn} onClick={show}>
@@ -97,7 +87,7 @@ export const Notify = () => {
           <div>messaging</div>
         </div>
       </div>
-      <Modal appType={appType} containerId={containerId} visible={visible} closeModal={hide} modalHeader={<ModalHead />} >
+      <Modal appType={appType} containerId={containerId} visible={visible} closeModal={hide} title={'Bulk messaging'} >
         <div className={ss.modalBody}>
           <div className={ss.title}>
             Sending a message to multiple contacts or group chats at the same time

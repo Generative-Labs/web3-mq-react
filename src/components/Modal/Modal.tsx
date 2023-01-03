@@ -17,7 +17,7 @@ interface IProps {
   className?: string;
   dialogClassName?: string;
   title?: string;
-  rightBtn?: React.ReactNode;
+  leftBtn?: React.ReactNode;
 }
 
 export const Modal = React.memo((props: PropsWithChildren<IProps>) => {
@@ -27,7 +27,7 @@ export const Modal = React.memo((props: PropsWithChildren<IProps>) => {
     closeModal,
     containerId = '',
     modalHeader,
-    rightBtn = null,
+    leftBtn = null,
     children,
     style = {},
     className = '',
@@ -94,9 +94,9 @@ export const Modal = React.memo((props: PropsWithChildren<IProps>) => {
       >
         {modalHeader || (
           <div className={ss.titleContainer}>
-            <CloseBtnIcon onClick={closeModal} className={ss.closeBtn} />
+            <div className={ss.leftBtn}>{leftBtn}</div>
             <div className={ss.title}>{title}</div>
-            <div className={ss.rightBtn}>{rightBtn}</div>
+            <CloseBtnIcon onClick={closeModal} className={ss.closeBtn} />
           </div>
         )}
         {children}

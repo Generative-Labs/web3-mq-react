@@ -45,16 +45,6 @@ export const NotificationList = () => {
     return chcheObj;
   }, []);
 
-  const ModalHead = useCallback(
-    () => (
-      <div className={ss.modalHead}>
-        <div className={ss.title}>Notification</div>
-        <CloseBtnIcon onClick={hide} className={ss.closeBtn} />
-      </div>
-    ),
-    [],
-  );
-
   const OpreateBtns = useCallback((props: { notification: any }) => {
     const { type, content } = props.notification;
     const userid = content.split(' ')[0];
@@ -119,7 +109,7 @@ export const NotificationList = () => {
         containerId={containerId}
         visible={visible}
         closeModal={hide}
-        modalHeader={<ModalHead />}
+        title={'Notification'}
       >
         <div className={ss.modalBody} ref={listRef}>
           <ul className={ss.chatUl}>{NotificationPreview}</ul>
