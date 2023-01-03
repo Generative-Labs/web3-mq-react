@@ -1,0 +1,111 @@
+.mq-btn {
+  position: relative;
+  display: inline-block;
+  height: 33px;
+  line-height: 1.42857143;
+  padding: 6px 16px;
+  font-family: 'Inter';
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
+  > span {
+    display: inline-block;
+  }
+  > span:nth-of-type(2) {
+    margin-left: 8px;
+  }
+}
+.mq-btn-icon {
+  vertical-align: sub;
+}
+
+// type default
+.mq-btn-default {
+  border: 1px solid #E4E4E7;
+  background-color: #FFFFFF;
+  color: #18181B;
+  &:hover {
+    background-color: #F4F4F5;
+  }
+  &:disabled {
+    background-color: #F4F4F5;
+    color: #A1A1AA;
+  }
+}
+
+// type primary
+.mq-btn-primary {
+  background-color: #615EF0;
+  color: #FFFFFF;
+  &:hover {
+    background-color: #3D3ABB;
+  }
+  &:disabled {
+    color: #8885FD;
+    background-color: #F4F4FE;
+  }
+}
+
+// type ghost
+.mq-btn-ghost {
+  border: 1px solid #D2D1F9;
+  background-color: #FFFFFF;
+  color: #615EF0;
+  &:hover {
+    border: 1px solid #615EF0;
+    background-color: #F4F4FE;
+  }
+  &:disabled {
+    color: #8885FD;
+    background-color: #F4F4FE;
+  }
+}
+
+// type danger
+.mq-btn-danger {
+  color: #FFFFFF;
+  background-color: #EF4343;
+  &:hover {
+    background-color: #BA1C1C;
+  }
+  &:disabled {
+    color: #FD6B6B;
+    background-color: #FEF1F1;
+  }
+}
+
+// disabled
+.mq-btn-default:disabled,
+.mq-btn-primary:disabled,
+.mq-btn-ghost:disabled,
+.mq-btn-danger:disabled {
+  cursor: not-allowed;
+  border: none;
+  > * {
+    pointer-events: none;
+  }
+}
+
+// size small
+.mq-btn-sm {
+  height: 28px;
+  padding: 3px 8px;
+}
+// size large
+.mq-btn-lg {
+  font-size: 16px;
+  height: 42px;
+  padding: 10px 20px;
+  line-height: 1.25;
+  border-radius: 8px;
+}
+
+.mq-btn-block {
+  width: 100%;
+}
