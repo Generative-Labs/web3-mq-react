@@ -1,14 +1,18 @@
+@import "../../../style/index.scss";
+
 .emptyContainer {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
-  font-family: 'Inter';
-  font-size: 14px;
-  font-weight: 400;
   line-height: 20px;
+  font-family: 'Inter';
   letter-spacing: 0em;
   text-align: center;
-  color: #71717A;
+  @include themeify {
+    font-size: themed(Body_font-size);
+    font-weight: themed(Regular_font-weight);
+    color: themed(Gray_500);
+  }
 }

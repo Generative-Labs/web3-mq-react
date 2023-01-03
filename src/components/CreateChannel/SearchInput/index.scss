@@ -1,32 +1,38 @@
+@import "../../../style/index.scss";
+
 .searchInput {
   display: flex;
-  background: #F4F4F5;
   padding: 10px 16px;
   border-radius: 8px;
-  border: 1px solid #F4F4F5;
   transition: all .1s;
-
-  &.searchInputFoucs {
-    background-color:rgba(255, 255, 255, 1);
-    border: 2px solid #8885FD;
+  @include themeify {
+    background: themed(Gray_100);
+    border: 1px solid themed(Gray_100);
     > input {
-      background-color:rgba(255, 255, 255, 1);
+      font-size: themed(Headline_font-size);
+      font-weight: themed(Regular_font-weight);
+      background-color: themed(Gray_100);
     }
   }
-
   > input {
     width: 100%;
     margin-left: 16px;
     padding: 0;
     outline: none;
-    background-color: #F4F4F5;
     border: none;
-    font-size: 16px;
-    font-weight: 400;
     line-height: 20px;
     letter-spacing: 0em;
     text-align: left;
     transition: all .1s;
+  }
+}
+.searchInputFoucs {
+  @include themeify {
+    background-color: themed(White_color);
+    border: 2px solid themed(Violet_400);
+    > input {
+      background-color:themed(White_color);
+    }
   }
 }
 .searchIcon, .cleanBtn {
@@ -37,15 +43,19 @@
   height: 20px;
 }
 .searchIcon {
-  color: #A1A1AA;
+  @include themeify {
+    color: themed(Gray_400);
+  }
 }
 .cleanBtn {
   cursor: pointer;
-  color: #D4D4D8;
-  &:hover {
-    color: #A1A1AA;
-  }
   &.hide {
     display: none;
+  }
+  @include themeify {
+    color: themed(Gray_300);
+    &:hover {
+      color: themed(Gray_400);
+    }
   }
 }

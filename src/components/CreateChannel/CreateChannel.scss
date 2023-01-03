@@ -40,11 +40,13 @@
 
   .title {
     width: 100%;
-    font-size: 18px;
-    font-weight: 500;
     line-height: 22px;
     letter-spacing: 0em;
     text-align: center;
+    @include themeify {
+      font-size: themed(title3_font-size);
+      font-weight: themed(Medium_font-weight);
+    }
   }
   .closeBtn, .backBtn {
     display: flex;
@@ -53,11 +55,13 @@
     align-items: center;
     width: 20px;
     height: 20px;
-    font-size: 16px;
-    color: #A1A1AA;
     cursor: pointer;
-    &:hover {
-      color: #71717A;
+    @include themeify {
+      font-size: themed(Headline_font-size);
+      color: themed(Gray_400);
+      &:hover {
+        color: themed(Gray_500);
+      }
     }
   }
 }
@@ -73,6 +77,13 @@
   display: none;
 }
 
+.mainContainer {
+  position: relative;
+  margin-top: 16px;
+  height: 100%;
+  overflow-y: scroll;
+}
+
 .opreraBar {
   display: flex;
   padding: 16px 16px;
@@ -85,7 +96,10 @@
   .addFriends, .createRoom {
     width: 20px;
     height: 20px;
-    font-size: 6.666666666px;
+    @include themeify {
+      $font-size: themed(Headline_font-size) or 16px;
+      font-size: $font-size/2.4;
+    }
   }
 }
 
@@ -97,11 +111,13 @@
     height: 20px;
     padding: 0px 16px;
     margin-bottom: 8px;
-    color: #3F3F46;
     font-style: normal;
-    font-weight: 400;
-    font-size: 14px;
     line-height: 20px;
+    @include themeify {
+      color: themed(Gray_700);
+      font-weight: themed(Regular_font-weight);
+      font-size: themed(Body_font-size);
+    }
   }
 }
 
@@ -115,12 +131,14 @@
   display: flex;
   padding: 8px 16px;
   margin-bottom: 4px;
-  color: #18181B;
-  font-size: 14px;
-  font-weight: 500;
   cursor: pointer;
-  &:hover {
-    background-color: #F4F4F5;
+  @include themeify {
+    color: themed(Gray_900);
+    font-size: themed(Body_font-size);
+    font-weight: themed(Medium_font-weight);
+    &:hover {
+      background-color: themed(Gray_100);
+    }
   }
 }
 
@@ -134,9 +152,11 @@
 
 .searchFollowerItem {
   .followStatus {
-    font-size: 10px;
-    font-weight: 400;
-    color: #A1A1AA;
+    @include themeify {
+      font-size: themed(Caption2_font-size);
+      font-weight: themed(Regular_font-weight);
+      color: themed(Gray_400);
+    }
   }
   .searchFollowersBtn {
     display: flex;
@@ -151,13 +171,15 @@
   flex-direction: column;
   height: calc(100% - 124px);
   font-family: 'Inter';
-  font-size: 14px;
-  font-weight: 400;
   letter-spacing: 0em;
   text-align: left;
-  border-bottom: 1px solid #F4F4F5;
   &.hide {
     display: none;
+  }
+  @include themeify {
+    font-size: themed(Body_font-size);
+    font-weight: themed(Regular_font-weight);
+    border-bottom: 1px solid themed(Gray_100);
   }
 }
 .btnContaner {
@@ -170,15 +192,17 @@
 .commonInput, .commonTextarea {
   box-sizing: border-box;
   width: 100%;
-  font-size: 16px;
   text-align: left;
   line-height: 20px;
   padding: 10px 16px;
   outline: none;
-  border: 1px solid #E4E4E7;
   border-radius: 8px;
-  &:focus {
-    border: 2px solid #8885FD;
+  @include themeify {
+    font-size: themed(Headline_font-size);
+    border: 1px solid themed(Gray_200);
+    &:focus {
+      border: 2px solid themed(Violet_400);
+    }
   }
 }
 .commonTextarea {
@@ -188,7 +212,9 @@
 .addFriendContainer {
   padding: 0 16px;
   > .label {
-    color: #18181B;
+    @include themeify {
+      color: themed(Gray_900);
+    }
     margin-bottom: 8px;
   }
   .label:nth-child(4) {
@@ -200,14 +226,16 @@
     line-height: 16px;
     padding: 12px;
     margin-top: 8px;
-    border: 1px solid #FEE1E1;
     border-radius: 12px;
-    background-color: #FEF1F1;
-    color: #EF4343;
-    font-size: 12px;
-    font-weight: 500;
     &.hide {
       display: none;
+    }
+    @include themeify {
+      font-size: themed(Caption1_font-size);
+      font-weight: themed(Medium_font-weight);
+      color: themed(Red_500);
+      border: 1px solid themed(Red_100);
+      background-color: themed(Red_50);
     }
   }
   .warnIcon {
@@ -215,57 +243,67 @@
     align-items: center;
     width: 16px;
     height: 16px;
-    font-size: 4px;
+    @include themeify {
+      $font-size: themed(Headline_font-size) or 16px;
+      font-size: $font-size/4;
+    }
   }
 }
 
 .selectContactsContainer {
-  font-weight: 600;
-
-  .inputContainer {
-    box-sizing: border-box;
-    display: flex;
-    margin: 0 16px;
-    padding: 4px 10px;
+  @include themeify {
+    font-weight: themed(Bold_font-weight);
+  }
+}
+.inputContainer {
+  box-sizing: border-box;
+  display: flex;
+  margin: 0 16px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  cursor: text;
+  @include themeify {
     border: 2px solid #8885FD;
-    border-radius: 8px;
-    cursor: text;
+  }
+}
+.contactSelector {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  .selectedBox {
+    height: 23px;
+    line-height: 20px;
+    padding: 1px 6px 2px 6px;
+    margin: 4px 8px 4px 0px;
+    border-radius: 4px;
+    cursor: default;
+    @include themeify {
+      color: themed(White_color);
+      background: themed(Violet_500);
+    }
+  }
 
-    .contactSelector {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-start;
-      width: 100%;
-      .selectedBox {
-        height: 23px;
-        line-height: 20px;
-        padding: 1px 6px 2px 6px;
-        margin: 4px 8px 4px 0px;
-        color: #FFFFFF;
-        background: #615EF0;
-        border-radius: 4px;
-        cursor: default;
-      }
-
-      .inputElement {
-        min-width: 4px;
-        width: 100%;
-        overflow: auto;
-        font-size: 16px;
-        background: none;
-        border: none;
-        outline: none;
-        flex: none;
-        align-self: center;
-        margin: 0;
-        padding: 0;
-        appearance: none;
-      }
+  .inputElement {
+    min-width: 4px;
+    width: 100%;
+    overflow: auto;
+    background: none;
+    border: none;
+    outline: none;
+    flex: none;
+    align-self: center;
+    margin: 0;
+    padding: 0;
+    appearance: none;
+    @include themeify {
+      font-size: themed(Headline_font-size);
     }
   }
 }
+
 .searchContactItem {
   input[type=checkbox] {
     appearance: none;
@@ -274,13 +312,10 @@
     align-self: center;
     margin: 0;
     margin-right: 12px;
-    border: 1.875px solid #D4D4D8;
     border-radius: 6px;
     cursor: pointer;
     &:checked {
       position: relative;
-      background-color: #615EF0;
-      border: none;
       border-radius: 6px;
       &::after {
         box-sizing: border-box;
@@ -290,12 +325,21 @@
         display: table;
         width: 7.14282142px;
         height: 11.285714px;
-        border: 2px solid #fff;
-        border-top: 0;
-        border-inline-start: 0;
         transform: rotate(45deg) translate(-50%,-50%);
         content: "";
       } 
+    }
+    @include themeify {
+      border: 1.875px solid themed(Gray_300);
+      &:checked {
+        border: none;
+        background-color: themed(Violet_500);
+        &::after {
+          border: 2px solid themed(White_color);
+          border-top: 0;
+          border-inline-start: 0;
+        }
+      }
     }
   }
 }
@@ -304,7 +348,6 @@
   .operationContainer {
     display: flex;
     align-items: center;
-    background: #F4F4FE;
     border-radius: 22px;
     padding: 12px;
     margin: 0px 16px 16px 16px;
@@ -322,7 +365,6 @@
     .fileBox {
       margin-right: 12px;
       padding: 14px;
-      background: #8885FD;
       &.nopadding {
         padding: 0;
       }
@@ -333,14 +375,16 @@
         color: #FDFDFD;
       }
     }
+    @include themeify {
+      background: themed(Violet_50);
+      .fileBox {
+        background: themed(Violet_400);
+        .cameraIcon {
+          color: themed(Gray_50);
+        }
+      }
+    }
   }
-}
-
-.mainContainer {
-  position: relative;
-  margin-top: 16px;
-  height: 100%;
-  overflow-y: scroll;
 }
 
 
