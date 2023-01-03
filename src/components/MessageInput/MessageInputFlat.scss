@@ -1,14 +1,19 @@
+@import "../../style/index.scss";
+
 .messageInputFlatContainer {
   box-shadow: 0px -12px 10px rgba(30, 83, 133, 0.03);
   padding: 13px 30px;
+
   &.mobileStyle {
     padding: 13px 15px;
   }
 }
+
 .inputContainer {
   display: flex;
   align-items: center;
 }
+
 .messageIcon {
   cursor: pointer;
   background-image: url('../assets/searchMessage.svg');
@@ -18,11 +23,15 @@
   height: 25px;
   margin-right: 10px;
 }
+
 .opreat {
   display: none;
   min-height: 100px;
-  background-color: #fafafa;
+  @include themeify {
+    background-color: themed(Gray_100);
+  }
 }
+
 .showOperat {
   display: block;
 }

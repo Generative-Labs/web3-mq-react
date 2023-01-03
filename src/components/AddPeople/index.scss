@@ -1,54 +1,69 @@
+@import "../../style/index.scss";
+
 .icon {
   cursor: pointer;
-  margin-left: 15px;
+  margin-left: 24px;
   display: flex;
   align-items: center;
-  span {
-    margin-left: 5px;
+
+  div:first-child {
+    margin-right: 8px;
   }
 }
+
 .inviteBtn {
-  color: #5a67e2;
-  font-size: 18px;
-  &:hover {
-    color: #949bde;
+  @include themeify {
+    color: themed(Violet_500);
+    font-size: themed(title3_font-size);
+    &:hover {
+      color: themed(Violet_600);
+    }
   }
 }
+
 .selectMain {
   display: flex;
   padding: 16px;
   align-items: center;
   box-shadow: 0 7px 9px rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.03);
 }
+
 .label {
   width: 50px;
 }
+
 .selectWarp {
   flex: 1;
   flex-wrap: wrap;
   display: flex;
+
   .input {
     margin: 2px;
     flex: 1;
     outline: none;
     border: none;
     min-height: 28px;
-    font-size: 17px;
-    color: rgba(0, 0, 0, 0.9);
+    @include themeify {
+      font-size: themed(Headline_font-size);
+      color: themed(Gray_900);
+    }
   }
 }
+
 .selectItem {
   cursor: pointer;
   padding: 5px 10px;
-  margin: 2px;
-  font-size: 17px;
-  color: rgba(0, 0, 0, 0.9);
   border-radius: 15px;
   display: flex;
   align-items: center;
-  background: #f1f1f1;
   opacity: 0.9;
-  margin-right: 5px;
+  margin: 2px 5px 2px 2px;
+  @include themeify {
+    font-size: themed(Headline_font-size);
+    color: themed(Gray_900);
+    background: themed(Gray_200);
+  }
+
   .name {
     margin-right: 5px;
     max-width: 150px;
@@ -57,28 +72,37 @@
     text-overflow: ellipsis;
   }
 }
+
 .listContainer {
   padding: 16px;
 }
+
 .listTitle {
   margin: 5px 0 15px;
   font-weight: 700;
-  font-size: 16px;
-  color: #000;
+  @include themeify {
+    font-size: themed(Headline_font-size);
+    color: themed(Primary_color);
+  }
 }
+
 .listWarp {
   overflow-y: scroll;
   max-height: 420px;
 }
+
 .listItem {
   cursor: pointer;
   min-height: 48px;
   display: flex;
   align-items: center;
+
   .name {
     margin-left: 10px;
     font-weight: 500;
-    font-size: 14px;
-    color: #000;
+    @include themeify {
+      font-size: themed(Body_font-size);
+      color: themed(Primary_color);
+    }
   }
 }

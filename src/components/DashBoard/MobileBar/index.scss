@@ -1,8 +1,12 @@
+@import "../../../style/index.scss";
+
 .MobileContainer {
   width: 100%;
-  background-color: #fff;
   display: flex;
   flex-direction: row;
+  @include themeify {
+    background-color: themed(White_color);
+  }
 }
 
 .tabItem {
@@ -14,22 +18,28 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #242424;
+  @include themeify {
+    color: themed(Gray_900);
+    &:hover {
+      background-color: themed(Gray_100);
+      color: themed(Violet_500);
+    }
+    &.selected {
+      background-color: themed(Gray_100);
+      color: themed(Violet_500);
+    }
+  }
 
-  &:hover {
-    background-color: #fafafa;
-    color: #605DEC;
-  }
-  &.selected {
-    color: #605DEC;
-    background-color: #fafafa;
-  }
 }
+
 .icon {
   width: 24px;
   height: 30px;
   background-size: cover;
 }
+
 .title {
-  font-size: 12px;
+  @include themeify {
+    font-size: themed(Caption1_font-size);
+  }
 }

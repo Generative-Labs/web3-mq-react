@@ -1,3 +1,5 @@
+@import "../../../style/index.scss";
+
 .textContainer {
   &:hover {
     .thread,
@@ -11,6 +13,7 @@
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+
   .thread,
   .reply {
     cursor: pointer;
@@ -18,11 +21,15 @@
     margin-left: 15px;
   }
 }
+
 .text {
+  @include themeify {
+    font-size: themed(Body_font-size);
+    font-weight: themed(Regular_font-weight);
+    color: themed(Gray_900);
+    background-color: themed(White_color);
+  }
   line-height: 23px;
-  font-size: 14px;
-  color: #424242;
-  background: #fff;
   margin-left: 0;
   word-break: break-all;
 }
@@ -30,34 +37,46 @@
 .extraBox {
   display: flex;
   align-items: center;
-  font-size: 12px;
+  @include themeify {
+    font-size: themed(Caption1_font-size);
+  }
   margin: 8px 0;
 
   .extraFlag {
-    color: #ccc;
-    font-weight: 100;
+    @include themeify {
+      color: themed(Gray_400);
+      font-weight: themed(Regular_font-weight);
+      font-size: themed(title3_font-size);
+    }
     transform: rotateY(180deg);
     margin-right: 5px;
-    font-size: 18px;
   }
+
   .extraMain {
     display: flex;
     flex-direction: column;
-	align-items: flex-start;
+    align-items: flex-start;
+
     .threadMessage {
-      color: #006cff;
+      @include themeify {
+        color: themed(Violet_500);
+        font-weight: themed(Bold_font-weight);
+      }
       cursor: pointer;
-      font-weight: 700;
     }
+
     .replyMessage {
       display: inline-block;
-      background: #ccc;
+      @include themeify {
+        background: themed(Gray_400);
+        color: themed(Gray_900);
+        font-size: themed(Caption2_font-size);
+      }
       padding: 4px;
-      font-size: 10px;
       border-radius: 4px;
-      color: #20222c;
-	  word-break: break-all;
+      word-break: break-all;
     }
+
     .loading > div {
       width: 20px;
       height: 20px;

@@ -1,12 +1,15 @@
+@import "../../style/index.scss";
 .avatarContainer {
   flex-shrink: 0;
-  color: #fff;
-  margin-right: 10px;
+  margin-right: 8px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   text-transform: uppercase;
+  @include themeify{
+    color: themed(White_color);
+  }
 }
 .circle {
   border-radius: 50%;
@@ -18,7 +21,11 @@
   border-radius: 0;
 }
 .avatarFallback {
-  background-color: #006cff;
+
+  @include themeify{
+    background-color: themed(Violet_500);
+  }
+
 }
 .imgLoaded {
   background-color: none;

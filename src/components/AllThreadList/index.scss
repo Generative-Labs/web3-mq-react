@@ -1,3 +1,5 @@
+@import "../../style/index.scss";
+
 .mask {
   position: fixed;
   right: 0;
@@ -5,43 +7,60 @@
   display: flex;
   flex-direction: row-reverse;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
+  @include themeify {
+    background-color: themed(Gray_600);
+  }
 }
+
 .allThreadListContainer {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  border-left: 1px solid #f1f1f1;
   border-radius: 0px 10px 0 0;
-  background: #ffffff;
   min-width: 400px;
   max-width: 400px;
+  @include themeify {
+    border-left: 1px solid themed(Gray_100);
+    background: themed(White_color);
+  }
 }
+
 .mobileStyle {
   min-width: 100%;
   border: none;
 }
+
 .warp {
   height: 100%;
   overflow-y: scroll;
 }
+
 .listItem {
   padding: 15px 40px;
   display: flex;
   align-items: center;
-  color: #252423;
+
   cursor: pointer;
-  &:hover {
-    background-color: rgb(244, 244, 244);
+  @include themeify {
+    color: themed(Gray_900);
+    &:hover {
+      background-color: themed(Gray_200);
+    }
   }
+
+
   .symbol {
     font-size: 22px;
     font-weight: bold;
-    color: #7d7d7d;
+    @include themeify {
+      color: themed(Gray_500);
+    }
   }
+
   .avatar {
     margin: 0 20px 0 10px;
   }
+
   .text {
     font-weight: 700;
     font-size: 14px;

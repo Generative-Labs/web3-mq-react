@@ -56,7 +56,7 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
         {chat_type === 'group' && <AddPeople />}
         <div className={ss.icon} onClick={handleOpenAllThread}>
           <ThreadIcon />
-          {appType === AppTypeEnum['pc'] && <span>All Thread</span>}
+          {appType === AppTypeEnum['pc'] && <div>All Thread</div>}
         </div>
       </div>
     </div>

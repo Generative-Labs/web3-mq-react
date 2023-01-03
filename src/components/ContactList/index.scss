@@ -1,5 +1,10 @@
+@import "../../style/index.scss";
 .channelListMessengerContainer {
   min-width: 300px;
   height: 100%;
   overflow-y: auto;
+  @include themeify{
+    background-color: themed(White_color);
+    border-right: 1px solid themed(Gray_100);
+  }
 }

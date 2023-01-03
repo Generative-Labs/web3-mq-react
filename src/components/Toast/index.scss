@@ -1,3 +1,4 @@
+@import "../../style/index.scss";
 @keyframes zoomIn {
   from {
     opacity: 0;
@@ -36,9 +37,7 @@
   padding: 10px 16px;
   background: #fff;
   border-radius: 8px;
-  border: 1px solid #f2f2f2;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1), 0 3px 3px rgba(0, 0, 0, 0.05);
-  color: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   font-size: 14px;
@@ -49,6 +48,10 @@
   animation-name: zoomIn;
   animation-duration: 0.3s;
   font-weight:600;
+  @include themeify{
+    border: 1px solid themed(Gray_100);
+    color: themed(Gray_900);
+  }
 
   .icon{
 	font-size:16px;

@@ -5,9 +5,10 @@ import { dateFormat } from '../../utils';
 import { useChatContext } from '../../context/ChatContext';
 import { usePaginatedNotifications } from './hooks/usePaginatedNotifications';
 import useToggle from '../../hooks/useToggle';
-import { NotifyIcon, CloseBtnIcon } from '../../icons';
+import { CloseBtnIcon, NotifyIcon } from '../../icons';
 import { Avatar } from '../Avatar';
 import { Modal } from '../Modal';
+import { Button, ButtonType } from '../Button';
 
 import ss from './index.scss';
 
@@ -60,22 +61,24 @@ export const NotificationList = () => {
     if (type === 'system.friend_request') {
       return (
         <div className={ss.opreateBtnsContainer}>
-          <button
+          <Button
+            btnType={ButtonType.primary}
             className={cx(ss.btnItem, ss.agree)}
             onClick={() => {
               handleFirendRequest(userid, 'agree');
             }}
           >
             Agree
-          </button>
-          <button
+          </Button>
+          <Button
+            btnType={ButtonType.danger}
             className={cx(ss.btnItem, ss.refused)}
             onClick={() => {
               handleFirendRequest(userid, 'reject');
             }}
           >
             Refused
-          </button>
+          </Button>
         </div>
       );
     }
@@ -88,11 +91,11 @@ export const NotificationList = () => {
     return notifications.map((notification, index) => {
       return (
         <li key={index} className={ss.notificationSimpleContainer}>
-          <Avatar />
+          <Avatar size={40} />
           <div className={ss.notification}>
             <div className={ss.dataInner}>
-              <div>{notification.title}</div>
-              <div>{dateFormat(notification.timestamp, 'Y/M/D H:I:S')}</div>
+              <div className={ss.title}>{notification.title}</div>
+              <div className={ss.date}>{dateFormat(notification.timestamp, 'Y/M/D H:I:S')}</div>
             </div>
             <div className={ss.textContainer}>{notification.content}</div>
             <OpreateBtns notification={notification} />
@@ -111,7 +114,13 @@ export const NotificationList = () => {
     <div className={ss.receiveNotificationContainer}>
       <NotifyIcon className={ss.iconBtn} onClick={handleModalShow} />
       {unReadCount && <div className={ss.iconCount}>{unReadCount <= 99 ? unReadCount : '99+'}</div>}
-      <Modal appType={appType} containerId={containerId} visible={visible} closeModal={hide} modalHeader={<ModalHead />}>
+      <Modal
+        appType={appType}
+        containerId={containerId}
+        visible={visible}
+        closeModal={hide}
+        modalHeader={<ModalHead />}
+      >
         <div className={ss.modalBody} ref={listRef}>
           <ul className={ss.chatUl}>{NotificationPreview}</ul>
         </div>

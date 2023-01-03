@@ -5,9 +5,9 @@ import { useInput } from '../../hooks/useInput';
 import { useChatContext } from '../../context/ChatContext';
 import { BulkMessageIcon, CloseBtnIcon } from '../../icons';
 import { Modal } from '../Modal';
-import { SelectUser } from './SelectUser';
 import { SelectTopic } from './SelectTopic';
-import { RadioGroup, IValueType } from '../RadioGroup';
+import { Button, ButtonSize, ButtonType } from '../Button';
+import { IValueType, RadioGroup } from '../RadioGroup';
 
 import ss from './index.scss';
 
@@ -110,9 +110,9 @@ export const Notify = () => {
           <textarea placeholder="Write something..." {...input} />
           <div className={ss.label}>Send via</div>
           <RadioGroup className={ss.radioGroup} value={radioGroup} onChange={handleSelectVia} />
-        </div>
-        <div className={ss.submitBtn} onClick={handleSubmit}>
-          Send
+          <div className={ss.submitBtn} onClick={handleSubmit}>
+            Send
+          </div>
         </div>
       </Modal>
     </div>

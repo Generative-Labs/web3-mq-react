@@ -7,7 +7,6 @@ export * from './ChatsIcon';
 export * from './CheveronLeft';
 export * from './CleanCircleIcon';
 export * from './CloseBtn';
-export * from './DefaultAvatarIcon';
 export * from './MoreBtnIcon';
 export * from './RoomsIcon';
 export * from './SendIcon';

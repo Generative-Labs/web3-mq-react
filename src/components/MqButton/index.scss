@@ -1,3 +1,4 @@
+@import "../../style/index.scss";
 .mq-btn {
   position: relative;
   display: inline-block;
@@ -6,8 +7,10 @@
   padding: 6px 16px;
   font-family: 'Inter';
   font-style: normal;
-  font-size: 14px;
-  font-weight: 500;
+  @include themeify {
+    font-size: themed(Body_font-size);
+    font-weight: themed(Medium_font-weight);
+  }
   background-color: transparent;
   border: 1px solid transparent;
   border-radius: 6px;
@@ -27,56 +30,64 @@
 
 // type default
 .mq-btn-default {
-  border: 1px solid #E4E4E7;
-  background-color: #FFFFFF;
-  color: #18181B;
-  &:hover {
-    background-color: #F4F4F5;
-  }
-  &:disabled {
-    background-color: #F4F4F5;
-    color: #A1A1AA;
+  @include themeify {
+    border: 1px solid themed(Gray_200);
+    background-color: themed(White_color);
+    color: themed(Gray_900);
+    &:hover {
+      background-color: themed(Gray_100);
+    }
+    &:disabled {
+      background-color: themed(Gray_100);
+      color: themed(Gray_400);
+    }
   }
 }
 
 // type primary
 .mq-btn-primary {
-  background-color: #615EF0;
-  color: #FFFFFF;
-  &:hover {
-    background-color: #3D3ABB;
-  }
-  &:disabled {
-    color: #8885FD;
-    background-color: #F4F4FE;
+  @include themeify {
+    background-color: themed(Violet_500);
+    color: themed(White_color);
+    &:hover {
+      background-color: themed(Violet_700);
+    }
+    &:disabled {
+      color: themed(Violet_400);
+      background-color: themed(Violet_50);
+    }
   }
 }
 
 // type ghost
 .mq-btn-ghost {
-  border: 1px solid #D2D1F9;
-  background-color: #FFFFFF;
-  color: #615EF0;
-  &:hover {
-    border: 1px solid #615EF0;
-    background-color: #F4F4FE;
-  }
-  &:disabled {
-    color: #8885FD;
-    background-color: #F4F4FE;
+  @include themeify {
+    border: 1px solid themed(Violet_200);
+    background-color: themed(White_color);
+    color: themed(Violet_500);
+    &:hover {
+      border: 1px solid themed(Violet_500);
+      background-color: themed(Violet_50);
+    }
+    &:disabled {
+      color: themed(Violet_400);
+      background-color: themed(Violet_50);
+    }
   }
 }
 
 // type danger
 .mq-btn-danger {
-  color: #FFFFFF;
-  background-color: #EF4343;
-  &:hover {
-    background-color: #BA1C1C;
-  }
-  &:disabled {
-    color: #FD6B6B;
-    background-color: #FEF1F1;
+  @include themeify {
+    color: themed(White_color);
+    background-color: themed(Red_500);
+    &:hover {
+      background-color: themed(Red_700);
+    }
+    &:disabled {
+      color: themed(Red_400);
+      background-color: themed(Red_50);
+    }
   }
 }
 
@@ -99,7 +110,9 @@
 }
 // size large
 .mq-btn-lg {
-  font-size: 16px;
+  @include themeify {
+    font-size: themed(Headline_font-size);
+  }
   height: 42px;
   padding: 10px 20px;
   line-height: 1.25;
