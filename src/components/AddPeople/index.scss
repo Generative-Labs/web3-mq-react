@@ -61,7 +61,7 @@
   @include themeify {
     font-size: themed(Headline_font-size);
     color: themed(Gray_900);
-    background: themed(White_color);
+    background: themed(Gray_200);
   }
 
   .name {

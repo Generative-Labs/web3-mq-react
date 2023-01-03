@@ -43,6 +43,11 @@
   div:first-child {
     margin-right: 8px;
   }
+  @include themeify {
+    color: themed(Gray_900);
+    font-size: themed(Body_font-size);
+    font-weight: themed(Medium_font-weight);
+  }
 }
 
 .title {
