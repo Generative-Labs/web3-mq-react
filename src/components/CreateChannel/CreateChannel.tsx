@@ -1,130 +1,156 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import cx from 'classnames';
 
+import { Avatar } from '../Avatar';
+import { Empty } from './Empty';
+import { MqButton } from '../MqButton';
 import { ChannelSelectItem as SearchBox, SearchItemProps } from './ChannelSelectItem';
-import { RadioGroup, IValueType } from '../RadioGroup';
-import { toast } from '../Toast';
 import { Modal } from '../Modal';
+import { SearchInput } from './SearchInput';
 
-import { useChatContext } from '../../context';
-import { useInput } from '../../hooks/useInput';
+import { useChatContext, AppTypeEnum } from '../../context';
+import { useSelectedContacts }  from './hooks/useSelectedContacts';
+import { useSteps, StepTitleEnum } from './hooks/useSteps';
+import { useSearchFollower } from './hooks/useSearchFollower';
 
-import { CreateChannelIcon } from '../../icons/CreateChannelIcon';
+import { AddUserIcon, CreateChannelIcon, CreateChatIcon, CloseBtnIcon, CheveronLeft } from '../../icons';
 
-import { fileParse } from '../../utils';
-
+import { getShortAddress } from '../../utils';
 import ss from './CreateChannel.scss';
 
-export type CreateChannelProps = {
+type CreateChannelProps = {
   ChannelSelectItem?: React.ComponentType<SearchItemProps>;
 };
-
-enum RadioEnum {
-  addFriends = '1',
-  createTopic = '2',
-  subscribeTopic = '3',
-  createRoom = '4',
-}
-
-const radioGroup: IValueType[] = [
-  { id: RadioEnum.addFriends, name: 'addFriends' },
-  // { id: RadioEnum.createTopic, name: 'createTopic' },
-  // { id: RadioEnum.subscribeTopic, name: 'subscribeTopic' },
-  { id: RadioEnum.createRoom, name: 'createRoom' },
-];
 
 const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   const { ChannelSelectItem = SearchBox } = props;
   const { client, appType, containerId } = useChatContext();
+  const { contacts, selectedContacts, handleCleanSelected, handleEvent, handleDeleteContact, handleSelectedContact } = useSelectedContacts(client);
+  const { steps, current, handleNext, handlePrev, handleCleanSteps, handleUpdateSteps, setCurrent } = useSteps();
+  const { followers, searchFollowers, getFollowerList, handleSearchFollers, setFollowers } = useSearchFollower(client);
   const [ showCreateChannel, setShowCreateChannel ] = useState<boolean>(false);
-  const [selectType, setSelectType] = useState<string>(RadioEnum.addFriends);
-  const [selectFile, setSelectFile] = useState<File | undefined>(undefined);
-  const { input, setValue } = useInput('');
-  const { value } = input;
-  // const {
-  //   content,
-  //   setContent,
-  //   searchResult,
-  //   selectedSearchUser,
-  //   selectedUsers,
-  //   deleteSelectUser,
-  //   resetSearchUser,
-  // } = useSearchUser(client);
-
-  // useEffect(() => {
-  //   if (!showCreateChannel) {
-  //     resetSearchUser();
-  //   }
-  // }, [showCreateChannel]);
+  const [ isShowBackBtn, setIsShowBackBtn ] = useState<boolean>(false);
+  const [ searchValue, setSearchValue ] = useState<string>('');
 
   useEffect(() => {
-    if (!showCreateChannel) {
-      setSelectType('1');
-      setValue('');
+    client.on('contact.getList', handleEvent);
+    client.on('contact.updateList', handleEvent);
+    client.on('channel.activeChange', handleEvent);
+    return () => {
+      client.off('contact.getList', handleEvent);
+      client.off('contact.updateList', handleEvent);
+      client.off('channel.activeChange', handleEvent);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (steps.length) {
+      setIsShowBackBtn(true);
+    } else {
+      setIsShowBackBtn(false);
     }
-    // searchContact();
+  }, [steps]);
+
+  useEffect(() => {
+    if (showCreateChannel) {
+      getFollowerList();
+    };
   }, [showCreateChannel]);
-
-  const handleFileChange = useCallback(async (e) => {
-    const file = e.target.files[0];
-    setSelectFile(file);
-  }, []);
-
-  const handleSelectType = useCallback((item: IValueType) => {
-    setSelectType(item.id);
-  }, []);
-
-  const handleSubmit = useCallback(async () => {
-    if (!value && selectType !== RadioEnum.createRoom) {
-      return;
-    }
-    if (
-      (selectType === RadioEnum.subscribeTopic && value.indexOf('topic:') !== 0) ||
-      (selectType === RadioEnum.addFriends && value.indexOf('user:') !== 0)
-    ) {
-      toast.error('Invalid format');
-      return;
-    }
-    if (selectType === RadioEnum.addFriends) {
-      await client.contact.sendFriend(value);
-    }
-    // if (selectType === RadioEnum.createTopic) {
-    //   await client.topic.createTopic(value);
-    // }
-    // if (selectType === RadioEnum.subscribeTopic) {
-    //   await client.topic.subscribeTopic(value);
-    // }
-    if (selectType === RadioEnum.createRoom) {
-      let avatarUrl;
-      if (selectFile) {
-        const data = await fileParse(selectFile);
-        avatarUrl = data.target.result;
-      }
-      await client.channel.createRoom({ group_name: value, avatar_base64: avatarUrl });
-    }
+ 
+  const handleClose = useCallback(() => {
     setShowCreateChannel(false);
-  }, [value, selectType, selectFile]);
+    setCurrent(0);
+    setSearchValue('');
+    handleCleanSelected();
+    handleCleanSteps();
+  }, []);
 
-  const showLabelAndPlaceholder = useMemo(
-    () => {
-      if (selectType === '1') {
-        return 'userid';
-      } else if (selectType === '2') {
-        return 'topicid';
-      } else {
-        return 'group name';
+  const handleBack = useCallback(() => {
+    if (current === 0) {
+      handleCleanSelected();
+    };
+    handlePrev();
+  }, [handlePrev]);
+
+  const handleChange = useCallback((value) => {
+    setSearchValue(value);
+    handleSearchFollers(value);
+  }, [handleSearchFollers]);
+
+  const handleFollowOrSendFriend = useCallback(async (userid, action: 'follow') => {
+    if (action === 'follow') {
+      await client.user.followOperation({target_userid: userid, action: 'follow'});
+      const _followers = followers.map(_follower => {
+        if (_follower.userid === userid) {
+          _follower.follow_status = 'follow_each';
+          return _follower;
+        };
+        return _follower;
+      });
+      setFollowers(_followers);
+    }
+    
+  }, [followers]);
+
+  const startChat = (userid: string) => {
+    const { channelList } = client.channel;
+    if (channelList) {
+      const activeChannel = channelList.find((channel: any) => channel.chatid === userid);
+      if (activeChannel) {
+        client.channel.setActiveChannel(activeChannel || null);
+        setShowCreateChannel(false);
       }
-    },
-    [selectType],
-  );
-
-  const startChat = async () => {
-    // if (selectedUsers.length > 0) {
-    //   await client.channel.createRoom({
-    //     user_ids: selectedUsers.map((item) => item.userId),
-    //   });
-    //   setShowCreateChannel(false);
-    // }
+    }
   };
+
+  const ModalHead = useCallback(
+    () => (
+      <div className={ss.createChannelModalHeader}>
+        {isShowBackBtn && <CheveronLeft onClick={handleBack} className={ss.backBtn} />}
+        <div className={ss.title}>{!steps.length ? 'New Message' : steps[current].title}</div>
+        <CloseBtnIcon onClick={handleClose} className={ss.closeBtn} />
+      </div>
+    ),
+    [current, isShowBackBtn, handleBack, steps],
+  );
+  
+  const FollowerList = useCallback(() => (
+    <div className={cx(ss.mainContainer, {[ss.hide]: !searchValue})}>
+      { !searchFollowers.length ? <Empty content='No result' />
+        : (
+          searchFollowers.map(follower => (
+            <div className={ss.searchFollowerItem} key={follower.userid}>
+              <Avatar image={follower.avatar_url} size={40} />
+              <div className={ss.wrapper}>
+                <div>{follower.nickname || getShortAddress(follower.wallet_address)}</div>
+                <div className={ss.followStatus}>follows you</div>
+              </div>
+              <MqButton 
+                className={ss.searchFollowersBtn} 
+                type='primary' 
+                disabled={follower.follow_status === 'follow_each'}
+                onClick={() => handleFollowOrSendFriend(follower.userid, 'follow')}
+              >
+                {follower.follow_status !== 'follow_each' ? 'Follow' : 'Following'}
+              </MqButton>
+            </div>
+          ))
+        )
+      }
+    </div>
+  ), [searchValue, searchFollowers, handleFollowOrSendFriend]);
+
+  const OperaBar = useCallback(
+    () => (
+      <div className={cx(ss.opreraBar, {
+        [ss.hide]: searchValue
+      })}>
+        <MqButton block icon={<AddUserIcon className={ss.addFriends} /> } size='large' type='ghost' onClick={() => handleUpdateSteps(StepTitleEnum['ADDFRIENDS'])}>Add friends</MqButton>
+        <MqButton block icon={<CreateChatIcon className={ss.createRoom} />} size='large' type='ghost' onClick={() => handleUpdateSteps(StepTitleEnum['CREATEROOM'])}>Create room</MqButton>
+      </div>
+    ),
+    [searchValue]
+  );
 
   return (
     <>
@@ -140,71 +166,51 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
         appType={appType}
         containerId={containerId}
         visible={showCreateChannel}
-        dialogClassName={ss.createChannelModal}
-        closeModal={() => {
-          // resetSearchUser();
-          setShowCreateChannel(false);
-        }}
+        dialogClassName={cx(ss.createChannelModal, {[ss.mobileStyle]: appType !== AppTypeEnum['pc'] })}
+        modalHeader={<ModalHead />}
+        closeModal={handleClose}
       >
-        <div className={ss.createChannelContainer}>
-          <div className={ss.label}>Select Type</div>
-          <RadioGroup className={ss.radioGroup} value={radioGroup} onChange={handleSelectType} />
-          <div className={ss.label}>{showLabelAndPlaceholder}</div>
-          <input type="text" placeholder={`input ${showLabelAndPlaceholder}`} {...input} />
-          {selectType === RadioEnum.createRoom && (
-            <>
-              <div className={ss.label}> upload avatar</div>
-              <input
-                type="file"
-                accept="image/*"
-                placeholder="select image"
-                onChange={handleFileChange}
-              />
-            </>
-          )}
-          <div className={ss.submitBtn} onClick={handleSubmit}>
-            Send
-          </div>
-          {/* <div className={ss.container}>
-            <div className={ss.leftBox}>
-              <div className={ss.to}>To:</div>
-              <div className={ss.inputContainer}>
-                <div className={ss.selectedUsers}>
-                  {selectedUsers.map((user) => (
-                    <div key={user.userId} className={ss.spanBox}>
-                      <div className={ss.username}>{user.userName}</div>
-                      <div className={ss.clear} onClick={() => deleteSelectUser(user)}>
-                        <CloseBtnIcon style={{ fontSize: 10 }} />
+        <div className={cx(ss.createChannelContainer, {
+          [ss.hide]: steps.length
+        })}>
+          <SearchInput style={{margin: '0px 16px'}} value={searchValue} onChange={handleChange} />
+          <FollowerList />
+          <OperaBar />
+          <div className={cx(ss.contactsContainer, {
+            [ss.hide]: searchValue
+          })}>
+            <div className={ss.friendTitle}>Friends</div>
+            { contacts.length ? (
+              <div className={ss.contactList}>
+                {contacts.map((contact: any) => {
+                  return (
+                    <div className={ss.contactItem} key={contact.userid} onClick={() => startChat(contact.userid)}>
+                      <Avatar image={contact.avatar_url} size={40} />
+                      <div className={ss.wrapper}>
+                        {getShortAddress(contact.userid)}
                       </div>
                     </div>
-                  ))}
-                </div>
-                <input
-                  className={ss.inputElement}
-                  onChange={(e) => setContent(e.target.value)}
-                  value={content}
-                  placeholder={selectedUsers.length > 0 ? '' : 'Start typing for suggestions'}
-                />
+                  );
+                })}
               </div>
-            </div>
-            <div className={ss.rightBox}>
-              <button disabled={selectedUsers.length <= 0} onClick={startChat} className={ss.btn}>
-                Start Chat
-              </button>
-            </div>
-          </div> */}
-          {/* <div className={ss.main}>
-            <div className={ss.mainContainer}>
-              {searchResult.map((user) => (
-                <ChannelSelectItem
-                  key={user.userId}
-                  onClick={(user) => selectedSearchUser(user)}
-                  user={user}
-                />
-              ))}
-            </div>
-          </div> */}
+            ) : <Empty content='no friends' style={{height: 'calc(100% - 28px)'}} />}
+          </div>
         </div>
+        {steps.map((step, index) => {
+          const { Component } = step;
+          const props = {
+            key: step.id,
+            className: cx({ [ss.hide]: index !== current }),
+            client,
+            contactList: contacts,
+            selectedContacts,
+            onClose: handleClose,
+            onSelected: handleSelectedContact,
+            onDeleted: handleDeleteContact,
+            handleNext,
+          };
+          return <Component { ...props }  />;
+        })}
       </Modal>
     </>
     

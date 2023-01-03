@@ -16,189 +16,332 @@
   border: none;
   outline: none;
 }
+
 .createChannelModal {
-  overflow: scroll;
-}
-.createChannelContainer {
-  overflow-y: scroll;
-  padding: 20px 30px;
-
-  .label:nth-of-type(1) {
-    margin-top: 0px;
-  }
-  .label {
-    font-family: 'Helvetica Neue';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 16px;
-    color: #616161;
-    margin: 24px 0 12px;
-  }
-  input[type=text] {
-    font-family: 'Helvetica Neue';
-    border: 1px solid #dedede;
-    border-radius: 8px;
+  min-width: 420px;
+  width: 420px;
+  height: 480px;
+  font-family: 'Inter';
+  overflow: hidden;
+  &.mobileStyle {
     width: 100%;
-    padding: 14px 15px;
-    box-sizing: border-box;
-    resize: none;
-    background: #ffffff;
-    font-size: 14px;
-    line-height: 16px;
-    color: rgba(0, 0, 0, 0.9);
-    outline: none;
-    margin-bottom: 12px;
+    height: 100%;
+    min-width: 375px;
+    border-radius: unset;
   }
 }
-.submitBtn {
-  position: absolute;
-  left: 30px;
-  bottom: 30px;
-  width: calc(100% - 60px);
-  max-width: 540px;
-  cursor: pointer;
-  background-color: #605dec;
-  border-radius: 49px;
-  text-align: center;
-  font-style: normal;
-  font-weight: 700;
-  font-size: 14px;
-  color: #fff;
-  height: 48px;
-  line-height: 48px;
-}
-.radioGroup {
-  flex-wrap: wrap;
-}
-// .createChannelContainer {
-//   display: flex;
-//   flex-direction: column;
-//   height: 100%;
-//   background-color: rgb(255, 255, 255);
-//   .main {
-//     width: 100%;
-//     height: 500px;
-//     overflow-y: scroll;
-//     .mainContainer {
-//       min-width: 330px;
-//       display: flex;
-//       flex-direction: column;
-//       border-radius: 10px;
-//       background: rgba(241, 241, 241, 0.9);
-//       box-shadow: 0 1px 5px rgba(0, 0, 0, 0.07);
 
-//     }
-//   }
-//   .searchItemContainer {
-//     &:hover {
-//       background: #fff;
-//     }
-//     .searchItem {
-//       padding: 10px 16px;
-//       display: flex;
-//       cursor: pointer;
-//       align-items: center;
-//       .avatar {
-//         width: 40px;
-//         height: 40px;
-//         border-radius: 20px;
-//         margin-right: 10px;
-//       }
-//       .name {
-//         font-size: 17px;
-//         color: #000000;
-//       }
-//     }
-//   }
-//   .container {
-//     position: sticky;
-//     top: 0;
-//     display: flex;
-//     justify-content: space-between;
-//     flex-direction: row;
-//     align-items: center;
-//     padding: 5px 10px 5px 25px;
-//     background-color: rgb(62, 62, 65);
-//     border-radius: 10px 10px 0px 0px;
-//     box-shadow: 0 7px 9px rgba(0, 0, 0, 0.03), 0 1px 0 rgba(0, 0, 0, 0.03);
-//     background-color: rgba(255, 255, 255, 0.9);
-//   }
-//   .leftBox {
-//     flex: 1;
-//     display: flex;
-//     flex-direction: row;
-//     align-items: center;
-//     justify-content: space-between;
-//     .to {
-//       font-size: 17px;
-//       margin-right: 10px;
-//       color: rgba(0, 0, 0, 0.5);
-//     }
+.createChannelModalHeader {
+  display: flex;
+  position: relative;
+  height: 50px;
+  border-radius: 0px;
+  padding: 14px 16px 14px 16px;
 
-//   }
-//   .inputContainer {
-//     flex: 1;
-//     display: flex;
-//     flex-direction: column;
-//     margin-top: 6px;
-//     margin-bottom: 6px;
-//   }
-//   .selectedUsers {
-//     display: flex;
-//     flex-direction: row;
-//     flex-wrap: wrap;
-//     align-items: center;
-//     justify-content: flex-start;
-//     margin-left: 8px;
-//     margin-right: 8px;
-//     .spanBox {
-//       height: 18px;
-//       font-size: 17px;
-//       padding: 18px 12px;
-//       margin: 2px;
-//       border-radius: 15px;
-//       line-height: 18px;
-//       display: flex;
-//       align-items: center;
-//       color: #000;
-//       background: #f1f1f1;
-//       opacity: 0.9;
-//       .username {
-//         margin-right: 8px;
-//       }
-//       .clear {
-//         cursor: pointer;
-//       }
-//     }
-//   }
-//   .inputElement {
-//     font-size: 17px;
-//     background: none;
-//     border: none;
-//     outline: none;
-//     min-width: 215px;
-//     color: rgba(0, 0, 0, 0.9);
-//   }
-//   .rightBox {
-//     .btn {
-//       right: 10px;
-//       max-width: 111px;
-//       height: 40px;
-//       border: none;
-//       outline: none;
-//       background: #005fff;
-//       border-radius: 20px;
-//       font-weight: bold;
-//       font-size: 14px;
-//       line-height: 18px;
-//       color: #ffffff;
-//       cursor: pointer;
-//       flex: 1;
-//       padding: 0 10px;
-//     }
-//   }
-// }
+  .title {
+    width: 100%;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: center;
+  }
+  .closeBtn, .backBtn {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    color: #A1A1AA;
+    cursor: pointer;
+    &:hover {
+      color: #71717A;
+    }
+  }
+}
+
+.createChannelContainer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 50px);
+  overflow-y: hidden;
+}
+
 .hide {
   display: none;
 }
+
+.opreraBar {
+  display: flex;
+  padding: 16px 16px;
+  &.hide {
+    display: none;
+  }
+  button:first-of-type {
+    margin-right: 16px;
+  }
+  .addFriends, .createRoom {
+    width: 20px;
+    height: 20px;
+    font-size: 6.666666666px;
+  }
+}
+
+.contactsContainer {
+  overflow: hidden;
+  height: 100%;
+  > .friendTitle {
+    width: 100%;
+    height: 20px;
+    padding: 0px 16px;
+    margin-bottom: 8px;
+    color: #3F3F46;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+
+.contactList {
+  height: calc(100% - 28px);
+  overflow-y: scroll;
+  cursor: pointer;
+}
+
+.contactItem, .searchFollowerItem, .searchContactItem {
+  display: flex;
+  padding: 8px 16px;
+  margin-bottom: 4px;
+  color: #18181B;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  &:hover {
+    background-color: #F4F4F5;
+  }
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  letter-spacing: 0em;
+  text-align: left;
+}
+
+.searchFollowerItem {
+  .followStatus {
+    font-size: 10px;
+    font-weight: 400;
+    color: #A1A1AA;
+  }
+  .searchFollowersBtn {
+    display: flex;
+    align-self: center;
+    position: absolute;
+    right: 16px;
+  }
+}
+
+.addFriendContainer, .selectContactsContainer, .createRoomContainer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 124px);
+  font-family: 'Inter';
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0em;
+  text-align: left;
+  border-bottom: 1px solid #F4F4F5;
+  &.hide {
+    display: none;
+  }
+}
+.btnContaner {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 16px;
+}
+.commonInput, .commonTextarea {
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 16px;
+  text-align: left;
+  line-height: 20px;
+  padding: 10px 16px;
+  outline: none;
+  border: 1px solid #E4E4E7;
+  border-radius: 8px;
+  &:focus {
+    border: 2px solid #8885FD;
+  }
+}
+.commonTextarea {
+  resize: vertical
+}
+
+.addFriendContainer {
+  padding: 0 16px;
+  > .label {
+    color: #18181B;
+    margin-bottom: 8px;
+  }
+  .label:nth-child(4) {
+    margin-top: 16px;
+  }
+  > .warnning {
+    box-sizing: border-box;
+    display: flex;
+    line-height: 16px;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #FEE1E1;
+    border-radius: 12px;
+    background-color: #FEF1F1;
+    color: #EF4343;
+    font-size: 12px;
+    font-weight: 500;
+    &.hide {
+      display: none;
+    }
+  }
+  .warnIcon {
+    display: flex;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+    font-size: 4px;
+  }
+}
+
+.selectContactsContainer {
+  font-weight: 600;
+
+  .inputContainer {
+    box-sizing: border-box;
+    display: flex;
+    margin: 0 16px;
+    padding: 4px 10px;
+    border: 2px solid #8885FD;
+    border-radius: 8px;
+    cursor: text;
+
+    .contactSelector {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      .selectedBox {
+        height: 23px;
+        line-height: 20px;
+        padding: 1px 6px 2px 6px;
+        margin: 4px 8px 4px 0px;
+        color: #FFFFFF;
+        background: #615EF0;
+        border-radius: 4px;
+        cursor: default;
+      }
+
+      .inputElement {
+        min-width: 4px;
+        width: 100%;
+        overflow: auto;
+        font-size: 16px;
+        background: none;
+        border: none;
+        outline: none;
+        flex: none;
+        align-self: center;
+        margin: 0;
+        padding: 0;
+        appearance: none;
+      }
+    }
+  }
+}
+.searchContactItem {
+  input[type=checkbox] {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    align-self: center;
+    margin: 0;
+    margin-right: 12px;
+    border: 1.875px solid #D4D4D8;
+    border-radius: 6px;
+    cursor: pointer;
+    &:checked {
+      position: relative;
+      background-color: #615EF0;
+      border: none;
+      border-radius: 6px;
+      &::after {
+        box-sizing: border-box;
+        position: absolute;
+        top: 50%;
+        inset-inline-start: 21.5%;
+        display: table;
+        width: 7.14282142px;
+        height: 11.285714px;
+        border: 2px solid #fff;
+        border-top: 0;
+        border-inline-start: 0;
+        transform: rotate(45deg) translate(-50%,-50%);
+        content: "";
+      } 
+    }
+  }
+}
+
+.createRoomContainer {
+  .operationContainer {
+    display: flex;
+    align-items: center;
+    background: #F4F4FE;
+    border-radius: 22px;
+    padding: 12px;
+    margin: 0px 16px 16px 16px;
+
+    .fileBox, .imgBox {
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .imgBox {
+      width: 64px;
+      height: 64px;
+      overflow: hidden;
+    }
+
+    .fileBox {
+      margin-right: 12px;
+      padding: 14px;
+      background: #8885FD;
+      &.nopadding {
+        padding: 0;
+      }
+      .cameraIcon {
+        width: 36px;
+        height: 36px;
+        font-size: 12px;
+        color: #FDFDFD;
+      }
+    }
+  }
+}
+
+.mainContainer {
+  position: relative;
+  margin-top: 16px;
+  height: 100%;
+  overflow-y: scroll;
+}
+
+
+
