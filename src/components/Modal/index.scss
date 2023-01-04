@@ -17,8 +17,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
   width: 420px;
-  height: 480px;
+  min-height: 80px;
   border-radius: 18px;
+  padding-bottom: 16px;
   @include themeify {
     background-color: themed(White_color);
   }

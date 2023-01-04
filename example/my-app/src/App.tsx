@@ -13,7 +13,8 @@ import {
 import 'web3-mq-react/dist/css/index.css';
 import MsgInput from './components/MsgInput';
 
-import Login from './components/Login';
+// import Login from './components/Login';
+import NewLogin, {AddressRes, LoginRes} from './components/NewLogin';
 import useLogin from './hooks/useLogin';
 
 const App: React.FC = () => {
@@ -22,6 +23,23 @@ const App: React.FC = () => {
   const [appType, setAppType] = useState(
     window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc'],
   );
+
+  const getEthAccount =async (): Promise<AddressRes> => {
+    return {
+      address: '0x9b6a5a1dd55ea481f76b782862e7df2977dffe6c',
+      userExits: false
+    }
+  }
+  const login =async (): Promise<LoginRes> => {
+    return {
+      success: false,
+      msg: 'The password is incorrect',
+      code: -1
+    }
+  }
+  const register =async (): Promise<boolean> => {
+    return true
+  }
 
   useEffect(() => {
     init();
@@ -32,7 +50,7 @@ const App: React.FC = () => {
   }, []);
 
   if (!keys) {
-    return <Login sign={signMetaMask} />;
+    return <NewLogin register={register} login={login} getEthAccount={getEthAccount} />;
   }
 
   if (!fastestUrl) {
