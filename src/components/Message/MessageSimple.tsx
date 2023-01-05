@@ -4,9 +4,7 @@ import cx from 'classnames';
 import { Avatar } from '../Avatar';
 import { Profile } from '../Profile';
 import { Text } from './Text';
-import { SudoSwapCard } from './SudoSwapCard';
-import { NftItemCard } from './NftItemCard';
-import { dateTransform, getShortAddress } from '../../utils';
+
 import { useMessageContext } from '../../context/MessageContext';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { ActionBtns } from '../Message/ActionBtns';
@@ -18,9 +16,16 @@ export const MessageSimple = () => {
   const { isThread, message } = useMessageContext('MessageSimple');
   const { client, appType } = useChatContext('MessageSimple');
   const [isShow, setIsShow] = useState<boolean>(false);
-  const { created_at, from_uid, msg_type, belong_to_thread_id, is_opensea_item_thread } = message;
-  const { activeMember = {} } = client.channel as any;
+  const { 
+    date, 
+    timestamp,  
+    belong_to_thread_id,
+    senderInfo = {}, 
+  } = message;
+  const { avatar_url, nickname } = senderInfo.web3mqInfo || {};
   const messageRef = useRef<HTMLDivElement | null>(null);
+  const avatarUrl = avatar_url || senderInfo.defaultUserAvatar;
+  const nickName = nickname || senderInfo.defaultUserName;
 
   const longPressEvents = uselongPressEvents({
     onStartCallback: () => setIsShow(true),
@@ -59,12 +64,12 @@ export const MessageSimple = () => {
     >
       {appType === AppTypeEnum['pc'] ? (
         <Profile
-          userInfo={activeMember[from_uid] || {}}
+          userInfo={senderInfo}
           isSelf={client.keys.userid === message.senderId}
           AvatarNode={
             <Avatar
               name="user"
-              image={activeMember[from_uid]?.avatar || ''}
+              image={avatarUrl}
               size={40}
             />
           }
@@ -72,7 +77,7 @@ export const MessageSimple = () => {
       ): (
         <Avatar
           name="user"
-          image={activeMember[from_uid]?.avatar || ''}
+          image={avatarUrl}
           size={30} 
         />
       )}
@@ -86,8 +91,8 @@ export const MessageSimple = () => {
           {/* {activeMember[from_uid]?.user_name && (
             <span className={ss.name}>{activeMember[from_uid]?.user_name || ''}</span>
           )} */}
-          <span className={ss.name}>{activeMember[from_uid]?.user_name || getShortAddress(message.senderId)}</span>
-          <span>{message.date}&nbsp;{message.timestamp}</span>
+          <span className={ss.name}>{nickName}</span>
+          <span>{date}&nbsp;{timestamp}</span>
         </div>
         <MessageInner />
       </div>

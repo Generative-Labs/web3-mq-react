@@ -11,7 +11,10 @@ const PAGE = {
   size: 20,
 };
 
-export const usePaginatedContacts = (client: Client) => {
+export const usePaginatedContacts = (
+  client: Client,
+  getUserInfo: (userid: string) => Promise<any>,
+) => {
   const [contacts, setContacts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [activeContact, setActiveContact] = useState<any | null>(null);
@@ -39,7 +42,24 @@ export const usePaginatedContacts = (client: Client) => {
     queryContacts();
   };
 
-  const handleEvent = useCallback((props: { type: EventTypes }) => {
+  // const renderContact
+  const renderContactList = async (contactList: any[]) => {
+    await Promise.all(
+      contactList.map(async (contact) => {
+        // 通过是否存在web3mqInfo和address字段来判断
+        if (!contact.hasOwnProperty('web3mqInfo') || !contact.hasOwnProperty('address')) {
+          const info = await getUserInfo(contact.userid);
+          for (let key in info) {
+            if (info.hasOwnProperty(key)) {
+              contact[key] = info[key];
+            }
+          }
+        }
+      }),
+    );
+  };
+
+  const handleEvent = useCallback(async (props: { type: EventTypes }) => {
     const { type } = props;
 
     const { contactList } = client.contact;
@@ -50,6 +70,7 @@ export const usePaginatedContacts = (client: Client) => {
     //   changeActiveContactEvent(contactList[0]);
     // }
     if (type === 'contact.getList') {
+      await renderContactList(contactList);
       setContacts(contactList);
     }
     if (type === 'contact.activeChange') {
@@ -57,6 +78,7 @@ export const usePaginatedContacts = (client: Client) => {
       return;
     }
     if (type === 'contact.updateList') {
+      await renderContactList(contactList);
       setContacts(contactList);
       return;
     }

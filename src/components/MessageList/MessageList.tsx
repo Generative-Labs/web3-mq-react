@@ -2,15 +2,15 @@ import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } fr
 import type { EventTypes } from 'web3-mq';
 
 import { useMessageListElements } from './hooks/useMessageListElements';
-// import { useMessageLoadMore } from './hooks/useMessageLoadMore';
 import { usePaginatedMessages } from './hooks/usePaginatedMessages';
-// import { useChannelStateContext } from '../../context/ChannelStateContext';
 import { useChatContext } from '../../context/ChatContext';
+import type { UserInfoType } from '../Chat/hooks/useQueryUserInfo';
 import type { ComponentContextValue } from '../../context/ComponentContext';
 import { Paginator } from '../Paginator';
 import { Loading } from '../Loading';
 
 import ss from './index.scss';
+
 
 export type MessageListProps = {
   Message?: ComponentContextValue['Message'];
@@ -33,11 +33,14 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
     };
   }, []);
 
-  const { client } = useChatContext('MessageList');
-  const { msgListloading, loadMoreLoading, messageList, loadNextPage } = usePaginatedMessages(
+  const { client, userInfo, getUserInfo } = useChatContext('MessageList');
+  
+  const { msgListloading, loadMoreLoading, messageList, loadNextPage } = usePaginatedMessages({
     client,
+    userInfo: userInfo as UserInfoType,
     scrollBottom,
-  );
+    getUserInfo
+  });
 
   const elements = useMessageListElements({
     ...props,
@@ -96,7 +99,6 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
       scrollBottom();
     }
   }, [msgListloading]);
-
   // const RenderChatDown = useCallback(() => {
   //   if (msgCount === 0) {
   //     return null;

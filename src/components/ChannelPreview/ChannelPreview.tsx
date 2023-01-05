@@ -17,8 +17,29 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
   } = props;
 
   const isActive = activeChannel?.chatid === channel.chatid;
+  const { 
+    chatid, 
+    chat_name,
+    chat_type,
+    avatar_url, 
+    avatar_base64, 
+    unread, 
+    lastMessage, 
+    updatedAt,
+  } = channel;
+  const { 
+    defaultUserAvatar = '', 
+    defaultUserName = '', 
+  } = channel.homeOwnerInfo || {};
 
-  const { chatid, chat_name, avatar_url, avatar_base64, unread, lastMessage, updatedAt } = channel;
+  const hasNickName = chat_name.indexOf('user:') !== 0 ? true : false;
+  const chatName = chat_type !== 'user' ? 
+    chat_name 
+    : hasNickName 
+      ? chat_name 
+      : 
+      defaultUserName;
+  const avatarUrl = avatar_base64 || avatar_url || (chat_type === 'user' && defaultUserAvatar);
 
   return (
     <Preview
@@ -26,11 +47,11 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
       active={isActive}
       channel={channel}
       unread={unread || 0}
-      displayTitle={chat_name || chatid}
+      displayTitle={chatName}
       lastMessage={lastMessage}
       updatedAt={updatedAt}
       setActiveChannel={changeActiveChannelEvent}
-      avatarUrl={avatar_base64 || avatar_url}
+      avatarUrl={avatarUrl}
     />
   );
 };

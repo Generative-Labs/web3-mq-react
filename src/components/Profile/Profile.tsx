@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
-import type { SearchUsersResponse } from 'web3-mq';
 import cx from 'classnames';
 
 import {
@@ -12,6 +11,7 @@ import {
   // DiscordIcon,
 } from '../../icons';
 import { Avatar } from '../Avatar';
+import type { UserInfoType } from '../Chat/hooks/useQueryUserInfo';
 import { copyText } from '../../utils';
 import useToggle from '../../hooks/useToggle';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
@@ -19,8 +19,9 @@ import { toast } from '../Toast';
 
 import ss from './index.scss';
 
+
 type IProps = {
-  userInfo?: SearchUsersResponse;
+  userInfo?: UserInfoType;
   AvatarNode?: React.ReactNode;
   isTab?: boolean;
   isSelf?: boolean;
@@ -37,7 +38,16 @@ export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
   // const members = client.channel.activeChannel?.members || [];
 
   const userInfo = propsUserInfo || contextUserInfo;
-  const { avatar_url = '', nickname = '', wallet_address = '', userid } = userInfo || {};
+  const { 
+    defaultUserAvatar = '', 
+    defaultUserName = '', 
+  } = userInfo || {};
+  const {
+    avatar_url = '',
+    nickname = '',
+    wallet_address = '',
+  } = userInfo?.web3mqInfo || {};
+
 
   const copy = useCallback(async () => {
     const res = await copyText(wallet_address);
@@ -131,8 +141,8 @@ export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
           })}
         >
           <BackArrow />
-          <Avatar className={ss.avatar} name="user" image={avatar_url} size={46} />
-          <div className={ss.name}>{nickname}</div>
+          <Avatar className={ss.avatar} name="user" image={avatar_url || defaultUserAvatar} size={46} />
+          <div className={ss.name}>{nickname || defaultUserName}</div>
           <div className={ss.addressWarp}>
             <span className={ss.address}>{wallet_address}</span>
             <CopyIcon className={cx(ss.copyIcon, { [ss.copied]: copied })} onClick={copy} />
