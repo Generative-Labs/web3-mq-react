@@ -9,13 +9,14 @@ import {
   MessageHeader,
   MessageList,
   MessageInput,
-  Login
+  LoginModal,
 } from 'web3-mq-react';
 import 'web3-mq-react/dist/css/index.css';
 import MsgInput from './components/MsgInput';
 
-// import Login from './components/Login';
 import useLogin from './hooks/useLogin';
+import ss from './index.module.scss'
+
 
 const App: React.FC = () => {
   const { keys, fastestUrl, init, getEthAccount, logout, login, register } = useLogin();
@@ -33,7 +34,16 @@ const App: React.FC = () => {
   }, []);
 
   if (!keys) {
-    return <Login register={register} login={login} getEthAccount={getEthAccount} />;
+    return (
+      <LoginModal
+        appType={AppTypeEnum.pc}
+        isShow={true}
+        register={register}
+        login={login}
+        getEthAccount={getEthAccount}
+        styles={ss}
+      />
+    );
   }
 
   if (!fastestUrl) {

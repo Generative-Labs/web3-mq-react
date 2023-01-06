@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import cx from 'classnames';
 import type { Client } from 'web3-mq';
 
-import { MqButton } from '../MqButton';
+import { Button } from '../Button';
 import { ExclamationCircleIcon } from '../../icons';
 
 import ss from './CreateChannel.scss';
@@ -51,7 +51,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
         <div className={ss.label}>Add invitation note</div>
         <textarea className={ss.commonTextarea} maxLength={100} value={content} onChange={(e) => { setContent(e.target.value)}} />
         <div className={cx(ss.btnContaner)}>
-          <MqButton block disabled={!value || isWarn || load} size='large' type='primary' onClick={handleSubmit}>Add</MqButton>
+          <Button block disabled={!value || isWarn || load} size='large' type='primary' onClick={handleSubmit}>Add</Button>
         </div>
       </div>
     </>

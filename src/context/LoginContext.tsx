@@ -1,17 +1,25 @@
-import React, { PropsWithChildren, useContext } from 'react';
+import React, { Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react';
+
+export type GetEthAccountRes = {
+  address: string;
+  userid: string;
+  userExist: boolean;
+};
+export enum StepStringEnum {
+  HOME = 'home',
+  VIEW_ALL = 'view_all_desktop',
+  LOGIN_MODAL = 'login_modal',
+}
 
 export type LoginContextValue = {
-  login: any;
-  register: any;
-  getEthAccount: any;
+  login: (password: string) => Promise<void>;
+  register: (password: string) => Promise<void>;
+  getEthAccount: () => Promise<void>;
   address: string;
-  setAddress: any;
-  userExits: boolean;
-  setUserExits: any;
-  headerTitle: string;
-  setHeaderTitle: any;
-  step: any;
-  setStep: any;
+  setHeaderTitle: Dispatch<SetStateAction<string>>;
+  step: string;
+  setStep: Dispatch<SetStateAction<StepStringEnum>>;
+  styles?: Record<string, any> | null;
 };
 
 export const LoginContext = React.createContext<LoginContextValue | undefined>(undefined);

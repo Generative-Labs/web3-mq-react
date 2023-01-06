@@ -3,7 +3,7 @@ import cx from 'classnames';
 
 import { Avatar } from '../Avatar';
 import { Empty } from './Empty';
-import { MqButton } from '../MqButton';
+import { Button } from '../Button';
 import { ChannelSelectItem as SearchBox, SearchItemProps } from './ChannelSelectItem';
 import { Modal } from '../Modal';
 import { SearchInput } from './SearchInput';
@@ -125,14 +125,14 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
                 <div>{follower.nickname || getShortAddress(follower.wallet_address)}</div>
                 <div className={ss.followStatus}>follows you</div>
               </div>
-              <MqButton 
+              <Button
                 className={ss.searchFollowersBtn} 
                 type='primary' 
                 disabled={follower.follow_status === 'follow_each'}
                 onClick={() => handleFollowOrSendFriend(follower.userid, 'follow')}
               >
                 {follower.follow_status !== 'follow_each' ? 'Follow' : 'Following'}
-              </MqButton>
+              </Button>
             </div>
           ))
         )
@@ -145,8 +145,8 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
       <div className={cx(ss.opreraBar, {
         [ss.hide]: searchValue
       })}>
-        <MqButton block icon={<AddUserIcon className={ss.addFriends} /> } size='large' type='ghost' onClick={() => handleUpdateSteps(StepTitleEnum['ADDFRIENDS'])}>Add friends</MqButton>
-        <MqButton block icon={<CreateChatIcon className={ss.createRoom} />} size='large' type='ghost' onClick={() => handleUpdateSteps(StepTitleEnum['CREATEROOM'])}>Create room</MqButton>
+        <Button block icon={<AddUserIcon className={ss.addFriends} /> } size='large' type='ghost' onClick={() => handleUpdateSteps(StepTitleEnum['ADDFRIENDS'])}>Add friends</Button>
+        <Button block icon={<CreateChatIcon className={ss.createRoom} />} size='large' type='ghost' onClick={() => handleUpdateSteps(StepTitleEnum['CREATEROOM'])}>Create room</Button>
       </div>
     ),
     [searchValue]

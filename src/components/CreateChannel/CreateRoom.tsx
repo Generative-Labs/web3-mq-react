@@ -3,7 +3,7 @@ import cx from 'classnames';
 import type { Client } from 'web3-mq';
 
 import { Avatar } from '../Avatar';
-import { MqButton } from '../MqButton';
+import { Button } from '../Button';
 
 import { CameraIcon } from '../../icons';
 
@@ -105,13 +105,13 @@ export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
         ))}
       </div>
       <div className={cx(ss.btnContaner)}>
-        <MqButton 
+        <Button
           block  
           disabled={!selectFileUrl || !roomName || btnLoad} 
           size='large' 
           type='primary' 
           onClick={handleSubmit}
-        >Create</MqButton>
+        >Create</Button>
       </div>
     </div>
   );

@@ -1,29 +1,27 @@
 import React, { useEffect } from 'react';
-import { DesktopIcon } from '../../../../icons/DesktopIcon';
-import { MobileIcon } from '../../../../icons/MobileIcon';
+
+import {
+  WalletConnectIcon,
+  WalletMetaMaskIcon,
+  Web3MqIcon,
+  DesktopIcon,
+  MobileIcon,
+} from '../../../icons';
+import { Button } from '../../Button';
+import {StepStringEnum, useLoginContext} from '../../../context';
 
 import ss from './index.module.scss';
-import { StepStringEnum } from '../../index';
-import { MqButton } from '../../../MqButton';
-import { Button } from '../../../Button';
-import { useLoginContext } from '../../../../context';
+import cx from 'classnames';
 
-import web3mqIcon from '../../../../assets/web3mqIcon.svg';
-import walletConnectIcon from '../../../../assets/walletConnectIcon.svg';
-import { MetaMaskIcon, WalletConnectIcon, WalletMetaMaskIcon, Web3MqIcon } from '../../../../icons';
-
-// const web3mqIcon = require('../../../../assets/web3mqIcon.svg').default;
-// const walletConnectIcon = require('../../../../assets/walletConnectIcon.svg').default;
-//
-export const StepOne: React.FC = () => {
-  const { setStep, setHeaderTitle, step, getEthAccount } = useLoginContext();
+export const Home: React.FC = () => {
+  const { setStep, setHeaderTitle, step, getEthAccount, styles } = useLoginContext();
 
   useEffect(() => {
     setHeaderTitle('Connect Dapp');
   }, []);
 
   return (
-    <div className={ss.container}>
+    <div className={cx(ss.container, styles?.homeContainer)}>
       {step === StepStringEnum.HOME && (
         <div className={ss.stepOneBox}>
           <div className={ss.contentBox}>
@@ -62,18 +60,18 @@ export const StepOne: React.FC = () => {
               <div className={ss.title}>Mobile</div>
             </div>
             <div className={ss.btnsBox}>
-              <MqButton className={ss.btn}>
+              <Button className={ss.btn}>
                 <div className={ss.icon}>
                   <Web3MqIcon />
                 </div>
                 Web3MQ
-              </MqButton>
-              <MqButton className={ss.btn}>
+              </Button>
+              <Button className={ss.btn}>
                 <div className={ss.icon}>
                   <WalletConnectIcon />
                 </div>
                 WalletConnect
-              </MqButton>
+              </Button>
             </div>
           </div>
         </div>

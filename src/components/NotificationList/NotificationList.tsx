@@ -8,7 +8,7 @@ import useToggle from '../../hooks/useToggle';
 import { CloseBtnIcon, NotifyIcon } from '../../icons';
 import { Avatar } from '../Avatar';
 import { Modal } from '../Modal';
-import { Button, ButtonType } from '../Button';
+import { Button } from '../Button';
 
 import ss from './index.scss';
 
@@ -52,7 +52,7 @@ export const NotificationList = () => {
       return (
         <div className={ss.opreateBtnsContainer}>
           <Button
-            btnType={ButtonType.primary}
+            type='primary'
             className={cx(ss.btnItem, ss.agree)}
             onClick={() => {
               handleFirendRequest(userid, 'agree');
@@ -61,7 +61,7 @@ export const NotificationList = () => {
             Agree
           </Button>
           <Button
-            btnType={ButtonType.danger}
+            type="danger"
             className={cx(ss.btnItem, ss.refused)}
             onClick={() => {
               handleFirendRequest(userid, 'reject');

@@ -1,58 +1,51 @@
-import React from 'react';
+import React, { PropsWithChildren, MouseEvent } from 'react';
 import cx from 'classnames';
 
 import ss from './index.scss';
 
-export enum ButtonSize {
-  large = 'large',
-  small = 'small',
-}
+export type ButtonSize = 'large' | 'default' | 'small';
+export type ButtonType = 'primary' | 'default' | 'danger' | 'ghost';
 
-export enum ButtonType {
-  default = 'default',
-  primary = 'primary',
-  danger = 'danger',
-  link = 'link',
-}
-
-interface BaseButtonProps {
+export type ButtonProps = {
+  block?: boolean;
   className?: string;
-  disable?: boolean;
-  size?: ButtonSize | string;
-  btnType?: ButtonType | string;
-  children: React.ReactNode;
-  href?: string;
-}
+  disabled?: boolean;
+  icon?: React.ReactNode;
+  size?: ButtonSize;
+  type?: ButtonType;
+  onClick?: (event: MouseEvent) => void;
+};
 
-type NativeButtonProps = BaseButtonProps & React.ButtonHTMLAttributes<HTMLElement>;
-type AnchorButtonProps = BaseButtonProps & React.AnchorHTMLAttributes<HTMLElement>;
-export type ButtonProps = Partial<NativeButtonProps & AnchorButtonProps>;
+const sizeAbbreviation = {
+  default: '',
+  large: 'lg',
+  small: 'sm'
+};
 
-export const Button: React.FC<ButtonProps> = (props) => {
+export const Button: React.FC<PropsWithChildren<ButtonProps>> = (props) => {
   const {
-    btnType = ButtonType.default,
-    className,
-    disable = false,
-    size = ButtonSize.small,
+    block = false,
+    className = '',
     children,
-    href,
-    ...restProps
+    disabled = false,
+    icon,
+    size = 'default',
+    type = 'default',
+    onClick = () => {},
   } = props;
-
-  const classes = cx(ss.buttonContainer, className, ss[btnType], ss[size], {
-    disabled: btnType === ButtonType.link && disable,
-  });
-
-  if (btnType === ButtonType.link && href) {
-    return (
-      <a className={classes} href={href} {...restProps}>
-        {children}
-      </a>
-    );
-  }
+  
   return (
-    <button className={classes} disabled={disable} {...restProps}>
-      {children}
+    <button 
+      className={cx(ss['mq-btn'], className, {
+        [ss[`mq-btn-${type}`]]: type,
+        [ss[`mq-btn-${sizeAbbreviation[size]}`]]: size !== 'default',
+        [ss['mq-btn-block']]: block,
+      })}
+      disabled={disabled}
+      onClick={(e) => onClick(e)}
+    >
+      {icon && <span className={ss['mq-btn-icon']}>{icon}</span>}
+      <span>{children}</span>
     </button>
   );
 };
