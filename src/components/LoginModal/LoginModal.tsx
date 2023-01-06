@@ -112,7 +112,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
           </Button>
         )}
         <Modal
-          dialogClassName={cx(styles?.dialogClassName)}
+          dialogClassName={styles?.dialogClassName}
           containerId={containerId}
           appType={appType}
           visible={visible}

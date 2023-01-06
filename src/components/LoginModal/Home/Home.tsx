@@ -23,7 +23,7 @@ export const Home: React.FC = () => {
   return (
     <div className={cx(ss.container, styles?.homeContainer)}>
       {step === StepStringEnum.HOME && (
-        <div className={ss.stepOneBox}>
+        <div className={ss.chooseWalletBox}>
           <div className={ss.contentBox}>
             <div className={ss.top}>
               <div className={ss.icon}>
