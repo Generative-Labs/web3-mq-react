@@ -1,26 +1,17 @@
-import React, {useEffect, useMemo, useState} from 'react';
-import { Button, ButtonType } from 'web3-mq-react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CloseEyesIcon, LoginErrorIcon, MetaMaskIcon, OpenEyesIcon } from '../../../../icons';
 import ss from './index.module.scss';
 import { getShortAddress } from '../../../../utils';
+import { Button, ButtonType } from '../../../Button';
+import { useLoginContext } from '../../../../context';
 
 interface IProps {
-  getEthAccount: () => Promise<AddressRes>;
-  login: () => Promise<LoginRes>;
-  register: () => Promise<boolean>;
-  setHeaderTitle: any
-}
-
-
-export interface AddressRes {
-  address: string;
+  getEthAccount: any;
+  login: any;
+  register: any;
+  setHeaderTitle: any;
   userExits: boolean;
-}
-
-export interface LoginRes {
-  success: boolean;
-  msg: string;
-  code: number;
+  address: string;
 }
 
 const loginText = {
@@ -33,16 +24,14 @@ const signUpText = {
   subTitle: 'This password will be used to generate encryption keys for communicating with Web3MQ.',
 };
 
-const StepTwo: React.FC<IProps> = (props) => {
-  const { getEthAccount, login, register, setHeaderTitle} = props;
+export const StepTwo: React.FC = () => {
+  const { login, register, userExits, address } = useLoginContext();
+
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorInfo, setErrorInfo] = useState<string>();
-  const [address, setAddress] = useState('');
-  const [userExits, setUserExits] = useState(false);
-
 
   const isDisable = useMemo(() => {
     let res = !password;
@@ -52,38 +41,22 @@ const StepTwo: React.FC<IProps> = (props) => {
         res = password !== confirmPassword;
       }
     }
-
     return res;
   }, [password, userExits, confirmPassword]);
 
-  const init = async () =>{
-    const accountRes = await getEthAccount();
-    if (accountRes.userExits) {
-      setHeaderTitle('Log in');
-    } else {
-      setHeaderTitle('Sign up');
-    }
-    setAddress(accountRes.address)
-    setUserExits(accountRes.userExits)
-  }
-  useEffect(() => {
-    init()
-  }, []);
-
-
   const handleSubmit = async () => {
-    if (userExits) {
-      const res = await login();
-      if (!res.success && res.msg) {
-        setErrorInfo(res.msg);
+    try {
+      if (userExits) {
+        await login(password);
+      } else {
+        if (password !== confirmPassword) {
+          setErrorInfo('Passwords don\'t match. Please check your password inputs.');
+        }
+        await register(password);
+        await login(password);
       }
-    } else {
-      if (password !== confirmPassword) {
-        setErrorInfo("Passwords don't match. Please check your password inputs.");
-      }
-
-      const registerRes = await register();
-      console.log(registerRes, 'registerRes');
+    } catch (e: any) {
+      setErrorInfo(e.message);
     }
   };
 
@@ -192,5 +165,3 @@ const StepTwo: React.FC<IProps> = (props) => {
     </div>
   );
 };
-
-export default StepTwo;

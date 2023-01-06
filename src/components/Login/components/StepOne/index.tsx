@@ -1,26 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { AppTypeEnum, Button, ButtonType, MqButton } from 'web3-mq-react';
-import {
-  DesktopIcon,
-  MobileIcon,
-  ViewAllIcon,
-  WalletConnectIcon,
-  WalletMetaMaskIcon,
-} from '../../../../icons';
+import React, { useEffect } from 'react';
+import { DesktopIcon } from '../../../../icons/DesktopIcon';
+import { MobileIcon } from '../../../../icons/MobileIcon';
 
 import ss from './index.module.scss';
 import { StepStringEnum } from '../../index';
+import { MqButton } from '../../../MqButton';
+import { Button } from '../../../Button';
+import { useLoginContext } from '../../../../context';
+
 import web3mqIcon from '../../../../assets/web3mqIcon.svg';
 import walletConnectIcon from '../../../../assets/walletConnectIcon.svg';
+import { MetaMaskIcon, WalletConnectIcon, WalletMetaMaskIcon, Web3MqIcon } from '../../../../icons';
 
-interface IProps {
-  setStep: any;
-  setHeaderTitle: any;
-  step: StepStringEnum;
-}
+// const web3mqIcon = require('../../../../assets/web3mqIcon.svg').default;
+// const walletConnectIcon = require('../../../../assets/walletConnectIcon.svg').default;
+//
+export const StepOne: React.FC = () => {
+  const { setStep, setHeaderTitle, step, getEthAccount } = useLoginContext();
 
-const StepOne: React.FC<IProps> = (props) => {
-  const { setStep, setHeaderTitle, step } = props;
   useEffect(() => {
     setHeaderTitle('Connect Dapp');
   }, []);
@@ -37,13 +34,7 @@ const StepOne: React.FC<IProps> = (props) => {
               <div>Desktop</div>
             </div>
             <div className={ss.walletBox}>
-              <div
-                className={ss.walletItem}
-                onClick={() => {
-                  setHeaderTitle('Choose Desktop wallets');
-                  setStep(StepStringEnum.LOGIN_MODAL);
-                }}
-              >
+              <div className={ss.walletItem} onClick={getEthAccount}>
                 <div className={ss.walletIcon}>
                   <WalletMetaMaskIcon />
                 </div>
@@ -72,11 +63,15 @@ const StepOne: React.FC<IProps> = (props) => {
             </div>
             <div className={ss.btnsBox}>
               <MqButton className={ss.btn}>
-                <img src={web3mqIcon} className={ss.icon} alt="" />
+                <div className={ss.icon}>
+                  <Web3MqIcon />
+                </div>
                 Web3MQ
               </MqButton>
               <MqButton className={ss.btn}>
-                <img src={walletConnectIcon} className={ss.icon} alt="" />
+                <div className={ss.icon}>
+                  <WalletConnectIcon />
+                </div>
                 WalletConnect
               </MqButton>
             </div>
@@ -98,5 +93,3 @@ const StepOne: React.FC<IProps> = (props) => {
     </div>
   );
 };
-
-export default StepOne;

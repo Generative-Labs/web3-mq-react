@@ -1,3 +1,5 @@
+@import "../../style/index.scss";
+
 .loginModalHead {
   display: flex;
   position: relative;
@@ -10,19 +12,22 @@
     line-height: 22px;
     letter-spacing: 0em;
     text-align: center;
-    font-size: 18px;
-    font-weight: 500;
+    @include themeify {
+      font-size: themed(title3_font-size);
+      font-weight: themed(Medium_font-weight);
+    }
   }
 
   .backBtn {
     position: absolute;
     left: 30px;
     cursor: pointer;
-    font-size: 16px;
     height: 16px;
-
-    &:hover {
-      color: #71717a;
+    @include themeify {
+      font-size: themed(Headline_font-size);
+      &:hover {
+        color: themed(Gray_500);
+      }
     }
   }
 
@@ -31,11 +36,15 @@
     position: absolute;
     right: 30px;
     cursor: pointer;
-    font-size: 16px;
     height: 16px;
+    @include themeify {
+      font-size: themed(Headline_font-size);
+
       &:hover {
-        color: #71717a;
+        color: themed(Gray_500);
       }
+    }
+
   }
 }
 
