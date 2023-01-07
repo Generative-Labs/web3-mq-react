@@ -54,25 +54,26 @@ export const usePaginatedMessages = (props: {
           });
         } else if (activeChannel.chat_type === 'group') {
           const curMember: any = { ...activeMember };
-          await Promise.all(
-            messageList.map(async (message) => {
-              if (!message.hasOwnProperty('senderInfo')) {
-                const { senderId } = message;
-                // 是否是自己发送消息
-                if (senderId === client.keys.userid) {
-                  message.senderInfo = userInfo;
+          for (let message of messageList) {
+            if (!message.hasOwnProperty('senderInfo')) {
+              const { senderId } = message;
+              // 是否是自己发送消息
+              if (senderId === client.keys.userid) {
+                console.log('meme');
+                message.senderInfo = userInfo;
+              } else {
+                if (!curMember[senderId]) {
+                  console.log('no has');
+                  const info = await getUserInfo(senderId);
+                  message.senderInfo = info;
+                  curMember[senderId] = info;
                 } else {
-                  if (!curMember[senderId]) {
-                    const info = await getUserInfo(senderId);
-                    message.senderInfo = info;
-                    curMember[senderId] = info;
-                  } else {
-                    message.senderInfo = curMember[senderId];
-                  }
+                  console.log('has');
+                  message.senderInfo = curMember[senderId];
                 }
               }
-            }),
-          );
+            }
+          }
           setActiveMember(curMember);
         }
       }
