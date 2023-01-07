@@ -14,19 +14,16 @@
   margin: 0 auto;
   @include themeify {
     border: 1px solid themed(Gray_200);
+    color: themed(Gray_700);
+    font-weight: themed(Bold_font-weight);
+    font-size: themed(Headline_font-size);
+    font-style: normal;
     .centerText {
       margin-left: 4px;
       margin-right: 6px;
-      font-style: normal;
-      font-weight: themed(Bold_font-weight);
-      font-size: themed(Headline_font-size);
-      color: themed(Gray_700);
     }
     .addressText {
-      font-weight: themed(Bold_font-weight);
-      font-size: themed(Headline_font-size);
       line-height: 20px;
-      color: themed(Gray_700);
     }
   }
 
@@ -41,7 +38,7 @@
   text-align: center;
   @include themeify {
     .title {
-      font-size: 26px;
+      font-size: themed(title2_font-size);
       font-weight: themed(Bold_font-weight);
       line-height: 30px;
       color: themed(Gray_900);
@@ -66,11 +63,11 @@
     text-align: left;
     margin-top: 16px;
     @include themeify {
+      color: themed(Gray_900);
       .title {
         font-weight: themed(Regular_font-weight);
         font-size: themed(Body_font-size);
         line-height: 20px;
-        color: themed(Gray_900);
       }
       .inputValue {
         margin-top: 8px;

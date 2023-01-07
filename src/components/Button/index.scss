@@ -53,8 +53,7 @@
       background-color: themed(Violet_700);
     }
     &:disabled {
-      color: themed(Violet_400);
-      background-color: themed(Violet_50);
+      opacity: 0.5
     }
   }
 }

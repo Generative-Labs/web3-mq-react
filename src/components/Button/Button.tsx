@@ -14,12 +14,13 @@ export type ButtonProps = {
   size?: ButtonSize;
   type?: ButtonType;
   onClick?: (event: MouseEvent) => void;
+  style?: React.CSSProperties;
 };
 
 const sizeAbbreviation = {
   default: '',
   large: 'lg',
-  small: 'sm'
+  small: 'sm',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = (props) => {
@@ -32,15 +33,17 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = (props) => {
     size = 'default',
     type = 'default',
     onClick = () => {},
+    style = {},
   } = props;
-  
+
   return (
-    <button 
+    <button
       className={cx(ss['mq-btn'], className, {
         [ss[`mq-btn-${type}`]]: type,
         [ss[`mq-btn-${sizeAbbreviation[size]}`]]: size !== 'default',
         [ss['mq-btn-block']]: block,
       })}
+      style={style}
       disabled={disabled}
       onClick={(e) => onClick(e)}
     >

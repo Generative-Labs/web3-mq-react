@@ -8,23 +8,24 @@ import {
   MobileIcon,
 } from '../../../icons';
 import { Button } from '../../Button';
-import {StepStringEnum, useLoginContext} from '../../../context';
+import { StepStringEnum, useLoginContext } from '../../../context';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
+import { Loading } from '../../Loading';
 
 export const Home: React.FC = () => {
-  const { setStep, setHeaderTitle, step, getEthAccount, styles } = useLoginContext();
+  const { setStep, setHeaderTitle, step, getEthAccount, styles, showLoading } = useLoginContext();
 
   useEffect(() => {
     setHeaderTitle('Connect Dapp');
   }, []);
 
   return (
-    <div className={cx(ss.container, styles?.homeContainer)}>
+    <div className={cx(ss.container)} style={styles?.homeContainer}>
       {step === StepStringEnum.HOME && (
         <div className={ss.chooseWalletBox}>
-          <div className={ss.contentBox}>
+          <div className={ss.contentBox} style={styles?.contentBox}>
             <div className={ss.top}>
               <div className={ss.icon}>
                 <DesktopIcon />
@@ -32,12 +33,26 @@ export const Home: React.FC = () => {
               <div>Desktop</div>
             </div>
             <div className={ss.walletBox}>
-              <div className={ss.walletItem} onClick={getEthAccount}>
-                <div className={ss.walletIcon}>
-                  <WalletMetaMaskIcon />
+              {showLoading ? (
+                <div
+                  className={ss.walletItem}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    ...styles?.walletItem,
+                  }}
+                >
+                  <Loading />
                 </div>
-                <div className={ss.walletName}>MetaMask</div>
-              </div>
+              ) : (
+                <div className={ss.walletItem} onClick={getEthAccount} style={styles?.walletItem}>
+                  <div className={ss.walletIcon}>
+                    <WalletMetaMaskIcon />
+                  </div>
+                  <div className={ss.walletName}>MetaMask</div>
+                </div>
+              )}
               {/*<div*/}
               {/*    className={ss.walletItem}*/}
               {/*    onClick={() => {*/}
@@ -52,7 +67,7 @@ export const Home: React.FC = () => {
               {/*</div>*/}
             </div>
           </div>
-          <div className={ss.contentBox}>
+          <div className={ss.contentBox} style={styles?.contentBox}>
             <div className={ss.top}>
               <div className={ss.icon}>
                 <MobileIcon />
@@ -60,13 +75,13 @@ export const Home: React.FC = () => {
               <div className={ss.title}>Mobile</div>
             </div>
             <div className={ss.btnsBox}>
-              <Button className={ss.btn}>
+              <Button className={ss.btn} style={styles?.homeButton}>
                 <div className={ss.icon}>
                   <Web3MqIcon />
                 </div>
                 Web3MQ
               </Button>
-              <Button className={ss.btn}>
+              <Button className={ss.btn} style={styles?.homeButton}>
                 <div className={ss.icon}>
                   <WalletConnectIcon />
                 </div>

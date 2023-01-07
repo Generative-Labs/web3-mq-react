@@ -31,6 +31,7 @@ type IProps = {
     userExist: boolean;
   };
   styles?: Record<string, any>;
+  modalClassName?: string;
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
@@ -44,14 +45,17 @@ export const LoginModal: React.FC<IProps> = (props) => {
     loginBtnNode = null,
     account = null,
     styles = null,
+    modalClassName = '',
   } = props;
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(account ? StepStringEnum.LOGIN_MODAL : StepStringEnum.HOME);
   const [headerTitle, setHeaderTitle] = useState('Log in');
   const [address, setAddress] = useState(account?.address || '');
   const [userExits, setUserExits] = useState(account?.userExist || false);
+  const [showLoading, setShowLoading] = useState(false);
 
   const getAccount = async () => {
+    setShowLoading(true);
     const { address, userExist } = await getEthAccount();
     if (userExist) {
       setHeaderTitle('Log in');
@@ -61,6 +65,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setAddress(address);
     setUserExits(userExist);
     setStep(StepStringEnum.LOGIN_MODAL);
+    setShowLoading(false);
   };
 
   // 渲染列表列
@@ -98,6 +103,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       step,
       setStep,
       styles: styles,
+      showLoading,
+      setShowLoading,
     }),
 
     [address, setAddress, getAccount],
@@ -112,14 +119,14 @@ export const LoginModal: React.FC<IProps> = (props) => {
           </Button>
         )}
         <Modal
-          dialogClassName={styles?.dialogClassName}
+          dialogClassName={modalClassName}
           containerId={containerId}
           appType={appType}
           visible={visible}
           modalHeader={<ModalHead />}
           closeModal={hide}
         >
-          <div className={cx(ss.modalBody, styles?.modalBody)}>
+          <div className={cx(ss.modalBody)} style={styles?.modalBody}>
             {[StepStringEnum.HOME, StepStringEnum.VIEW_ALL].includes(step) && <Home />}
             {step === StepStringEnum.LOGIN_MODAL ? userExits ? <Login /> : <SignUp /> : null}
           </div>

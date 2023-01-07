@@ -17,6 +17,8 @@ export type LoginContextValue = {
   getEthAccount: () => Promise<void>;
   address: string;
   setHeaderTitle: Dispatch<SetStateAction<string>>;
+  showLoading: boolean;
+  setShowLoading: Dispatch<SetStateAction<boolean>>;
   step: string;
   setStep: Dispatch<SetStateAction<StepStringEnum>>;
   styles?: Record<string, any> | null;
