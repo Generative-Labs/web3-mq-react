@@ -76,6 +76,7 @@ ul {
 .modalBody {
   width: 100%;
   height: calc(100% - 65px);
+  max-height: 480px;
   overflow-x: hidden;
   overflow-y: auto;
 

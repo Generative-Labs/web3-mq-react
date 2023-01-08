@@ -6,7 +6,6 @@ import { useChatContext } from '../../context/ChatContext';
 import { BulkMessageIcon, CloseBtnIcon } from '../../icons';
 import { Modal } from '../Modal';
 import { SelectTopic } from './SelectTopic';
-import { Button, ButtonSize, ButtonType } from '../Button';
 import { IValueType, RadioGroup } from '../RadioGroup';
 
 import ss from './index.scss';
