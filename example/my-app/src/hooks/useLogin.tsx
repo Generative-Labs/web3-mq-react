@@ -57,20 +57,22 @@ const useLogin = () => {
       return;
     }
 
-    const mainPrivateKey = localStorage.getItem('MAIN_PRIVATE_KEY') || '';
-    const mainPublicKey = localStorage.getItem('MAIN_PUBLIC_KEY') || '';
+    const localMainPrivateKey = localStorage.getItem('MAIN_PRIVATE_KEY') || '';
+    const localMainPublicKey = localStorage.getItem('MAIN_PUBLIC_KEY') || '';
 
     const { userid, address } = userAccount;
-    const { TempPrivateKey, TempPublicKey, pubkeyExpiredTimestamp } =
+    const { TempPrivateKey, TempPublicKey, pubkeyExpiredTimestamp, mainPrivateKey, mainPublicKey } =
       await Client.register.signMetaMask({
         password,
         userid,
         did_value: address,
-        mainPublicKey,
-        mainPrivateKey,
+        mainPublicKey: localMainPublicKey,
+        mainPrivateKey: localMainPrivateKey,
       });
     localStorage.setItem('PRIVATE_KEY', TempPrivateKey);
     localStorage.setItem('PUBLIC_KEY', TempPublicKey);
+    localStorage.setItem('MAIN_PRIVATE_KEY', mainPrivateKey);
+    localStorage.setItem('MAIN_PUBLIC_KEY', mainPublicKey);
     localStorage.setItem('WALLET_ADDRESS', address);
     localStorage.setItem('PUBKEY_EXPIRED_TIMESTAMP', String(pubkeyExpiredTimestamp));
     setKeys({
@@ -96,7 +98,10 @@ const useLogin = () => {
   };
 
   const logout = () => {
-    localStorage.clear();
+    localStorage.setItem('PRIVATE_KEY', '')
+    localStorage.setItem('PUBLIC_KEY', '')
+    localStorage.setItem('WALLET_ADDRESS', '')
+    localStorage.setItem('userid', '')
     setKeys(null);
   };
 
