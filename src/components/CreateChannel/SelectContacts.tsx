@@ -3,7 +3,7 @@ import cx from 'classnames';
 
 import { Avatar } from '../Avatar';
 import { Empty } from './Empty';
-import { MqButton } from '../MqButton';
+import { Button } from '../Button';
 import { SearchInput } from './SearchInput';
 
 import { getShortAddress } from '../../utils';
@@ -110,7 +110,7 @@ export const SelectContacts: React.FC<SelectContactsProps> = React.memo((props) 
           </div>
       }
       <div className={cx(ss.btnContaner)}>
-        <MqButton block disabled={selectedContacts.length < 1}  size='large' type='primary' onClick={handleNext}>Next</MqButton>
+        <Button block disabled={selectedContacts.length < 1} size='large' type='primary' onClick={handleNext}>Next</Button>
       </div>
     </div>
   );

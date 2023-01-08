@@ -11,8 +11,8 @@ export const AddPeopleIcon = (props: any) => {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M2 5C2 2.23858 4.23858 0 7 0C9.76142 0 12 2.23858 12 5C12 7.76142 9.76142 10 7 10C4.23858 10 2 7.76142 2 5ZM7 2C5.34315 2 4 3.34315 4 5C4 6.65685 5.34315 8 7 8C8.65685 8 10 6.65685 10 5C10 3.34315 8.65685 2 7 2Z"
           fill="#18181B"
         />
@@ -21,8 +21,8 @@ export const AddPeopleIcon = (props: any) => {
           fill="#18181B"
         />
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M0 18C0 14.134 3.13401 11 7 11C10.866 11 14 14.134 14 18C14 19.1046 13.1046 20 12 20H2C0.895431 20 0 19.1046 0 18ZM7 13C4.23858 13 2 15.2386 2 18H12C12 15.2386 9.76142 13 7 13Z"
           fill="#18181B"
         />

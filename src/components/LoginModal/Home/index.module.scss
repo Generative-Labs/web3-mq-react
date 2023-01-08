@@ -1,0 +1,87 @@
+@import "../../../style/index.scss";
+
+.chooseWalletBox {
+  .contentBox {
+    padding: 16px 0;
+    @include themeify {
+      color: themed(Gray_900);
+
+      .top {
+        display: flex;
+        justify-content: left;
+        align-items: center;
+        font-family: 'Inter', sans-serif;
+        font-style: normal;
+        line-height: 20px;
+        text-align: center;
+        height: 20px;
+        font-weight: themed(Regular_font-weight);
+        font-size: themed(Body_font-size);
+
+        .icon {
+          margin-right: 4px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .walletBox {
+        margin-top: 8px;
+        display: flex;
+
+        .walletItem {
+          margin-right: 22px;
+          width: 80px;
+          min-height: 90px;
+          border-radius: 8px;
+          background: themed(White_color);
+
+          &:hover {
+            cursor: pointer;
+            background: themed(Gray_100);
+          }
+
+          .walletIcon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 6px 16px 0;
+            height: 48px;
+            margin: 0 auto;
+          }
+
+          .walletName {
+            font-family: 'Inter', sans-serif;
+            padding: 0 10px;
+            margin-top: 6px;
+            text-align: center;
+            font-style: normal;
+            font-weight: themed(Medium_font-weight);
+            font-size: themed(Caption1_font-size);
+            line-height: themed(Headline_font-size);
+          }
+
+        }
+      }
+
+      .btnsBox {
+        .btn {
+          width: 100%;
+          margin-top: 16px;
+          height: 40px;
+
+          span {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+
+          .icon {
+            margin-right: 8px;
+          }
+        }
+      }
+    }
+  }
+}

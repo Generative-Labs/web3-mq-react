@@ -66,6 +66,7 @@
 
 .modalBody {
   height: calc(100% - 65px);
+  max-height: 480px;
   overflow-y: scroll;
   padding: 0 16px;
   @include themeify {
