@@ -29,7 +29,8 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const handleSubmit = async () => {
     try {
       setLoad(true);
-      await client.contact.sendFriend(value, content);
+      const userId = client.keys.userid || '';
+      await client.contact.sendFriend(value, `${userId} : ${content}`);
       setLoad(false);
       onClose && onClose();
     } catch (error) {

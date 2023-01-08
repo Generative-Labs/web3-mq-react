@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Client, KeyPairsType } from 'web3-mq';
 
 const useLogin = () => {
@@ -20,10 +20,15 @@ const useLogin = () => {
   }>();
 
   const init = async () => {
+    const tempPubkey = localStorage.getItem('PUBLIC_KEY') || '';
+    const walletAddress = localStorage.getItem('WALLET_ADDRESS');
+    const didKey = walletAddress ? `eth:${walletAddress}` : '';
     const fastUrl = await Client.init({
       connectUrl: localStorage.getItem('FAST_URL'),
       app_key: 'vAUJTFXbBZRkEDRE',
       env: 'dev',
+      didKey,
+      tempPubkey,
     });
     localStorage.setItem('FAST_URL', fastUrl);
     setFastUrl(fastUrl);
@@ -62,10 +67,11 @@ const useLogin = () => {
         userid,
         did_value: address,
         mainPublicKey,
-        mainPrivateKey
+        mainPrivateKey,
       });
     localStorage.setItem('PRIVATE_KEY', TempPrivateKey);
     localStorage.setItem('PUBLIC_KEY', TempPublicKey);
+    localStorage.setItem('WALLET_ADDRESS', address);
     localStorage.setItem('PUBKEY_EXPIRED_TIMESTAMP', String(pubkeyExpiredTimestamp));
     setKeys({
       PrivateKey: TempPrivateKey,
@@ -78,7 +84,6 @@ const useLogin = () => {
     if (!userAccount) {
       return;
     }
-    console.log(password, 'password')
     const { address, userid } = userAccount;
     const { mainPrivateKey, mainPublicKey } = await Client.register.registerMetaMask({
       password,

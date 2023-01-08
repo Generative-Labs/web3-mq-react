@@ -52,10 +52,11 @@ export const NotificationList = () => {
       return (
         <div className={ss.opreateBtnsContainer}>
           <Button
-            type='primary'
+            type="primary"
             className={cx(ss.btnItem, ss.agree)}
-            onClick={() => {
-              handleFirendRequest(userid, 'agree');
+            onClick={async () => {
+              await handleFirendRequest(userid, 'agree');
+              hide();
             }}
           >
             Agree

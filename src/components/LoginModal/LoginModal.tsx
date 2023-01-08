@@ -70,7 +70,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
 
   // 渲染列表列
   const handleModalShow = async () => {
-    console.log('handleModalShow');
     show();
     setStep(StepStringEnum.HOME);
   };
@@ -113,11 +112,9 @@ export const LoginModal: React.FC<IProps> = (props) => {
   return (
     <LoginProvider value={loginContextValue}>
       <div className={cx(ss.container)}>
-        {loginBtnNode || (
-          <Button className={ss.iconBtn} onClick={handleModalShow}>
-            Login
-          </Button>
-        )}
+        <div onClick={handleModalShow}>
+          {loginBtnNode || <Button className={ss.iconBtn}>Login</Button>}
+        </div>
         <Modal
           dialogClassName={modalClassName}
           containerId={containerId}
