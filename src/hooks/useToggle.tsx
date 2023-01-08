@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
-const useToggle = () => {
-  const [visible, setVisible] = useState<boolean>(false);
+const useToggle = (isShow?: boolean) => {
+  const [visible, setVisible] = useState<boolean>(isShow || false);
 
   const show = () => {
     setVisible(true);

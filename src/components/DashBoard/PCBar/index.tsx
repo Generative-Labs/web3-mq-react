@@ -16,7 +16,12 @@ const PCBar: React.FC<IProps> = (props) => {
   const { setShowListTypeView, showListTypeView, userInfo } = useChatContext();
   return (
     <div className={ss.PcContainer}>
-      <Profile AvatarNode={<Avatar className={ss.userAvatar} image={userInfo?.web3mqInfo?.avatar_url || userInfo?.defaultUserAvatar} name="user" size={56} />} hasLogout />
+      <Avatar
+        className={ss.userAvatar}
+        image={userInfo?.web3mqInfo?.avatar_url || userInfo?.defaultUserAvatar}
+        name="user"
+        size={56}
+      />
       <div className={ss.list}>
         {tabMaps.map((tabItem) => {
           return (
@@ -27,7 +32,9 @@ const PCBar: React.FC<IProps> = (props) => {
               key={tabItem.title}
               className={cx(ss.tabItem, { [ss.selected]: showListTypeView === tabItem.type })}
             >
-              <div className={cx(ss.icon, { [ss.selected]: showListTypeView === tabItem.type })}>{tabItem.icon}</div>
+              <div className={cx(ss.icon, { [ss.selected]: showListTypeView === tabItem.type })}>
+                {tabItem.icon}
+              </div>
               <div className={ss.title}>{tabItem.title}</div>
             </div>
           );

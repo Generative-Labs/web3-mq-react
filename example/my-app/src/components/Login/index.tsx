@@ -24,9 +24,6 @@ const Login: React.FC<IProps> = (props) => {
           <MetaMaskIcon />
           MetaMask
         </button>
-        <Button btnType="primary" size="small">
-          Button
-        </Button>
       </div>
     </div>
   );

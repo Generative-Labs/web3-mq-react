@@ -22,10 +22,10 @@ export const MessageSimple = () => {
     belong_to_thread_id,
     senderInfo = {}, 
   } = message;
-  const { avatar_url, nickname } = senderInfo.web3mqInfo || {};
+  const { avatar_url, nickname } = senderInfo?.web3mqInfo || {};
   const messageRef = useRef<HTMLDivElement | null>(null);
-  const avatarUrl = avatar_url || senderInfo.defaultUserAvatar;
-  const nickName = nickname || senderInfo.defaultUserName;
+  const avatarUrl = avatar_url || senderInfo?.defaultUserAvatar;
+  const nickName = nickname || senderInfo?.defaultUserName;
 
   const longPressEvents = uselongPressEvents({
     onStartCallback: () => setIsShow(true),
@@ -63,16 +63,10 @@ export const MessageSimple = () => {
       {...longPressEvents}
     >
       {appType === AppTypeEnum['pc'] ? (
-        <Profile
-          userInfo={senderInfo}
-          isSelf={client.keys.userid === message.senderId}
-          AvatarNode={
-            <Avatar
-              name="user"
-              image={avatarUrl}
-              size={40}
-            />
-          }
+        <Avatar
+          name="user"
+          image={avatarUrl}
+          size={40}
         />
       ): (
         <Avatar

@@ -56,7 +56,7 @@ const defaultMobileTabMaps: TabType[] = [
     title: 'Profile',
     icon: <ProfileIcon />,
     type: 'profile',
-    component: <Profile isTab hasLogout />,
+    component: <Profile isTab />,
   },
 ];
 

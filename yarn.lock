@@ -5439,8 +5439,8 @@
     "core-util-is" "1.0.2"
     "extsprintf" "^1.2.0"
 
-"web3-mq@file:../../web3-Mq/web3-mq-sdk":
-  "resolved" "file:../../web3-Mq/web3-mq-sdk"
+"web3-mq@file:../../web3-mq-sdk":
+  "resolved" "file:../../web3-mq-sdk"
   "version" "1.2.53"
   dependencies:
     "@noble/ed25519" "^1.6.1"
