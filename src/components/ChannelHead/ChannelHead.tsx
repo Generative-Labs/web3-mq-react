@@ -1,7 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
 
-import { NotificationList } from '../NotificationList';
 import { CreateChannel } from '../CreateChannel';
 
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
@@ -16,8 +15,7 @@ export const ChannelHead: React.FC = React.memo(() => {
       className={cx(ss.channelHeadContainer, { [ss.mobileStyle]: appType !== AppTypeEnum['pc'] })}
     >
       <div className={ss.header}>
-        <span className={ss.title}>{showListTypeView !== 'chat' ? 'Chats' : 'Contacts'}</span>
-        <NotificationList />
+        <span className={ss.title}>{showListTypeView === 'chat' ? 'Contacts' : showListTypeView === 'room' ? 'Chats' : 'Notification'}</span>
         <CreateChannel />
       </div>
     </div>

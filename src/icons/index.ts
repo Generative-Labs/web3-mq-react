@@ -29,6 +29,7 @@ export * from './SelectArrowIcon';
 export * from './SearchIcon';
 export * from './CheckedIcon';
 export * from './NotifyIcon';
+export * from './NotificationIcon';
 export * from './MetaMaskIcon';
 export * from './CloseEyesIcon';
 export * from './OpenEyesIcon';

@@ -33,6 +33,9 @@
   @include themeify{
     color: themed(Gray_900);
     &:hover {
+      .icon svg path {
+        fill:  themed(Violet_500);
+      }
       color:  themed(Violet_500);
       &::before {
         display: block;

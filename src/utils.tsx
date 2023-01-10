@@ -136,6 +136,29 @@ export const formatMessageData = (channel: any) => {
 };
 
 /**
+ * File格式转换
+*/
+export const fileParse = (file: File, type = 'base64'): Promise<any> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    switch (type) {
+    case 'base64':
+      reader.readAsDataURL(file);
+      break;
+    case 'buffer':
+      reader.readAsArrayBuffer(file);
+      break;
+    default:
+      throw new Error('Woring');
+    }
+    reader.onload = (ev) => {
+      resolve(ev);
+    };
+  });
+};
+
+// date-fns
+/**
  * 日期格式化
  * @param time
  * @param format
@@ -168,24 +191,241 @@ export function dateFormat(time: number, format?: string) {
     return rt > 10 || isAddZero(o) ? rt : `0${rt}`;
   });
 }
-/**
- * File格式转换
-*/
-export const fileParse = (file: File, type = 'base64'): Promise<any> => {
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    switch (type) {
-    case 'base64':
-      reader.readAsDataURL(file);
-      break;
-    case 'buffer':
-      reader.readAsArrayBuffer(file);
-      break;
-    default:
-      throw new Error('Woring');
+
+export const toDate = (date: number | Date) => {
+  const dateStr = Object.prototype.toString.call(date);
+
+  // Clone the date
+  if (
+    date instanceof Date ||
+    (typeof date === 'object' && dateStr === '[object Date]')
+  ) {
+    return new Date(date.getTime());
+    // return new Date(argument.getTime())
+  } else if (typeof date === 'number' || dateStr === '[object Number]') {
+    return new Date(date);
+  } else {
+    return new Date(NaN);
+  }
+};
+
+/** 比较两个日期，如果第一个日期晚于第二个日期，则返回 1；如果第一个日期早于第二个日期，则返回 -1；如果日期相等，则返回 0。
+ * 
+ * @param dirtyDateLeft 
+ * @param dirtyDateRight 
+ * @returns 
+ * 
+ */
+export const compareAsc = (
+  dirtyDateLeft: Date | number,
+  dirtyDateRight: Date | number
+) => {
+  const dateLeft = toDate(dirtyDateLeft);
+  const dateRight = toDate(dirtyDateRight);
+
+  const diff = dateLeft.getTime() - dateRight.getTime();
+
+  if (diff < 0) {
+    return -1;
+  } else if (diff > 0) {
+    return 1;
+  } else {
+    return diff;
+  }
+};
+
+export const endOfDay = (dirtyDate: Date | number): Date => {
+  const date = toDate(dirtyDate);
+  date.setHours(23, 59, 59, 999);
+  return date;
+};
+export const endOfMonth = (dirtyDate: Date | number): Date => {
+  const date = toDate(dirtyDate);
+  const month = date.getMonth();
+  date.setFullYear(date.getFullYear(), month + 1, 0);
+  date.setHours(23, 59, 59, 999);
+  return date;
+};
+export const isLastDayOfMonth = (dirtyDate: Date | number): boolean => {
+  const date = toDate(dirtyDate);
+  return endOfDay(date).getTime() === endOfMonth(date).getTime();
+};
+
+export const getTimezoneOffsetInMilliseconds = (date: Date): number => {
+  const utcDate = new Date(
+    Date.UTC(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes(),
+      date.getSeconds(),
+      date.getMilliseconds()
+    )
+  );
+  utcDate.setUTCFullYear(date.getFullYear());
+  return date.getTime() - utcDate.getTime();
+};
+// 获取给定日期之间的日历月数
+export const differenceInCalendarMonths = (dirtyDateLeft: Date | number,  dirtyDateRight: Date | number): number => {
+  const dateLeft = toDate(dirtyDateLeft);
+  const dateRight = toDate(dirtyDateRight);
+
+  const yearDiff = dateLeft.getFullYear() - dateRight.getFullYear();
+  const monthDiff = dateLeft.getMonth() - dateRight.getMonth();
+
+  return yearDiff * 12 + monthDiff;
+};
+// 获取给定日期之间的毫秒数
+export const differenceInMilliseconds = (dateLeft: Date | number, dateRight: Date | number): number => {
+  return toDate(dateLeft).getTime() - toDate(dateRight).getTime();
+};
+// 获取给定日期之间的秒数。
+export const differenceInSeconds = (dateLeft: Date | number, dateRight: Date | number,) => {
+  const diff = differenceInMilliseconds(dateLeft, dateRight) / 1000;
+  return diff < 0 ? Math.ceil(diff) : Math.floor(diff);
+};
+// 默认舍入方法获取给定日期之间的完整月数。
+export const differenceInMonths = (dirtyDateLeft: Date | number, dirtyDateRight: Date | number): number => {
+  const dateLeft = toDate(dirtyDateLeft);
+  const dateRight = toDate(dirtyDateRight);
+
+  const sign = compareAsc(dateLeft, dateRight);
+  const difference = Math.abs(differenceInCalendarMonths(dateLeft, dateRight));
+  let result;
+
+  if (difference < 1) {
+    result = 0;
+  } else {
+    if (dateLeft.getMonth() === 1 && dateLeft.getDate() > 27) {
+      dateLeft.setDate(30);
     }
-    reader.onload = (ev) => {
-      resolve(ev);
-    };
+
+    dateLeft.setMonth(dateLeft.getMonth() - sign * difference);
+
+    let isLastMonthNotFull = compareAsc(dateLeft, dateRight) === -sign;
+
+    // Check for cases of one full calendar month
+    if (
+      isLastDayOfMonth(toDate(dirtyDateLeft)) &&
+      difference === 1 &&
+      compareAsc(dirtyDateLeft, dateRight) === 1
+    ) {
+      isLastMonthNotFull = false;
+    }
+
+    result = sign * (difference - Number(isLastMonthNotFull));
+  }
+
+  return result === 0 ? 0 : result;
+};
+
+enum monthEnum {
+  'Jan' = 1,
+  'Feb' = 2,
+  'Mar' = 3,
+  'Apr' = 4,
+  'May' = 5,
+  'Jun' = 6,
+  'Jul' = 7,
+  'Aug' = 8,
+  'Sept' = 9,
+  'Oct' = 10,
+  'Nov' = 11,
+  'Dec' = 12,
+};
+export function newDateFormat(time: number, format?: string) {
+  const t = new Date(time);
+  format = format || 'Y-m-d h:i:s';
+  let year = t.getFullYear();
+  let month = monthEnum[t.getMonth() + 1];
+  let day = t.getDate();
+  let hours = t.getHours();
+  let minutes = t.getMinutes();
+  let seconds = t.getSeconds();
+
+  const hash = {
+    y: year,
+    m: month,
+    d: day,
+    h: hours,
+    i: minutes,
+    s: seconds,
+  };
+  // 是否补 0
+  const isAddZero = (o: string) => {
+    return /M|D|H|I|S/.test(o);
+  };
+  return format.replace(/\w/g, (o) => {
+    // @ts-ignore
+    let rt = hash[o.toLocaleLowerCase()];
+    if (typeof rt === 'string') return rt;
+    return rt >= 10 || isAddZero(o) ? rt : `0${rt}`;
   });
+}
+/**
+ * 
+ * @param date
+ * @returns 
+ * | Distance between dates                                            | Result              |
+ * |-------------------------------------------------------------------|---------------------|
+ * |   0 <= seconds <= 60                                              | Just now            |
+ * |   1 <= minutes < 60                                               | [1..60] min ago     |
+ * |   1 <= hour < 24                                                  | [1..24] h ago       |
+ * |   1 <= day < 7                                                    | [1..7] d ago        |
+ * |   7 <= day < 30                                                   | [7..30] / 7 wk ago  |
+ * |   1 <= month < 2                                                  | 1 mo ago            |
+ * |   month >= 2                                                      | MM/DD，如：Apr 14    |
+ * |  year > 1                                                         | MM/DD/YYYY          |
+ */
+export const formatDistanceToNow = (date: number | Date) => {
+  const nowDate = Date.now();
+  const minutesInDay = 1440;
+  const minutesInMonth = 43200;
+  const comparison = compareAsc(date, nowDate);
+  if (isNaN(comparison)) {
+    throw new RangeError('Invalid time value');
+  }
+  let dateLeft;
+  let dateRight;
+  if (comparison > 0) {
+    dateLeft = toDate(nowDate);
+    dateRight = toDate(date);
+  } else {
+    dateLeft = toDate(date);
+    dateRight = toDate(nowDate);
+  }
+
+  const seconds = differenceInSeconds(dateRight, dateLeft);
+  const offsetInSeconds = (getTimezoneOffsetInMilliseconds(dateRight) - getTimezoneOffsetInMilliseconds(dateLeft)) / 1000;
+  const minutes = Math.round((seconds - offsetInSeconds) / 60);
+  let months;
+  // 一分钟内
+  if (minutes < 1) {
+    return 'Just now';
+  } else if (minutes < 60) {
+    // 一小时内
+    return `${minutes}min ago`;
+  } else if (minutes < minutesInDay) {
+    // 一天内
+    const hours = Math.round(minutes / 60);
+    return `${hours}h ago`;
+  } else if (minutes < minutesInDay * 7) {
+    // 一周内
+    const days = Math.round(minutes / minutesInDay);
+    return `${days}d ago`;
+  } else if (minutes < minutesInMonth) {
+    // 一个月内
+    const weeks = Math.round(Math.round(minutes / minutesInDay) / 7);
+    return `${weeks}wk ago`;
+  } else if (minutes < minutesInMonth * 2) {
+    return '1mo ago';
+  };
+  months = differenceInMonths(dateRight, dateLeft);
+  if (months < 12) {
+    // 一年内
+    return newDateFormat(toDate(date).getTime(), 'm d');
+  } else {
+    return newDateFormat(toDate(date).getTime(), 'm d, y');
+  }
 };

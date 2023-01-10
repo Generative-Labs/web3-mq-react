@@ -1,0 +1,51 @@
+@import "../../style/index.scss";
+
+.notificationPreviewContainer {
+  display: flex;
+  width: 100%;
+  padding: 8px 16px 8px 16px;
+  word-break: break-word;
+  cursor: pointer;
+  @include themeify {
+    &:hover {
+      background-color: themed(Gray_100);
+    }
+  }
+}
+.wrapper {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+  
+  .dataInner {
+    display: flex;
+    justify-content: space-between;
+    font-family: Inter, sans-serif;
+    @include themeify {
+      .title {
+        font-weight: themed(Bold_font-weight);
+        font-size: themed(Headline_font-size);
+        color: themed(Primary_color);
+      }
+      .date {
+        font-weight: themed(Regular_font-weight);
+        font-size: themed(Tips_font-size);
+        color: themed(Gray_400);
+      }
+    }
+  }
+}
+.textContainer {
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  width: 100%;
+  line-height: 20px;
+  word-wrap: break-all;
+  @include themeify {
+    font-weight: themed(Regular_font-weight);
+    font-size: themed(Tips_font-size);
+    color: themed(Gray_600);
+  }
+}
