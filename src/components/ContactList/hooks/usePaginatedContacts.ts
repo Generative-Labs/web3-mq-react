@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { EventTypes, Client } from 'web3-mq';
+import type { CommonUserInfoType } from '../../Chat/hooks/useQueryUserInfo';
 
 type StatusType = {
   error: boolean;
@@ -11,7 +12,13 @@ const PAGE = {
   size: 20,
 };
 
-export const usePaginatedContacts = (client: Client) => {
+export const usePaginatedContacts = (
+  client: Client,
+  getUserInfo: (
+    didValue: string,
+    didType: 'eth' | 'web3mq',
+  ) => Promise<CommonUserInfoType | null>,
+) => {
   const [contacts, setContacts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [activeContact, setActiveContact] = useState<any | null>(null);
@@ -39,7 +46,20 @@ export const usePaginatedContacts = (client: Client) => {
     queryContacts();
   };
 
-  const handleEvent = useCallback((props: { type: EventTypes }) => {
+  // const renderContact
+  const renderContactList = async (contactList: any[]) => {
+    await Promise.all(
+      contactList.map(async (contact) => {
+        // 通过是否存在defaultUserName和address字段来判断
+        if (!contact.hasOwnProperty('defaultUserName') || !contact.hasOwnProperty('address')) {
+          const info = await getUserInfo(contact.userid, 'web3mq');
+          Object.assign(contact, info);
+        }
+      }),
+    );
+  };
+
+  const handleEvent = useCallback(async (props: { type: EventTypes }) => {
     const { type } = props;
 
     const { contactList } = client.contact;
@@ -50,6 +70,7 @@ export const usePaginatedContacts = (client: Client) => {
     //   changeActiveContactEvent(contactList[0]);
     // }
     if (type === 'contact.getList') {
+      await renderContactList(contactList);
       setContacts(contactList);
     }
     if (type === 'contact.activeChange') {
@@ -57,6 +78,7 @@ export const usePaginatedContacts = (client: Client) => {
       return;
     }
     if (type === 'contact.updateList') {
+      await renderContactList(contactList);
       setContacts(contactList);
       return;
     }

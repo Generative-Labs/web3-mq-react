@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Client, EventTypes } from 'web3-mq';
 
 import { AppTypeEnum } from '../../../context/ChatContext';
+import type { CommonUserInfoType } from '../../Chat/hooks/useQueryUserInfo';
 
 type StatusType = {
   error: boolean;
@@ -13,7 +14,14 @@ const PAGE = {
   size: 20,
 };
 
-export const usePaginatedChannels = (client: Client, appType: AppTypeEnum) => {
+export const usePaginatedChannels = (
+  client: Client,
+  appType: AppTypeEnum,
+  getUserInfo: (
+    didValue: string,
+    didType: 'eth' | 'web3mq',
+  ) => Promise<CommonUserInfoType | null>,
+) => {
   const [channels, setChannels] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
   const [activeChannel, setActiveChannel] = useState<any | null>(null);
@@ -40,11 +48,30 @@ export const usePaginatedChannels = (client: Client, appType: AppTypeEnum) => {
     queryChannels();
   };
 
+  const renderChannelList = async (channelList: any[]) => {
+    await Promise.all(
+      channelList.map(async (channel) => {
+        // 私聊添加DID支持
+        if (channel.chat_type === 'user') {
+          // 通过是否存在homeOwnerInfo字段来判断 该数据是否处理过
+          if (!channel.hasOwnProperty('homeOwnerInfo')) {
+            const info = await getUserInfo(channel.chatid, 'web3mq');
+            channel.homeOwnerInfo = info || {};
+          }
+        }
+      }),
+    );
+  };
+
   const handleEvent = useCallback(async (props: { type: EventTypes }) => {
     const { type } = props;
     const { channelList, activeChannel } = client.channel;
     if (!channelList) {
       return;
+    }
+    if (type === 'channel.getList') {
+      await renderChannelList(channelList);
+      setChannels(channelList);
     }
     if (!activeChannel && channelList.length !== 0) {
       appType === AppTypeEnum['pc'] && changeActiveChannelEvent(channelList[0]);
@@ -54,12 +81,11 @@ export const usePaginatedChannels = (client: Client, appType: AppTypeEnum) => {
       return;
     }
     if (type === 'channel.updated') {
-      setChannels(channelList);
-    }
-    if (type === 'channel.getList') {
+      await renderChannelList(channelList);
       setChannels(channelList);
     }
     if (type === 'channel.created') {
+      await renderChannelList(channelList);
       setChannels(channelList);
     }
     setStatus({

@@ -21,7 +21,7 @@ export const ChannelList = (props: PropsWithChildren<ChannelListProps>) => {
     Preview,
     Paginator = defaultPaginator,
   } = props;
-  const { client, appType } = useChatContext();
+  const { client, appType, getUserInfo } = useChatContext();
   const listRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -32,7 +32,7 @@ export const ChannelList = (props: PropsWithChildren<ChannelListProps>) => {
     handleEvent,
     activeChannel,
     changeActiveChannelEvent,
-  } = usePaginatedChannels(client, appType);
+  } = usePaginatedChannels(client, appType, getUserInfo);
 
   useEffect(() => {
     client.on('channel.updated', handleEvent);

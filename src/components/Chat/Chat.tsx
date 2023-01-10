@@ -1,7 +1,8 @@
-import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { PropsWithChildren, useEffect, useMemo } from 'react';
 import cx from 'classnames';
-import type { Client, SearchUsersResponse } from 'web3-mq';
+import type { Client } from 'web3-mq';
 import { ChatProvider, ChatContextValue, AppTypeEnum } from '../../context/ChatContext';
+import { useQueryUserInfo } from './hooks/useQueryUserInfo';
 
 import { useShowListTypeView } from './hooks/useShowListTypeView';
 
@@ -28,15 +29,10 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
   } = props;
 
   const { showListTypeView, setShowListTypeView } = useShowListTypeView();
-  const [userInfo, setUserInfo] = useState<SearchUsersResponse | null>(null);
+  const { getUserInfo, loginUserInfo, getLoginUserInfo } = useQueryUserInfo(client);
 
   useEffect(() => {
-    getUserInfo();
-  }, []);
-
-  const getUserInfo = useCallback(async () => {
-    const userInfo = await client.user.getMyProfile();
-    setUserInfo(userInfo);
+    getLoginUserInfo().then();
   }, []);
 
   const chatContextValue: ChatContextValue = useMemo(
@@ -44,12 +40,13 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
       client,
       containerId,
       appType,
-      userInfo,
       showListTypeView,
       setShowListTypeView,
       logout,
+      getUserInfo,
+      loginUserInfo,
     }),
-    [showListTypeView, appType, userInfo], // channel id变化需要重新render
+    [showListTypeView, appType, JSON.stringify(loginUserInfo)], // channel id变化需要重新render
   );
 
   return (
