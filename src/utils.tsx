@@ -1,7 +1,19 @@
-export const getShortAddress = (address: string = '') => {
+export function getShortAddress(
+  address: string = '',
+  num: number = 5,
+  endNum = 4
+) {
   let strLength = address.length;
-  return address.substring(0, 5) + '...' + address.substring(strLength - 4, strLength);
-};
+  return (
+    address.substring(0, num) +
+    '...' +
+    address.substring(strLength - endNum, strLength)
+  );
+}
+// export const getShortAddress = (address: string = '') => {
+//   let strLength = address.length;
+//   return address.substring(0, 5) + '...' + address.substring(strLength - 4, strLength);
+// };
 
 export const copyText = (text: string) => {
   return navigator.clipboard
@@ -428,4 +440,11 @@ export const formatDistanceToNow = (date: number | Date) => {
   } else {
     return newDateFormat(toDate(date).getTime(), 'm d, y');
   }
+};
+
+/**
+ * 获取wallet address默认头像
+ */
+export const getUserAvatar = (address: string) =>  {
+  return `https://cdn.stamp.fyi/avatar/${address}?s=300`;
 };

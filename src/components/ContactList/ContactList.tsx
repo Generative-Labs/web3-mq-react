@@ -22,7 +22,7 @@ export const ContactList = (props: PropsWithChildren<ContactListProps>) => {
     Preview,
     Paginator = defaultPaginator,
   } = props;
-  const { client, showListTypeView } = useChatContext();
+  const { client, getUserInfo } = useChatContext();
   const listRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -33,7 +33,7 @@ export const ContactList = (props: PropsWithChildren<ContactListProps>) => {
     handleEvent,
     activeContact,
     changeActiveContactEvent,
-  } = usePaginatedContacts(client);
+  } = usePaginatedContacts(client, getUserInfo);
 
   useEffect(() => {
     client.on('contact.getList', handleEvent);

@@ -32,11 +32,15 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
     return null;
   }
 
-  const { chatid, chat_type, chat_name, avatar_url, avatar_base64 } = activeChannel;
+  const { chatid, chat_type, chat_name, avatar_url, avatar_base64, homeOwnerInfo = {} } = activeChannel;
+  const { defaultUserAvatar, defaultUserName } = homeOwnerInfo;
 
-  // const { avatarUrl, displayTitle, is_1v1 } = formatMessageData(activeChannel);
-
-  const { avatarName = 'displayTitle', avatarImg = avatar_url || avatar_base64, title = chat_name || chatid, avatarSize = 32 } = props;
+  const { 
+    avatarName = 'displayTitle', 
+    avatarImg = defaultUserAvatar || avatar_url || avatar_base64, 
+    title = defaultUserName || chat_name || chatid, 
+    avatarSize = 32 
+  } = props;
 
   return (
     <div

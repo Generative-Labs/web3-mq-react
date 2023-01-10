@@ -13,10 +13,10 @@ type IProps = {
 
 const PCBar: React.FC<IProps> = (props) => {
   const { tabMaps } = props;
-  const { setShowListTypeView, showListTypeView, userInfo } = useChatContext();
+  const { setShowListTypeView, showListTypeView, loginUserInfo } = useChatContext();
   return (
     <div className={ss.PcContainer}>
-      <Profile AvatarNode={<Avatar className={ss.userAvatar} image={userInfo?.avatar_url} name="user" size={56} />} hasLogout />
+      <Profile AvatarNode={<Avatar className={ss.userAvatar} image={loginUserInfo?.defaultUserAvatar || ''} name="user" size={56} />} hasLogout />
       <div className={ss.list}>
         {tabMaps.map((tabItem) => {
           return (
