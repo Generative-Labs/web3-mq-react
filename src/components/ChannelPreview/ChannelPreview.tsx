@@ -30,9 +30,9 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
   const { 
     defaultUserAvatar = '', 
     defaultUserName = '', 
-  } = channel.homeOwnerInfo;
+  } = channel.homeOwnerInfo || {};
 
-  const hasNickName = chat_name.indexOf('user:') !== 0 ? true : false;
+  const hasNickName = chat_name.indexOf('user:') !== 0;
   const chatName = chat_type !== 'user' ? 
     chat_name 
     : hasNickName 

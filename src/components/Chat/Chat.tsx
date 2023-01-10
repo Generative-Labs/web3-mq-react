@@ -29,18 +29,10 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
   } = props;
 
   const { showListTypeView, setShowListTypeView } = useShowListTypeView();
-  const {
-    getUserInfo,
-    loginUserInfo,
-    getLoginUserInfo,
-  } = useQueryUserInfo(client);
-
-  const init = async () => {
-    await getLoginUserInfo();
-  };
+  const { getUserInfo, loginUserInfo, getLoginUserInfo } = useQueryUserInfo(client);
 
   useEffect(() => {
-    init();
+    getLoginUserInfo().then();
   }, []);
 
   const chatContextValue: ChatContextValue = useMemo(

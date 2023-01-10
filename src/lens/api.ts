@@ -1,4 +1,3 @@
-import { getOneProfileQuery } from './lensApiQueryConfig';
 import { getShortAddress } from '../utils';
 
 import { RSS3_USER_DID_PROFILE_PLATFORM } from '../types/enum';
