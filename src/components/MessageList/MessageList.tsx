@@ -4,7 +4,7 @@ import type { EventTypes } from 'web3-mq';
 import { useMessageListElements } from './hooks/useMessageListElements';
 import { usePaginatedMessages } from './hooks/usePaginatedMessages';
 import { useChatContext } from '../../context/ChatContext';
-import type { UserInfoType } from '../Chat/hooks/useQueryUserInfo';
+import type {CommonUserInfoType} from '../Chat/hooks/useQueryUserInfo';
 import type { ComponentContextValue } from '../../context/ComponentContext';
 import { Paginator } from '../Paginator';
 import { Loading } from '../Loading';
@@ -33,12 +33,12 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
     };
   }, []);
 
-  const { client, userInfo, getUserInfo } = useChatContext('MessageList');
+  const { client, getUserInfo, loginUserInfo } = useChatContext('MessageList');
   
   const { msgListloading, loadMoreLoading, messageList, loadNextPage } = usePaginatedMessages({
     client,
-    userInfo: userInfo as UserInfoType,
     scrollBottom,
+    loginUserInfo: loginUserInfo as CommonUserInfoType,
     getUserInfo
   });
 

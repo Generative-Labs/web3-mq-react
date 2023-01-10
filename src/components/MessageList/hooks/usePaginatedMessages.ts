@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Client, EventTypes, Web3MQDBValue } from 'web3-mq';
 
-import type { UserInfoType } from '../..//Chat/hooks/useQueryUserInfo';
+import type { CommonUserInfoType } from '../../Chat/hooks/useQueryUserInfo';
 
 const PAGE = {
   page: 1,
@@ -10,11 +10,14 @@ const PAGE = {
 
 export const usePaginatedMessages = (props: {
   client: Client;
-  userInfo: UserInfoType;
+  loginUserInfo: CommonUserInfoType;
   scrollBottom: () => void;
-  getUserInfo: (userid: string) => Promise<UserInfoType>;
+  getUserInfo: (
+    didValue: string,
+    didType: 'eth' | 'web3mq',
+  ) => Promise<CommonUserInfoType | null>;
 }) => {
-  const { client, userInfo, scrollBottom, getUserInfo } = props;
+  const { client, scrollBottom, getUserInfo, loginUserInfo } = props;
   const [messages, setMessages] = useState<any[]>([]);
   const [msgListloading, setMsgListloading] = useState<boolean>(false);
   const [loadMoreLoading, setLoadMoreLoading] = useState<boolean>(false);
@@ -48,7 +51,7 @@ export const usePaginatedMessages = (props: {
               if (message.senderId === chatid) {
                 message.senderInfo = homeOwnerInfo;
               } else {
-                message.senderInfo = userInfo;
+                message.senderInfo = loginUserInfo;
               }
             }
           });
@@ -60,11 +63,11 @@ export const usePaginatedMessages = (props: {
               // 是否是自己发送消息
               if (senderId === client.keys.userid) {
                 console.log('meme');
-                message.senderInfo = userInfo;
+                message.senderInfo = loginUserInfo;
               } else {
                 if (!curMember[senderId]) {
                   console.log('no has');
-                  const info = await getUserInfo(senderId);
+                  const info = await getUserInfo(senderId, 'web3mq');
                   message.senderInfo = info;
                   curMember[senderId] = info;
                 } else {
@@ -78,7 +81,7 @@ export const usePaginatedMessages = (props: {
         }
       }
     },
-    [JSON.stringify(userInfo), JSON.stringify(activeMember)],
+    [JSON.stringify(loginUserInfo), JSON.stringify(activeMember)],
   );
 
   const saveInIndexdb = async (messageList: any) => {

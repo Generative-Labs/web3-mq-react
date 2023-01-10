@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useContext } from 'react';
 import type { Client } from 'web3-mq';
-import type { UserInfoType } from '../components/Chat/hooks/useQueryUserInfo';
+import type { CommonUserInfoType } from '../components/Chat/hooks/useQueryUserInfo';
 
 export type ListComponentType = 'room' | 'chat';
 
@@ -14,11 +14,14 @@ export type ChatContextValue = {
   client: Client;
   containerId: string;
   appType: AppTypeEnum;
-  userInfo: UserInfoType | null;
   showListTypeView: ListComponentType | string;
-  getUserInfo: (userid: string) => Promise<UserInfoType>;
   setShowListTypeView: (listType: ListComponentType | string) => void;
   logout: () => void;
+  getUserInfo: (
+      didValue: string,
+      didType: 'eth' | 'web3mq',
+  ) => Promise<CommonUserInfoType | null>;
+  loginUserInfo: CommonUserInfoType | null
 };
 
 export const ChatContext = React.createContext<ChatContextValue | undefined>(undefined);

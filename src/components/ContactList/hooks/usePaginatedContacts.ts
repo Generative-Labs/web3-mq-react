@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { EventTypes, Client } from 'web3-mq';
+import type { CommonUserInfoType } from '../../Chat/hooks/useQueryUserInfo';
 
 type StatusType = {
   error: boolean;
@@ -13,7 +14,10 @@ const PAGE = {
 
 export const usePaginatedContacts = (
   client: Client,
-  getUserInfo: (userid: string) => Promise<any>,
+  getUserInfo: (
+    didValue: string,
+    didType: 'eth' | 'web3mq',
+  ) => Promise<CommonUserInfoType | null>,
 ) => {
   const [contacts, setContacts] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -46,14 +50,10 @@ export const usePaginatedContacts = (
   const renderContactList = async (contactList: any[]) => {
     await Promise.all(
       contactList.map(async (contact) => {
-        // 通过是否存在web3mqInfo和address字段来判断
-        if (!contact.hasOwnProperty('web3mqInfo') || !contact.hasOwnProperty('address')) {
-          const info = await getUserInfo(contact.userid);
-          for (let key in info) {
-            if (info.hasOwnProperty(key)) {
-              contact[key] = info[key];
-            }
-          }
+        // 通过是否存在defaultUserName和address字段来判断
+        if (!contact.hasOwnProperty('defaultUserName') || !contact.hasOwnProperty('address')) {
+          const info = await getUserInfo(contact.userid, 'web3mq');
+          Object.assign(contact, info);
         }
       }),
     );

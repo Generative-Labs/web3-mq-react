@@ -4,7 +4,7 @@ import type { Client, SearchUsersResponse } from 'web3-mq';
 
 import { getDidsByRss3, getProfileFromRss3 } from '../../../lens/api';
 import { ACCOUNT_CONNECT_TYPE, WEB3_MQ_DID_TYPE } from '../../../types/enum';
-import { getUserAvatar } from '../../../utils';
+import { getShortAddress, getUserAvatar } from '../../../utils';
 
 export type didValueType = Record<WEB3_MQ_DID_TYPE, any>;
 
@@ -16,171 +16,130 @@ export const PROVIDER_ID_CONFIG: Record<ACCOUNT_CONNECT_TYPE, any> = {
   [ACCOUNT_CONNECT_TYPE.DOTBIT]: 'web3mq:dotbit:SwapChat',
 };
 
-export type UserInfoType = {
-  defaultUserName?: string;
-  defaultUserAvatar?: string;
+
+export type DidValueType = {
+  did_type: WEB3_MQ_DID_TYPE;
+  did_value: string;
+  provider_id: string;
+  detail: any;
+};
+
+export type CommonUserInfoType = {
+  defaultUserName: string;
+  defaultUserAvatar: string;
   address: string;
-  ens?: string;
-  bit?: string;
-  lens?: string;
-  web3mqInfo: (SearchUsersResponse & { didValues?: didValueType }) | null;
-  lensInfo?: any;
-  ensInfo?: any;
-  bitInfo?: any;
-  csbInfo?: any;
+  didValues: DidValueType[];
+  userid: string;
+  stats: {
+    total_followers: number;
+    total_following: number;
+  };
+  wallet_type: string;
+  wallet_address: string;
   permissions?: any;
-  [key: string]: any;
+  didValueMap: Record<WEB3_MQ_DID_TYPE, string>;
 };
 
 export const useQueryUserInfo = (client: Client) => {
-  const [userInfo, setUserInfo] = useState<UserInfoType | null>(null);
+  const [loginUserInfo, setLoginUserInfo] = useState<CommonUserInfoType | null>(null);
+  const getUserInfo = async (
+    didValue: string,
+    didType: 'eth' | 'web3mq',
+    bindDid: boolean = false,
+  ): Promise<CommonUserInfoType | null> => {
+    const web3MqInfo = await getUserPublicProfileRequest({
+      did_type: didType,
+      did_value: didValue,
+      timestamp: Date.now(),
+      my_userid: client.keys.userid,
+    }).catch((e) => {
+      console.log(e);
+    });
 
-  const setUserDid = async (dids: any[]) => {
-    let res: didValueType = {
-      [WEB3_MQ_DID_TYPE.PHONE]: '',
-      [WEB3_MQ_DID_TYPE.EMAIL]: '',
-      [WEB3_MQ_DID_TYPE.LENS]: null,
-      [WEB3_MQ_DID_TYPE.ENS]: '',
-      [WEB3_MQ_DID_TYPE.DOTBIT]: '',
-    };
-    if (dids && dids.length > 0) {
-      dids.forEach((item: any) => {
-        if (item.did_value) {
-          if (item.did_type === WEB3_MQ_DID_TYPE.EMAIL) {
-            res[WEB3_MQ_DID_TYPE.EMAIL] = item.did_value;
-          }
-          if (item.did_type === WEB3_MQ_DID_TYPE.PHONE) {
-            res[WEB3_MQ_DID_TYPE.PHONE] = item.did_value;
-          }
-          if (item.did_type === WEB3_MQ_DID_TYPE.ENS) {
-            res[WEB3_MQ_DID_TYPE.ENS] = item.did_value;
-          }
-          if (item.did_type === WEB3_MQ_DID_TYPE.DOTBIT) {
-            res[WEB3_MQ_DID_TYPE.DOTBIT] = item.did_value;
-          }
+    if (web3MqInfo && web3MqInfo.data) {
+      const info = web3MqInfo.data;
+      const userInfo: CommonUserInfoType = {
+        ...info,
+        address: info.wallet_address,
+        defaultUserName: getShortAddress(info.wallet_address),
+        defaultUserAvatar: getUserAvatar(info.wallet_address),
+        didValueMap: {
+          [WEB3_MQ_DID_TYPE.LENS]: '',
+          [WEB3_MQ_DID_TYPE.ENS]: '',
+          [WEB3_MQ_DID_TYPE.DOTBIT]: '',
+          [WEB3_MQ_DID_TYPE.PHONE]: '',
+          [WEB3_MQ_DID_TYPE.EMAIL]: '',
+        },
+      };
+      // 组装did数据
+      if (info.bind_did_list && info.bind_did_list.length > 0) {
+        info.bind_did_list.forEach((item: any) => {
+          userInfo.didValueMap[item.did_type as WEB3_MQ_DID_TYPE] = item.did_value;
+        });
+      }
+      const rss3Dids = await getDidsByRss3(info.wallet_address);
+      if (rss3Dids) {
+        if (rss3Dids.avatar) {
+          userInfo.defaultUserAvatar = rss3Dids.avatar;
         }
-      });
-      const lensInfo = dids.find((item: any) => item.did_type === WEB3_MQ_DID_TYPE.LENS);
-      if (lensInfo) {
-        // 有lens信息
-        const lensHandle = lensInfo.did_value;
-        res[WEB3_MQ_DID_TYPE.LENS] = {
-          handle: lensHandle,
+        const oriDidValue = {
+          ...userInfo.didValueMap,
         };
-      }
-    }
-    return res;
-  };
-  const getUserProfileBase = async (address: string) => {
-    const commonProfile = await getProfileFromRss3(address);
-    let LoginUserInfo: UserInfoType = {
-      ...commonProfile,
-      defaultUserAvatar: getUserAvatar(commonProfile.address),
-      lensInfo: null,
-      ensInfo: null,
-      bitInfo: null,
-      csbInfo: null,
-    };
-    // all did on instance
-    const profiles = await getDidsByRss3(LoginUserInfo.address as string);
-    if (profiles) {
-      if (profiles.avatar) {
-        LoginUserInfo.defaultUserAvatar = profiles.avatar;
-      }
-      if (profiles.lensInfo) {
-        LoginUserInfo.lensInfo = profiles.lensInfo;
-        if (LoginUserInfo.lensInfo.name) {
-          LoginUserInfo.lens = LoginUserInfo.lensInfo.name;
+        if (rss3Dids.ensInfo && rss3Dids.ensInfo.name) {
+          userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
+          if (!oriDidValue.ens && bindDid) {
+            await client.user.userBindDid({
+              provider_id: PROVIDER_ID_CONFIG.ens,
+              did_type: WEB3_MQ_DID_TYPE.ENS,
+              did_value: rss3Dids.ensInfo.name,
+            });
+          }
+        }
+        if (rss3Dids.lensInfo && rss3Dids.lensInfo.name) {
+          userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
+          if (!oriDidValue['lens.xyz'] && bindDid) {
+            await client.user.userBindDid({
+              provider_id: PROVIDER_ID_CONFIG.lens,
+              did_type: WEB3_MQ_DID_TYPE.LENS,
+              did_value: rss3Dids.lensInfo.name,
+            });
+          }
         }
       }
-      if (profiles.ensInfo) {
-        LoginUserInfo.ensInfo = profiles.ensInfo;
-        if (LoginUserInfo.ensInfo.name) {
-          LoginUserInfo.ens = LoginUserInfo.ensInfo.name;
-        }
+      // username
+      if (info.nickname) {
+        userInfo.defaultUserName = info.nickname;
+      } else {
+        const rss3Profile = await getProfileFromRss3(info.wallet_address);
+        userInfo.defaultUserName = rss3Profile.defaultUserName;
       }
-      if (profiles.csbInfo) {
-        LoginUserInfo.csbInfo = profiles.csbInfo;
+      if (info.avatar_url) {
+        userInfo.defaultUserAvatar = info.avatar_url;
       }
+
+      return userInfo;
     }
-    return LoginUserInfo;
+    return null;
   };
 
-  // 初始化当前登陆用户信息
-  const getLoginUserInfo = useCallback(async () => {
+  const getLoginUserInfo = async () => {
     const myProfile = await client.user.getMyProfile();
-    if (myProfile) {
-      let loginUserInfo = await getUserProfileBase(myProfile.wallet_address);
-      loginUserInfo.web3mqInfo = myProfile;
-      const permissions = await client.user.getUserPermissions().catch((e) => console.log(e));
-      if (permissions && permissions.permissions) {
-        loginUserInfo.permissions = permissions.permissions;
-      }
-
-      if (loginUserInfo.ens) {
-        await client.user.userBindDid({
-          provider_id: PROVIDER_ID_CONFIG.ens,
-          did_type: WEB3_MQ_DID_TYPE.ENS,
-          did_value: loginUserInfo.ens,
-        });
-      }
-      if (loginUserInfo.lens) {
-        await client.user.userBindDid({
-          provider_id: PROVIDER_ID_CONFIG.lens,
-          did_type: WEB3_MQ_DID_TYPE.LENS,
-          did_value: loginUserInfo.lens,
-        });
-      }
-      if (loginUserInfo.bit) {
-        await client.user.userBindDid({
-          provider_id: PROVIDER_ID_CONFIG.dotbit,
-          did_type: WEB3_MQ_DID_TYPE.DOTBIT,
-          did_value: loginUserInfo.bit,
-        });
-      }
-      const dids = await client.user.getUserBindDids();
-      if (dids) {
-        loginUserInfo.web3mqInfo.didValues = await setUserDid(dids);
-      }
-      setUserInfo(loginUserInfo);
-    }
-  }, []);
-  // 获取其他用户信息
-  const getUserInfo = useCallback(async (userid: string) => {
-    let otherUserInfo: UserInfoType = {
-      address: '',
-      web3mqInfo: null,
-    };
-    try {
-      const web3MqInfo = await getUserPublicProfileRequest({
-        did_type: 'web3mq',
-        did_value: userid,
-        timestamp: Date.now(),
-        my_userid: client.keys.userid,
-      }).catch((e) => {
-        console.log(e);
-      });
-      if (web3MqInfo && web3MqInfo.data) {
-        otherUserInfo = await getUserProfileBase(web3MqInfo.data.wallet_address);
-        otherUserInfo.web3mqInfo = web3MqInfo.data;
-        if (
-          otherUserInfo.web3mqInfo &&
-          web3MqInfo.data.bind_did_list &&
-          web3MqInfo.data.bind_did_list.length > 0
-        ) {
-          otherUserInfo.web3mqInfo.didValues = await setUserDid(web3MqInfo.data.bind_did_list);
+    if (myProfile && myProfile.wallet_address) {
+      const info = await getUserInfo(myProfile.wallet_address, 'eth');
+      if (info) {
+        // 设置permissions
+        const permissions = await client.user.getUserPermissions().catch((e) => console.log(e));
+        if (permissions && permissions.permissions) {
+          info.permissions = permissions.permissions;
         }
+        setLoginUserInfo(info);
       }
-      return otherUserInfo;
-    } catch (e) {
-      console.log(e, 'e');
-      return otherUserInfo;
     }
-  }, []);
+  };
 
   return {
-    userInfo,
-    getLoginUserInfo,
     getUserInfo,
+    loginUserInfo,
+    getLoginUserInfo,
   };
 };

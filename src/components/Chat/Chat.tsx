@@ -29,10 +29,18 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
   } = props;
 
   const { showListTypeView, setShowListTypeView } = useShowListTypeView();
-  const { userInfo, getLoginUserInfo, getUserInfo } = useQueryUserInfo(client);
+  const {
+    getUserInfo,
+    loginUserInfo,
+    getLoginUserInfo,
+  } = useQueryUserInfo(client);
+
+  const init = async () => {
+    await getLoginUserInfo();
+  };
 
   useEffect(() => {
-    getLoginUserInfo();
+    init();
   }, []);
 
   const chatContextValue: ChatContextValue = useMemo(
@@ -40,13 +48,13 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
       client,
       containerId,
       appType,
-      userInfo,
-      getUserInfo,
       showListTypeView,
       setShowListTypeView,
       logout,
+      getUserInfo,
+      loginUserInfo,
     }),
-    [showListTypeView, appType, userInfo], // channel id变化需要重新render
+    [showListTypeView, appType, JSON.stringify(loginUserInfo)], // channel id变化需要重新render
   );
 
   return (

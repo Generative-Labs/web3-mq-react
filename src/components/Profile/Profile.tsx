@@ -11,17 +11,16 @@ import {
   // DiscordIcon,
 } from '../../icons';
 import { Avatar } from '../Avatar';
-import type { UserInfoType } from '../Chat/hooks/useQueryUserInfo';
+import type { CommonUserInfoType } from '../Chat/hooks/useQueryUserInfo';
 import { copyText } from '../../utils';
 import useToggle from '../../hooks/useToggle';
-import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
+import { useChatContext, AppTypeEnum } from '../../context';
 import { toast } from '../Toast';
 
 import ss from './index.scss';
 
-
 type IProps = {
-  userInfo?: UserInfoType;
+  userInfo?: CommonUserInfoType;
   AvatarNode?: React.ReactNode;
   isTab?: boolean;
   isSelf?: boolean;
@@ -29,8 +28,14 @@ type IProps = {
 };
 
 export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
-  const { AvatarNode, userInfo: propsUserInfo, isTab = false, isSelf = false, hasLogout = false } = props;
-  const { client, userInfo: contextUserInfo, appType, logout } = useChatContext('Profile');
+  const {
+    AvatarNode,
+    userInfo: propsUserInfo,
+    isTab = false,
+    isSelf = false,
+    hasLogout = false,
+  } = props;
+  const { loginUserInfo: contextUserInfo, appType, logout } = useChatContext('Profile');
   const [copied, setCopied] = useState<boolean>(false);
   const selectRef = useRef<HTMLDivElement | null>(null);
   const { visible, toggle, hide } = useToggle();
@@ -38,16 +43,7 @@ export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
   // const members = client.channel.activeChannel?.members || [];
 
   const userInfo = propsUserInfo || contextUserInfo;
-  const { 
-    defaultUserAvatar = '', 
-    defaultUserName = '', 
-  } = userInfo || {};
-  const {
-    avatar_url = '',
-    nickname = '',
-    wallet_address = '',
-  } = userInfo?.web3mqInfo || {};
-
+  const { defaultUserAvatar = '', defaultUserName = '', wallet_address = '' } = userInfo || {};
 
   const copy = useCallback(async () => {
     const res = await copyText(wallet_address);
@@ -122,10 +118,10 @@ export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
   }, [appType, isTab]);
 
   return (
-    <div 
+    <div
       className={cx(ss.profileContainer, {
-        [ss.isRelative]: appType === AppTypeEnum['pc']
-      })} 
+        [ss.isRelative]: appType === AppTypeEnum['pc'],
+      })}
       ref={selectRef}
     >
       {AvatarNode && (
@@ -141,8 +137,8 @@ export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
           })}
         >
           <BackArrow />
-          <Avatar className={ss.avatar} name="user" image={avatar_url || defaultUserAvatar} size={46} />
-          <div className={ss.name}>{nickname || defaultUserName}</div>
+          <Avatar className={ss.avatar} name="user" image={defaultUserAvatar} size={46} />
+          <div className={ss.name}>{defaultUserName}</div>
           <div className={ss.addressWarp}>
             <span className={ss.address}>{wallet_address}</span>
             <CopyIcon className={cx(ss.copyIcon, { [ss.copied]: copied })} onClick={copy} />

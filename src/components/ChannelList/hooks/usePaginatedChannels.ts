@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Client, EventTypes } from 'web3-mq';
 
 import { AppTypeEnum } from '../../../context/ChatContext';
+import type { CommonUserInfoType } from '../../Chat/hooks/useQueryUserInfo';
 
 type StatusType = {
   error: boolean;
@@ -16,7 +17,10 @@ const PAGE = {
 export const usePaginatedChannels = (
   client: Client,
   appType: AppTypeEnum,
-  getUserInfo: (userid: string) => Promise<any>,
+  getUserInfo: (
+    didValue: string,
+    didType: 'eth' | 'web3mq',
+  ) => Promise<CommonUserInfoType | null>,
 ) => {
   const [channels, setChannels] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
@@ -51,8 +55,8 @@ export const usePaginatedChannels = (
         if (channel.chat_type === 'user') {
           // 通过是否存在homeOwnerInfo字段来判断 该数据是否处理过
           if (!channel.hasOwnProperty('homeOwnerInfo')) {
-            const info = await getUserInfo(channel.chatid);
-            channel.homeOwnerInfo = info;
+            const info = await getUserInfo(channel.chatid, 'web3mq');
+            channel.homeOwnerInfo = info || {};
           }
         }
       }),

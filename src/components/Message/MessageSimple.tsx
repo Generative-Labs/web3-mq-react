@@ -22,10 +22,8 @@ export const MessageSimple = () => {
     belong_to_thread_id,
     senderInfo = {}, 
   } = message;
-  const { avatar_url, nickname } = senderInfo.web3mqInfo || {};
+  const { defaultUserAvatar, defaultUserName } = senderInfo || {};
   const messageRef = useRef<HTMLDivElement | null>(null);
-  const avatarUrl = avatar_url || senderInfo.defaultUserAvatar;
-  const nickName = nickname || senderInfo.defaultUserName;
 
   const longPressEvents = uselongPressEvents({
     onStartCallback: () => setIsShow(true),
@@ -69,7 +67,7 @@ export const MessageSimple = () => {
           AvatarNode={
             <Avatar
               name="user"
-              image={avatarUrl}
+              image={defaultUserAvatar}
               size={40}
             />
           }
@@ -77,7 +75,7 @@ export const MessageSimple = () => {
       ): (
         <Avatar
           name="user"
-          image={avatarUrl}
+          image={defaultUserAvatar}
           size={30} 
         />
       )}
@@ -91,7 +89,7 @@ export const MessageSimple = () => {
           {/* {activeMember[from_uid]?.user_name && (
             <span className={ss.name}>{activeMember[from_uid]?.user_name || ''}</span>
           )} */}
-          <span className={ss.name}>{nickName}</span>
+          <span className={ss.name}>{defaultUserName}</span>
           <span>{date}&nbsp;{timestamp}</span>
         </div>
         <MessageInner />
