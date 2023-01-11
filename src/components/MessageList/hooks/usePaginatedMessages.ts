@@ -12,10 +12,7 @@ export const usePaginatedMessages = (props: {
   client: Client;
   loginUserInfo: CommonUserInfoType;
   scrollBottom: () => void;
-  getUserInfo: (
-    didValue: string,
-    didType: 'eth' | 'web3mq',
-  ) => Promise<CommonUserInfoType | null>;
+  getUserInfo: (didValue: string, didType: 'eth' | 'web3mq') => Promise<CommonUserInfoType | null>;
 }) => {
   const { client, scrollBottom, getUserInfo, loginUserInfo } = props;
   const [messages, setMessages] = useState<any[]>([]);
@@ -62,16 +59,13 @@ export const usePaginatedMessages = (props: {
               const { senderId } = message;
               // 是否是自己发送消息
               if (senderId === client.keys.userid) {
-                console.log('meme');
                 message.senderInfo = loginUserInfo;
               } else {
                 if (!curMember[senderId]) {
-                  console.log('no has');
                   const info = await getUserInfo(senderId, 'web3mq');
                   message.senderInfo = info;
                   curMember[senderId] = info;
                 } else {
-                  console.log('has');
                   message.senderInfo = curMember[senderId];
                 }
               }

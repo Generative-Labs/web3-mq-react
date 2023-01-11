@@ -1,0 +1,61 @@
+@import "../../../style/index.scss";
+
+.contactTabsContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.tabsList {
+  display: flex;
+  position: relative;
+  justify-content: space-around;
+  border-right: 1px solid;
+  cursor: pointer;
+  &::before {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    content: '';
+    border-bottom: 1px solid;
+  }
+  @include themeify {
+    border-color: themed(Gray_100);
+    &::before {
+      border-color: themed(Gray_100);
+    }
+  }
+}
+.tabNav {
+  position: relative;
+  font-family: Inter, sans-serif;
+  padding: 13px 0px 15px;
+  line-height: 20px;
+  &::after {
+    position: absolute;
+    height: 2px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    content: '';
+  }
+  @include themeify {
+    font-size: themed(Headline_font-size);
+    font-weight: themed(Medium_font-weight);
+    color: themed(Gray_400);
+    &.selected {
+      color: themed(Violet_500);
+      &::after {
+        background-color: themed(Violet_500);
+      }
+    }
+  }
+}
+
+.tabsContentItem {
+  height: 100%;
+  overflow-y: auto;
+}
+.hide {
+  display: none;
+}

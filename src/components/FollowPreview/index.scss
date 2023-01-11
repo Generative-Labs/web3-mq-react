@@ -1,0 +1,43 @@
+@import "../../style/index.scss";
+.followPreviewContainer {
+  height: 56px;
+  display: flex;
+  align-items: center;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.1s ease-in-out;
+  @include themeify{
+    background-color: themed(White_color);
+    &:hover {
+      background-color: themed(Gray_100);
+    }
+    &.selected {
+      background-color: themed(Gray_100);
+    }
+  }
+}
+.rightContent {
+  height: 40px;
+  display: flex;
+  flex: 1 1;
+  justify-content: space-between;
+  align-items: center;
+  .wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    @include themeify {
+      & :nth-child(1) {
+        font-size: themed(Body_font-size);
+        font-weight: themed(Medium_font-weight);
+        color: themed(Gray_900);
+      }
+      & :nth-child(2) {
+        font-size: themed(Caption2_font-size);
+        font-weight: themed(Regular_font-weigh);
+        color: themed(Gray_400);
+      }
+    }
+  }
+}

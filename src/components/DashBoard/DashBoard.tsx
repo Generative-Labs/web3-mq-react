@@ -6,7 +6,7 @@ import { RoomsIcon, ChatsIcon, ProfileIcon } from '../../icons';
 import PCBar from './PCBar';
 import MobileBar from './MobileBar';
 import { ChannelList } from '../ChannelList';
-import { ContactList } from '../ContactList';
+import { ContactTabs } from '../ContactList';
 import { Profile } from '../Profile';
 import { Main } from 'components/Main';
 
@@ -35,7 +35,7 @@ const defaultPCTabMaps: TabType[] = [
     title: 'Contact',
     icon: <ChatsIcon />,
     type: 'chat',
-    component: <ContactList />,
+    component: <ContactTabs />,
   },
 ];
 
@@ -50,7 +50,7 @@ const defaultMobileTabMaps: TabType[] = [
     title: 'Contact',
     icon: <ChatsIcon />,
     type: 'chat',
-    component: <ContactList />,
+    component: <ContactTabs />,
   },
   {
     title: 'Profile',
