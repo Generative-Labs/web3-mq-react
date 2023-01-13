@@ -74,7 +74,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
           return <WalletItem {...item} key={index} />;
         }
       })}
-      {walletsConfig.length > 4 && showCount !== 0 && (
+      {walletsConfig.length > showCount + 1 && showCount !== 0 && (
         <div
           className={ss.walletItem}
           onClick={() => {
