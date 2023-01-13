@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Client, EventTypes } from 'web3-mq';
 
 import { AppTypeEnum } from '../../../context/ChatContext';
-import type { CommonUserInfoType } from '../../Chat/hooks/useQueryUserInfo';
+import type {CommonUserInfoType, SEARCH_DID_TYPE} from '../../Chat/hooks/useQueryUserInfo';
 
 type StatusType = {
   error: boolean;
@@ -19,7 +19,7 @@ export const usePaginatedChannels = (
   appType: AppTypeEnum,
   getUserInfo: (
     didValue: string,
-    didType: 'eth' | 'web3mq',
+    didType: SEARCH_DID_TYPE,
   ) => Promise<CommonUserInfoType | null>,
 ) => {
   const [channels, setChannels] = useState<any[]>([]);

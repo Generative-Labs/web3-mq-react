@@ -17,11 +17,12 @@ import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
+import type { WalletType } from 'web3-mq';
 
 type IProps = {
-  login: (password: string) => Promise<void>;
-  register: (password: string) => Promise<void>;
-  getEthAccount: () => Promise<GetEthAccountRes>;
+  login: (password: string, walletType?: WalletType) => Promise<void>;
+  register: (password: string, walletType?: WalletType) => Promise<void>;
+  getEthAccount: (walletType?: WalletType) => Promise<GetEthAccountRes>;
   containerId: string;
   isShow?: boolean;
   appType?: AppTypeEnum;
@@ -53,18 +54,21 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const [address, setAddress] = useState(account?.address || '');
   const [userExits, setUserExits] = useState(account?.userExist || false);
   const [showLoading, setShowLoading] = useState(false);
+  const [walletType, setWalletType] = useState<WalletType>('eth');
 
-  const getAccount = async () => {
+  const getAccount = async (didType?: WalletType) => {
     setShowLoading(true);
-    const { address, userExist } = await getEthAccount();
-    if (userExist) {
-      setHeaderTitle('Log in');
-    } else {
-      setHeaderTitle('Sign up');
+    const { address, userExist } = await getEthAccount(didType);
+    if (address) {
+      if (userExist) {
+        setHeaderTitle('Log in');
+      } else {
+        setHeaderTitle('Sign up');
+      }
+      setAddress(address);
+      setUserExits(userExist);
+      setStep(StepStringEnum.LOGIN_MODAL);
     }
-    setAddress(address);
-    setUserExits(userExist);
-    setStep(StepStringEnum.LOGIN_MODAL);
     setShowLoading(false);
   };
 
@@ -104,6 +108,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       styles: styles,
       showLoading,
       setShowLoading,
+      walletType,
+      setWalletType,
     }),
 
     [address, setAddress, getAccount],

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useContext } from 'react';
 import type { Client } from 'web3-mq';
-import type { CommonUserInfoType } from '../components/Chat/hooks/useQueryUserInfo';
+import type {CommonUserInfoType, SEARCH_DID_TYPE} from '../components/Chat/hooks/useQueryUserInfo';
 
 export type ListComponentType = 'room' | 'chat';
 
@@ -19,7 +19,7 @@ export type ChatContextValue = {
   logout: () => void;
   getUserInfo: (
       didValue: string,
-      didType: 'eth' | 'web3mq',
+      didType: SEARCH_DID_TYPE,
   ) => Promise<CommonUserInfoType | null>;
   loginUserInfo: CommonUserInfoType | null
 };
