@@ -1,21 +1,15 @@
 import React, { useEffect } from 'react';
 
-import {
-  WalletConnectIcon,
-  WalletMetaMaskIcon,
-  Web3MqIcon,
-  DesktopIcon,
-  MobileIcon,
-} from '../../../icons';
+import { DesktopIcon, MobileIcon, WalletConnectIcon, Web3MqIcon } from '../../../icons';
 import { Button } from '../../Button';
+import { RenderWallets } from '../RenderWallets/RenderWallets';
 import { StepStringEnum, useLoginContext } from '../../../context';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
-import { Loading } from '../../Loading';
 
 export const Home: React.FC = () => {
-  const { setStep, setHeaderTitle, step, getEthAccount, styles, showLoading } = useLoginContext();
+  const { setHeaderTitle, step, styles } = useLoginContext();
 
   useEffect(() => {
     setHeaderTitle('Connect Dapp');
@@ -32,40 +26,7 @@ export const Home: React.FC = () => {
               </div>
               <div>Desktop</div>
             </div>
-            <div className={ss.walletBox}>
-              {showLoading ? (
-                <div
-                  className={ss.walletItem}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    ...styles?.walletItem,
-                  }}
-                >
-                  <Loading />
-                </div>
-              ) : (
-                <div className={ss.walletItem} onClick={getEthAccount} style={styles?.walletItem}>
-                  <div className={ss.walletIcon}>
-                    <WalletMetaMaskIcon />
-                  </div>
-                  <div className={ss.walletName}>MetaMask</div>
-                </div>
-              )}
-              {/*<div*/}
-              {/*    className={ss.walletItem}*/}
-              {/*    onClick={() => {*/}
-              {/*      setHeaderTitle('Choose Desktop wallets');*/}
-              {/*      setStep(StepStringEnum.VIEW_ALL);*/}
-              {/*    }}*/}
-              {/*>*/}
-              {/*  <div className={ss.walletIcon}>*/}
-              {/*    <ViewAllIcon />*/}
-              {/*  </div>*/}
-              {/*  <div className={ss.walletName}>View All</div>*/}
-              {/*</div>*/}
-            </div>
+            <RenderWallets showCount={3} />
           </div>
           <div className={ss.contentBox} style={styles?.contentBox}>
             <div className={ss.top}>
@@ -91,18 +52,7 @@ export const Home: React.FC = () => {
           </div>
         </div>
       )}
-      {step === StepStringEnum.VIEW_ALL && (
-        <div>
-          Step two
-          <Button
-            onClick={() => {
-              setStep(StepStringEnum.LOGIN_MODAL);
-            }}
-          >
-            next
-          </Button>
-        </div>
-      )}
+      {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
     </div>
   );
 };

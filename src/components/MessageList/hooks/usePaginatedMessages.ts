@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Client, EventTypes, Web3MQDBValue } from 'web3-mq';
 
-import type { CommonUserInfoType } from '../../Chat/hooks/useQueryUserInfo';
+import type {CommonUserInfoType, SEARCH_DID_TYPE} from '../../Chat/hooks/useQueryUserInfo';
 
 const PAGE = {
   page: 1,
@@ -14,7 +14,7 @@ export const usePaginatedMessages = (props: {
   scrollBottom: () => void;
   getUserInfo: (
     didValue: string,
-    didType: 'eth' | 'web3mq',
+    didType: SEARCH_DID_TYPE,
   ) => Promise<CommonUserInfoType | null>;
 }) => {
   const { client, scrollBottom, getUserInfo, loginUserInfo } = props;
@@ -62,7 +62,6 @@ export const usePaginatedMessages = (props: {
               const { senderId } = message;
               // 是否是自己发送消息
               if (senderId === client.keys.userid) {
-                console.log('meme');
                 message.senderInfo = loginUserInfo;
               } else {
                 if (!curMember[senderId]) {

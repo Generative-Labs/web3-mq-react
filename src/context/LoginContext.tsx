@@ -1,10 +1,12 @@
 import React, { Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react';
+import type { WalletType } from 'web3-mq';
 
 export type GetEthAccountRes = {
   address: string;
   userid: string;
   userExist: boolean;
 };
+
 export enum StepStringEnum {
   HOME = 'home',
   VIEW_ALL = 'view_all_desktop',
@@ -12,15 +14,17 @@ export enum StepStringEnum {
 }
 
 export type LoginContextValue = {
-  login: (password: string) => Promise<void>;
-  register: (password: string) => Promise<void>;
-  getEthAccount: () => Promise<void>;
+  login: (password: string, walletType?: WalletType) => Promise<void>;
+  register: (password: string, walletType?: WalletType) => Promise<void>;
+  getEthAccount: (walletType?: WalletType) => Promise<void>;
   address: string;
   setHeaderTitle: Dispatch<SetStateAction<string>>;
   showLoading: boolean;
   setShowLoading: Dispatch<SetStateAction<boolean>>;
   step: string;
   setStep: Dispatch<SetStateAction<StepStringEnum>>;
+  walletType: WalletType;
+  setWalletType: Dispatch<SetStateAction<WalletType>>;
   styles?: Record<string, any> | null;
 };
 

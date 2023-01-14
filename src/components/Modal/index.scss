@@ -8,7 +8,7 @@
   bottom: 0;
   right: 0;
   background: rgba(0, 0, 0, 0.24);
-  z-index: 99;
+  z-index: 40;
 }
 
 .dialog {
@@ -54,20 +54,28 @@
 
 .closeBtn {
   position: absolute;
-  right: 30px;
+  right: 16px;
   cursor: pointer;
   font-size: 16px;
-  height: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  &:hover {
-    color: #777;
+  @include themeify {
+    &:hover {
+      color: themed(Gray_500);
+    }
   }
 }
 
 .leftBtn {
   cursor: pointer;
   position: absolute;
- left: 30px;
+  left: 30px;
 }
 
 .enter {

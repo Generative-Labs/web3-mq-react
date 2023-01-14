@@ -9,7 +9,7 @@ import ss from './index.module.scss';
 import cx from 'classnames';
 
 export const Login: React.FC = () => {
-  const { login, address, styles, showLoading, setShowLoading } = useLoginContext();
+  const { login, address, styles, showLoading, setShowLoading, walletType } = useLoginContext();
 
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -18,7 +18,7 @@ export const Login: React.FC = () => {
   const handleSubmit = async () => {
     setShowLoading(true);
     try {
-      await login(password);
+      await login(password, walletType);
       setShowLoading(false);
     } catch (e: any) {
       setErrorInfo(e.message);

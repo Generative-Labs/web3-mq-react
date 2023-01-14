@@ -9,7 +9,7 @@ import ss from './index.module.scss';
 import cx from 'classnames';
 
 export const SignUp: React.FC = () => {
-  const { login, register, address, styles, showLoading, setShowLoading } = useLoginContext();
+  const { login, register, address, styles, showLoading, setShowLoading, walletType } = useLoginContext();
 
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -31,8 +31,8 @@ export const SignUp: React.FC = () => {
       if (password !== confirmPassword) {
         setErrorInfo('Passwords don\'t match. Please check your password inputs.');
       }
-      await register(password);
-      await login(password);
+      await register(password, walletType);
+      await login(password, walletType);
       setShowLoading(false);
     } catch (e: any) {
       setErrorInfo(e.message);
