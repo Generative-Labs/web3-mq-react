@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useMemo } from 'react';
 
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
-import { RoomsIcon, ChatsIcon, ProfileIcon } from '../../icons';
+import { RoomsIcon, ChatsIcon, NotificationIcon, ProfileIcon } from '../../icons';
 
 import PCBar from './PCBar';
 import MobileBar from './MobileBar';
 import { ChannelList } from '../ChannelList';
 import { ContactList } from '../ContactList';
+import { NotificationList, NotificationModal } from '../NotificationList';
 import { Profile } from '../Profile';
 import { Main } from 'components/Main';
 
@@ -24,6 +25,12 @@ export type TabType = {
   component: React.ReactNode;
 };
 
+enum showTypeEnum {
+  'list' = 'list',
+  'modal' = 'modal'
+};
+const showNotificationType: showTypeEnum = showTypeEnum['list'];
+
 const defaultPCTabMaps: TabType[] = [
   {
     title: 'Rooms',
@@ -36,6 +43,12 @@ const defaultPCTabMaps: TabType[] = [
     icon: <ChatsIcon />,
     type: 'chat',
     component: <ContactList />,
+  },
+  {
+    title: 'Notification',
+    icon: showNotificationType === showTypeEnum['list'] ? <NotificationIcon /> : <NotificationModal /> ,
+    type: 'Notification',
+    component: <NotificationList style={{width: '360px'}} />,
   },
 ];
 
@@ -51,6 +64,12 @@ const defaultMobileTabMaps: TabType[] = [
     icon: <ChatsIcon />,
     type: 'chat',
     component: <ContactList />,
+  },
+  {
+    title: 'Notification',
+    icon: <NotificationIcon />,
+    type: 'Notification',
+    component: <NotificationList />,
   },
   {
     title: 'Profile',
