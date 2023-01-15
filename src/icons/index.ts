@@ -41,3 +41,5 @@ export * from './WalletConnectIcon';
 export * from './ViewAllIcon';
 export * from './Web3MqIcon';
 export * from './ArgentWalletIcon';
+export * from './SuccessIcon';
+export * from './ConnectClosedIcon';

@@ -1,5 +1,6 @@
 export * from './Chat';
 export * from './ChatAutoComplete';
+export * from './ConnectMessage';
 export * from './Avatar';
 export * from './Channel';
 export * from './DashBoard';

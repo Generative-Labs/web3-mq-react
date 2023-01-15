@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   padding: 21px 16px;
-  width: 360px;
+  min-width: 360px;
   border-bottom: 1px solid;
   border-right: 1px solid;
   @include themeify{
