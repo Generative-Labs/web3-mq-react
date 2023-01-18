@@ -13,12 +13,13 @@ import ss from './index.scss';
 
 
 export type MessageListProps = {
+  Load?: React.ReactNode;
   Message?: ComponentContextValue['Message'];
   isThread?: boolean;
 };
 
 const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
-  const { isThread = false } = props;
+  const { isThread = false, Load } = props;
   const listRef = useRef<HTMLDivElement | null>(null);
   // const messagesEndRef = useRef<HTMLDivElement | null>(null);
   // let [msgCount, setMsgCount] = useState<number>(0);
@@ -119,7 +120,7 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
   if (msgListloading) {
     return (
       <div className={ss.loadingContainer}>
-        <Loading />
+        {Load || <Loading />}
       </div>
     );
   }
