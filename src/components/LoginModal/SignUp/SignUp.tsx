@@ -1,6 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-import { CloseEyesIcon, LoginErrorIcon, MetaMaskIcon, OpenEyesIcon } from '../../../icons';
+import { walletsMap } from '../Login';
+import { CloseEyesIcon, LoginErrorIcon, OpenEyesIcon } from '../../../icons';
 import { getShortAddress } from '../../../utils';
 import { Button } from '../../Button';
 import { useLoginContext } from '../../../context';
@@ -25,6 +26,17 @@ export const SignUp: React.FC = () => {
     return res;
   }, [password, confirmPassword, showLoading]);
 
+  const WalletIconContainer = useCallback(() => {
+    const walletItem = walletsMap.find(item => item.type === walletType);
+    if (!walletItem) return null;
+    return (
+      <>
+        {walletItem?.icon}
+        <div className={ss.centerText}>{walletItem?.title}</div>
+      </>
+    );
+  }, [walletType]);
+
   const handleSubmit = async () => {
     setShowLoading(true);
     try {
@@ -43,8 +55,7 @@ export const SignUp: React.FC = () => {
   return (
     <div className={cx(ss.container)} style={styles?.loginContainer}>
       <div className={ss.addressBox} style={styles?.addressBox}>
-        <MetaMaskIcon />
-        <div className={ss.centerText}>MetaMask</div>
+        <WalletIconContainer />
         <div className={ss.addressText}>{getShortAddress(address)}</div>
       </div>
       <div className={ss.textBox}>

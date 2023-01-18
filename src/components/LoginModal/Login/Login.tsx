@@ -1,12 +1,25 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-import { CloseEyesIcon, LoginErrorIcon, MetaMaskIcon, OpenEyesIcon } from '../../../icons';
+import { ArgentWalletIcon, CloseEyesIcon, LoginErrorIcon, MetaMaskIcon, OpenEyesIcon } from '../../../icons';
 import { useLoginContext } from '../../../context';
 import { getShortAddress } from '../../../utils';
 import { Button } from '../../Button';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
+
+export const walletsMap = [
+  {
+    type: 'eth',
+    title: 'MetaMask',
+    icon: <MetaMaskIcon />,
+  },
+  {
+    type: 'starknet',
+    title: 'Argent X',
+    icon: <ArgentWalletIcon className={ss.ArgentWalletIcon} />,
+  },
+];
 
 export const Login: React.FC = () => {
   const { login, address, styles, showLoading, setShowLoading, walletType } = useLoginContext();
@@ -30,11 +43,21 @@ export const Login: React.FC = () => {
     return showLoading || !password;
   }, [password, showLoading]);
 
+  const WalletIconContainer = useCallback(() => {
+    const walletItem = walletsMap.find(item => item.type === walletType);
+    if (!walletItem) return null;
+    return (
+      <>
+        {walletItem?.icon}
+        <div className={ss.centerText}>{walletItem?.title}</div>
+      </>
+    );
+  }, [walletType]);
+
   return (
     <div className={cx(ss.container)} style={styles?.loginContainer}>
       <div className={cx(ss.addressBox)} style={styles?.addressBox}>
-        <MetaMaskIcon />
-        <div className={ss.centerText}>MetaMask</div>
+        <WalletIconContainer />
         <div className={ss.addressText}>{getShortAddress(address)}</div>
       </div>
       <div className={ss.textBox}>
