@@ -1,15 +1,33 @@
 import React, { useMemo, useState } from 'react';
 
-import { CloseEyesIcon, LoginErrorIcon, MetaMaskIcon, OpenEyesIcon } from '../../../icons';
+import {
+  ArgentXIcon,
+  CloseEyesIcon,
+  LoginErrorIcon,
+  MetaMaskIcon,
+  OpenEyesIcon,
+} from '../../../icons';
 import { getShortAddress } from '../../../utils';
 import { Button } from '../../Button';
-import { useLoginContext } from '../../../context';
+import { StepStringEnum, useLoginContext } from '../../../context';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
 
 export const SignUp: React.FC = () => {
-  const { login, register, address, styles, showLoading, setShowLoading, walletType } = useLoginContext();
+  const {
+    login,
+    register,
+    styles,
+    showLoading,
+    setShowLoading,
+    walletType,
+    handleLoginEvent,
+    userAccount,
+    setStep,
+    qrCodeUrl,
+    loginByQrCode,
+  } = useLoginContext();
 
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -31,21 +49,42 @@ export const SignUp: React.FC = () => {
       if (password !== confirmPassword) {
         setErrorInfo('Passwords don\'t match. Please check your password inputs.');
       }
-      await register(password, walletType);
-      await login(password, walletType);
+      if (qrCodeUrl) {
+        await loginByQrCode(password);
+      } else {
+        await register(password, walletType);
+        const data = await login(password, walletType);
+        handleLoginEvent({
+          msg: '',
+          data,
+          type: 'register',
+        });
+      }
+
       setShowLoading(false);
     } catch (e: any) {
+      handleLoginEvent({
+        msg: e.message,
+        data: null,
+        type: 'error',
+      });
       setErrorInfo(e.message);
       setShowLoading(false);
     }
   };
+  if (!userAccount) {
+    setStep(StepStringEnum.HOME);
+    return null;
+  }
 
   return (
     <div className={cx(ss.container)} style={styles?.loginContainer}>
       <div className={ss.addressBox} style={styles?.addressBox}>
-        <MetaMaskIcon />
-        <div className={ss.centerText}>MetaMask</div>
-        <div className={ss.addressText}>{getShortAddress(address)}</div>
+        {userAccount.walletType === 'starknet' ? <ArgentXIcon /> : <MetaMaskIcon />}
+        <div className={ss.centerText}>
+          {userAccount.walletType === 'starknet' ? 'Argent X' : 'MetaMask'}
+        </div>
+        <div className={ss.addressText}>{getShortAddress(userAccount.address)}</div>
       </div>
       <div className={ss.textBox}>
         <div className={ss.title} style={styles?.textBoxTitle}>

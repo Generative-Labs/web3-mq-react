@@ -5,13 +5,12 @@ import { AppTypeEnum, LoginModal } from 'web3-mq-react';
 import './index.css';
 
 interface IProps {
-  login: any;
-  register: any;
-  getEthAccount: any;
+  handleLoginEvent: any;
+  mainKeys?: any;
 }
 
 const Login: React.FC<IProps> = (props) => {
-  const { login, register, getEthAccount } = props;
+  const { handleLoginEvent, mainKeys = null } = props;
 
   const styles = {
     modalBody: {
@@ -81,10 +80,9 @@ const Login: React.FC<IProps> = (props) => {
       </div>
       <div className="button_box">
         <LoginModal
+          keys={mainKeys}
+          handleLoginEvent={handleLoginEvent}
           appType={AppTypeEnum.pc}
-          register={register}
-          login={login}
-          getEthAccount={getEthAccount}
           loginBtnNode={
             <button className="sign_btn">
               <MetaMaskIcon />
