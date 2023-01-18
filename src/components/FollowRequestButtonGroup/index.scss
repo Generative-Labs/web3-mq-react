@@ -1,0 +1,45 @@
+@import "../../style/index.scss";
+
+.operateFollowRequestBar {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 16px;
+  border-top: 1px solid #F4F4F5;
+}
+.warning {
+  display: flex;
+  width: 100%;
+  line-height: 16px;
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  .warnIcon {
+    display: flex;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+  }
+  @include themeify {
+    font-size: themed(Caption1_font-size);
+    font-weight: themed(Medium_font-weight);
+    color: themed(Red_500);
+    border: 1px solid themed(Red_100);
+    background-color: themed(Red_50);
+    .warnIcon {
+      $font-size: themed(Headline_font-size) or 16px;
+      font-size: $font-size/4;
+    }
+  }
+}
+
+.cancelBtn {
+  margin-right: 16px;
+}
+.cancelBtn, .operateBtn {
+  flex: 1;
+  width: 50%;
+}
+
+.dialogContent {
+  height: 480px;
+}

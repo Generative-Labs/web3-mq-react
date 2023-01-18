@@ -1,0 +1,30 @@
+@import "../../style/index.scss";
+
+.EmptyContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  font-family: Inter, sans-serif;
+  @include themeify {
+    font-size: themed(Headline_font-size);
+    font-weight: themed(Medium_font-weight);
+    color: themed(Gray_400);
+    background-color: themed(White_color);
+  }
+}
+.emptyIcon {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+  @include themeify {
+    svg path {
+      fill: themed(Gray_400)
+    }
+  }
+}
+.emptyDescription {
+  width: 100%;
+  text-align: center;
+}

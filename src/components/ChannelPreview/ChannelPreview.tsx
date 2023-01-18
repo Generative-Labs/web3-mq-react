@@ -34,7 +34,7 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
 
   const hasNickName = chat_name.indexOf('user:') !== 0;
   const chatName = chat_type !== 'user' ? 
-    chat_name 
+    (chat_name || chatid)
     : hasNickName 
       ? chat_name 
       : 

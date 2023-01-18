@@ -8,3 +8,10 @@
     border-right: 1px solid themed(Gray_100);
   }
 }
+.notificationIcon {
+  height: 42px;
+  svg {
+    width: 36px;
+    height: 42px;
+  }
+}

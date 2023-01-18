@@ -205,6 +205,7 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
             contactList: contacts,
             selectedContacts,
             onClose: handleClose,
+            onSubmit: handleClose,
             onSelected: handleSelectedContact,
             onDeleted: handleDeleteContact,
             handleNext,

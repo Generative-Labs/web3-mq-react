@@ -1,3 +1,5 @@
+@import "../../style/index.scss";
+
 .loadingContainer {
   width: 100%;
   display: flex;
@@ -5,15 +7,29 @@
   // default loaing
   .defaultLoading {
     position: relative;
-    width: 30px;
-    height: 30px;
-    border: 2px solid #000;
-    border-top-color: rgba(0, 0, 0, 0.2);
-    border-right-color: rgba(0, 0, 0, 0.2);
-    border-bottom-color: rgba(0, 0, 0, 0.2);
+    width: 42px;
+    height: 42px;
     border-radius: 100%;
 
     animation: circle infinite 0.75s linear;
+    &::after {
+      position: absolute;
+      display: block;
+      content: '';
+      width: calc(100% - 12px);
+      height: calc(100% - 12px);
+      border-radius: 100%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    @include themeify {
+      background-color: themed(Violet_500);
+      background: conic-gradient(from 13.39deg at 50% 50%, themed(Violet_500) 0deg, rgba(97, 94, 240, 0) 65.78deg, themed(Violet_500) 360deg);
+      &::after {
+        background-color: themed(White_color);
+      }
+    }
   }
   @keyframes circle {
     0% {

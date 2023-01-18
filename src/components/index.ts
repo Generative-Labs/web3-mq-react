@@ -7,6 +7,7 @@ export * from './DashBoard';
 export * from './ChannelList';
 export * from './ChannelPreview';
 export * from './Message';
+export * from './MessageConsole';
 export * from './MessageInput';
 export * from './MessageList';
 export * from './MessageHeader';

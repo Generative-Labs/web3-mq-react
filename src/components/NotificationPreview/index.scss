@@ -36,13 +36,22 @@
       }
     }
   }
+  .wrapperBottom {
+    display: flex;
+    align-items: center;
+  }
 }
 .textContainer {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  -webkit-line-clamp: 3; 
   font-family: Inter, sans-serif;
   font-style: normal;
   width: 100%;
-  line-height: 20px;
-  word-wrap: break-all;
+  line-height: 18px;
   @include themeify {
     font-weight: themed(Regular_font-weight);
     font-size: themed(Tips_font-size);
