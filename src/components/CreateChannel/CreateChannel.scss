@@ -208,6 +208,9 @@
   padding: 10px 16px;
   outline: none;
   border-radius: 8px;
+  &:disabled {
+    cursor: no-drop;
+  }
   @include themeify {
     font-size: themed(Headline_font-size);
     border: 1px solid themed(Gray_200);
