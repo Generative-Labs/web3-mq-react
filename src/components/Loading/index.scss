@@ -13,22 +13,19 @@
 
     animation: circle infinite 0.75s linear;
     &::after {
-      position: absolute;
       display: block;
       content: '';
-      width: calc(100% - 12px);
-      height: calc(100% - 12px);
+      box-sizing: border-box;
+      background-clip: content-box;
+      width: 100%;
+      height: 100%;
+      border: 6px solid transparent;
       border-radius: 100%;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      background-color: #fff;
     }
     @include themeify {
       background-color: themed(Violet_500);
       background: conic-gradient(from 13.39deg at 50% 50%, themed(Violet_500) 0deg, rgba(97, 94, 240, 0) 65.78deg, themed(Violet_500) 360deg);
-      &::after {
-        background-color: themed(White_color);
-      }
     }
   }
   @keyframes circle {
