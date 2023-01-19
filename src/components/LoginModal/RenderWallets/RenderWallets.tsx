@@ -4,7 +4,6 @@ import { StepStringEnum, useLoginContext } from '../../../context';
 import { ArgentWalletIcon, ViewAllIcon, WalletMetaMaskIcon } from '../../../icons';
 import { Loading } from '../../Loading';
 
-import cx from 'classnames';
 import ss from './index.module.scss';
 
 type IProps = {
@@ -13,7 +12,7 @@ type IProps = {
 
 export const RenderWallets: React.FC<IProps> = (props) => {
   const { showCount = 0 } = props;
-  const { styles, showLoading, setWalletType, getEthAccount, setStep } = useLoginContext();
+  const { styles, showLoading, setWalletType, getAccount, setStep } = useLoginContext();
   const walletsConfig = [
     {
       type: 'eth',
@@ -21,7 +20,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       icon: <WalletMetaMaskIcon />,
       handleClick: async () => {
         setWalletType('eth');
-        await getEthAccount('eth');
+        await getAccount('eth');
       },
     },
     {
@@ -29,7 +28,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       title: 'Argent X',
       icon: <ArgentWalletIcon />,
       handleClick: async () => {
-        await getEthAccount('starknet');
+        await getAccount('starknet');
         setWalletType('starknet');
       },
     },
@@ -46,11 +45,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
   };
 
   return (
-    <div
-      className={cx(ss.wallets, {
-        [ss.walletsShort]: walletsConfig.length <= showCount,
-      })}
-    >
+    <div className={ss.wallets}>
       {walletsConfig.map((item, index) => {
         if (walletsConfig.length > showCount + 1 && showCount && index >= showCount) {
           return null;
@@ -78,7 +73,6 @@ export const RenderWallets: React.FC<IProps> = (props) => {
         <div
           className={ss.walletItem}
           onClick={() => {
-            console.log('show all wallet');
             setStep(StepStringEnum.VIEW_ALL);
           }}
           style={styles?.walletItem}

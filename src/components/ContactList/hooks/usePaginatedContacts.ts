@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { EventTypes, Client } from 'web3-mq';
-import type {CommonUserInfoType, SEARCH_DID_TYPE} from '../../Chat/hooks/useQueryUserInfo';
+import type {CommonUserInfoType, SearchDidType} from '../../Chat/hooks/useQueryUserInfo';
 
 type StatusType = {
   error: boolean;
@@ -16,7 +16,7 @@ export const usePaginatedContacts = (
   client: Client,
   getUserInfo: (
     didValue: string,
-    didType: SEARCH_DID_TYPE,
+    didType: SearchDidType,
   ) => Promise<CommonUserInfoType | null>,
 ) => {
   const [contacts, setContacts] = useState<any[]>([]);

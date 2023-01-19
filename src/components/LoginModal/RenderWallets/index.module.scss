@@ -4,9 +4,9 @@
   margin-top: 8px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 
   .walletItem {
+    margin: 0 8px;
     @include themeify {
 
       width: 80px;
@@ -41,16 +41,6 @@
       }
 
     }
-  }
-}
-.walletsShort {
-  margin-top: 8px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: left;
-
-  .walletItem {
-    margin-right: 20px;
   }
 }
 
