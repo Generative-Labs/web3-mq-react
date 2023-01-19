@@ -40,7 +40,17 @@ export const LoginModal: React.FC<IProps> = (props) => {
     handleLoginEvent,
     keys = undefined,
   } = props;
-  const { getUserAccount, login, register, userAccount, setMainKeys, loginByQrCode } = useLogin(keys, account);
+  const {
+    getUserAccount,
+    login,
+    register,
+    userAccount,
+    setMainKeys,
+    loginByQrCode,
+    web3MqSignCallback,
+    registerByQrCode,
+    setUserAccount,
+  } = useLogin(handleLoginEvent, keys, account);
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
     userAccount
@@ -65,20 +75,23 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setShowLoading(false);
   };
   const handleWeb3mqCallback = async (eventData: any) => {
-    console.log(eventData, 'eventData');
     if (eventData.type === 'createQrcode') {
       setQrCodeUrl(eventData.data.qrCodeUrl);
     }
     if (eventData.type === 'keys') {
       const data = eventData.data || null;
       if (data) {
-        if (data?.action === 'connectResponse' && data.walletInfo) {
+        if (data.action === 'connectResponse' && data.walletInfo) {
           setWalletType(data.walletInfo.walletType);
           await getAccount(data.walletInfo.walletType, data.walletInfo.address.toLowerCase());
+        }
+        if (data.action === 'signResponse') {
+          await web3MqSignCallback(eventData.data.signature, eventData.data.userInfo);
         }
       }
     }
   };
+
   const handleModalShow = async () => {
     show();
     if (userAccount) {
@@ -93,9 +106,17 @@ export const LoginModal: React.FC<IProps> = (props) => {
   };
   const handleClose = () => {
     hide();
+    setUserAccount(undefined);
+    setStep(StepStringEnum.HOME);
+    setMainKeys(undefined);
+    setQrCodeUrl('');
   };
   const handleBack = () => {
     setStep(StepStringEnum.HOME);
+    setUserAccount(undefined);
+    setStep(StepStringEnum.HOME);
+    setMainKeys(undefined);
+    setQrCodeUrl('');
   };
   const headerTitle = useMemo(() => {
     switch (step) {
@@ -131,7 +152,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       login,
       step,
       setStep,
-      styles: styles,
+      styles,
       showLoading,
       setShowLoading,
       walletType,
@@ -141,7 +162,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       qrCodeUrl,
       userAccount,
       setMainKeys,
-      loginByQrCode
+      loginByQrCode,
+      registerByQrCode,
     }),
     [step, showLoading, walletType, qrCodeUrl, JSON.stringify(userAccount)],
   );

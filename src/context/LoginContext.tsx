@@ -15,6 +15,12 @@ export enum StepStringEnum {
   SIGN_UP = 'sign_up',
 }
 
+export enum SignAuditTypeEnum {
+  GET_KEYS_FOR_LOGIN = 'get_Keys_For_Login',
+  GET_KEYS_FOR_REGISTER = 'get_keys_For_Register',
+  REGISTER = 'register'
+}
+
 export type LoginContextValue = {
   login: (password: string, walletType?: WalletType) => Promise<LoginResType | null>;
   register: (password: string, walletType?: WalletType) => Promise<RegisterResType | null>;
@@ -29,9 +35,10 @@ export type LoginContextValue = {
   handleLoginEvent: (eventData: LoginEventDataType) => void;
   handleWeb3mqCallback: any;
   qrCodeUrl: any;
-  userAccount: UserAccountType | undefined;
+  userAccount: any;
   setMainKeys: any;
   loginByQrCode: any;
+  registerByQrCode: any;
 };
 
 export const LoginContext = React.createContext<LoginContextValue | undefined>(undefined);

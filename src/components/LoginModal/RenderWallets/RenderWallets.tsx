@@ -73,7 +73,6 @@ export const RenderWallets: React.FC<IProps> = (props) => {
         <div
           className={ss.walletItem}
           onClick={() => {
-            console.log('show all wallet');
             setStep(StepStringEnum.VIEW_ALL);
           }}
           style={styles?.walletItem}

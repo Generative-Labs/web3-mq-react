@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Client, WalletType, signWithQrCode, getMainKeypairSignContent, qrCodeLogin} from 'web3-mq';
+import { useEffect, useRef, useState } from 'react';
+import { Client, WalletType } from 'web3-mq';
+import { SignAuditTypeEnum } from '../../../context';
 
 export type LoginEventType = 'login' | 'register' | 'error';
 export type LoginEventDataType = {
@@ -39,9 +40,16 @@ export type RegisterResType = {
 
 // keys: for login with main keys
 // account: For custom get users
-const useLogin = (keys?: MainKeysType, account?: UserAccountType) => {
+const useLogin = (
+  handleLoginEvent: (eventData: LoginEventDataType) => void,
+  keys?: MainKeysType,
+  account?: UserAccountType,
+) => {
   const [userAccount, setUserAccount] = useState<UserAccountType | undefined>(account);
+  const walletAddress = useRef<string>('');
+  const [registerSignRes, setRegisterSignRes] = useState('');
   const [mainKeys, setMainKeys] = useState<MainKeysType | undefined>(keys);
+  const [signAuditType, setSignAuditType] = useState< SignAuditTypeEnum | undefined >();
   const getUserAccount = async (
     didType: WalletType = 'eth',
     address?: string,
@@ -58,6 +66,7 @@ const useLogin = (keys?: MainKeysType, account?: UserAccountType) => {
       did_value: didValue,
       did_type: didType,
     });
+    walletAddress.current = didValue;
     setUserAccount({
       userid,
       address: didValue,
@@ -123,44 +132,141 @@ const useLogin = (keys?: MainKeysType, account?: UserAccountType) => {
     });
     return { privateKey: mainPrivateKey, publicKey: mainPublicKey, address };
   };
-  const loginByQrCode = async (password: string) => {
+
+  const sendGetMainKeysSign = async (password: string, signType: SignAuditTypeEnum): Promise<void> => {
     if (!userAccount) {
-      return null;
+      return;
+    }
+    const { signContent } = await Client.qrCodeSign.getMainKeypairSignContent({
+      password,
+      did_value: userAccount.address,
+      did_type: userAccount.walletType,
+    });
+    await commonSendSign(signContent, userAccount.address.toLowerCase(), signType);
+  };
+  const sendGetRegisterSign = async (): Promise<void> => {
+    if (!userAccount) {
+      return;
+    }
+    const { signContent } = await Client.qrCodeSign.getRegisterSignContent({
+      userid: userAccount.userid,
+    });
+    await commonSendSign(signContent, userAccount.address.toLowerCase(), SignAuditTypeEnum.REGISTER);
+  };
+  const afterSignAndLogin = async () => {
+    if (signAuditType === SignAuditTypeEnum.GET_KEYS_FOR_LOGIN) {
+      await loginByQrCode();
+    }
+    if (signAuditType === SignAuditTypeEnum.GET_KEYS_FOR_REGISTER) {
+      await sendGetRegisterSign();
+    }
+    if (signAuditType === SignAuditTypeEnum.REGISTER && registerSignRes) {
+      await registerByQrCode(undefined, registerSignRes);
+    }
+  };
+
+
+  const commonSendSign = async (signContent: string, address: string, signAuditType: SignAuditTypeEnum) => {
+    await Client.qrCodeSign.signWithQrCode(signContent, address, signAuditType);
+  };
+
+  useEffect(() => {
+    if (!mainKeys) {
+      return;
+    }
+    afterSignAndLogin();
+  }, [mainKeys, registerSignRes, signAuditType]);
+
+  const loginByQrCode = async (password?: string) => {
+    if (!userAccount) {
+      return;
+    }
+    if (!mainKeys || mainKeys?.walletAddress.toLowerCase() !== userAccount.address.toLowerCase()) {
+      if (!password) {
+        return;
+      }
+      await sendGetMainKeysSign(password, SignAuditTypeEnum.GET_KEYS_FOR_LOGIN);
+      return;
+    } else {
+      const {
+        TempPrivateKey,
+        TempPublicKey,
+        pubkeyExpiredTimestamp,
+        mainPrivateKey,
+        mainPublicKey,
+      } = await Client.qrCodeSign.qrCodeLogin({
+        userid: userAccount.userid,
+        did_value: userAccount.address,
+        did_type: userAccount.walletType,
+        password,
+        mainPrivateKey: mainKeys.privateKey,
+        mainPublicKey: mainKeys.publicKey,
+      });
+
+      handleLoginEvent({
+        msg: '',
+        type: 'login',
+        data: {
+          privateKey: mainPrivateKey,
+          publicKey: mainPublicKey,
+          tempPrivateKey: TempPrivateKey,
+          tempPublicKey: TempPublicKey,
+          didKey: `${userAccount.walletType}:${userAccount.address}`,
+          userid: userAccount.userid,
+          address: userAccount.address,
+          pubkeyExpiredTimestamp,
+        },
+      });
+    }
+  };
+
+  const registerByQrCode = async (password?: string, signature?: string): Promise<void> => {
+    if (!userAccount) {
+      return;
     }
     if (!mainKeys || mainKeys.walletAddress.toLowerCase() !== userAccount.address.toLowerCase()) {
-      console.log('主密钥对校验失败  获取主密钥对');
-      const signContent = await getMainKeypairSignContent({
-        password,
-        did_value: userAccount.address,
-        did_type: userAccount.walletType,
-      });
-      console.log(signContent, 'signContent');
-      console.log(userAccount.address, 'userAccount.address');
-      await signWithQrCode(signContent, userAccount.address.toLowerCase());
-      return 'get main keys';
+      if (!password) {
+        return;
+      }
+      await sendGetMainKeysSign(password, SignAuditTypeEnum.GET_KEYS_FOR_REGISTER);
+      return;
+    } else if (!signature) {
+      await sendGetRegisterSign();
+      return;
     } else {
-      //  已经有正确的主密钥对
-      console.log('已经有正确的主密钥对');
-      const res = await qrCodeLogin({
-        password,
+      await Client.qrCodeSign.qrCodeRegister({
         userid: userAccount.userid,
-        did_type: userAccount.walletType,
-        did_value: userAccount.address,
-        mainPublicKey: mainKeys.publicKey,
-        mainPrivateKey: mainKeys.privateKey,
+        signature,
       });
-      console.log(res);
+      await loginByQrCode();
     }
-    return 'ok';
   };
+
+  const web3MqSignCallback = async (signature: string, signType: SignAuditTypeEnum) => {
+    setSignAuditType(signType);
+    if (signType === SignAuditTypeEnum.REGISTER) {
+      setRegisterSignRes(signature);
+    } else {
+      // 设置主密钥对
+      const { publicKey, secretKey } = await Client.qrCodeSign.getMainKeypair(signature);
+      setMainKeys({
+        publicKey,
+        privateKey: secretKey,
+        walletAddress: walletAddress.current,
+      });
+    }
+  };
+
   return {
     login,
     getUserAccount,
     register,
-    setUserAccount,
     userAccount,
     loginByQrCode,
     setMainKeys,
+    registerByQrCode,
+    web3MqSignCallback,
+    setUserAccount,
   };
 };
 

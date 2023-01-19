@@ -26,7 +26,7 @@ export const SignUp: React.FC = () => {
     userAccount,
     setStep,
     qrCodeUrl,
-    loginByQrCode,
+    registerByQrCode,
   } = useLoginContext();
 
   const [password, setPassword] = useState('');
@@ -50,14 +50,14 @@ export const SignUp: React.FC = () => {
         setErrorInfo('Passwords don\'t match. Please check your password inputs.');
       }
       if (qrCodeUrl) {
-        await loginByQrCode(password);
+        await registerByQrCode(password);
       } else {
         await register(password, walletType);
         const data = await login(password, walletType);
         handleLoginEvent({
           msg: '',
           data,
-          type: 'register',
+          type: 'login',
         });
       }
 
