@@ -1,7 +1,9 @@
-import React, { useCallback, useState, useMemo, useRef } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import cx from 'classnames';
+import { SendMsgLoadingMap } from 'web3-mq';
 
 import { Avatar } from '../Avatar';
+import { Loading } from '../Loading';
 import { Profile } from '../Profile';
 import { Text } from './Text';
 
@@ -21,6 +23,7 @@ export const MessageSimple = () => {
     timestamp,  
     belong_to_thread_id,
     senderInfo = {}, 
+    msgLoading = SendMsgLoadingMap['success']
   } = message;
   const { defaultUserAvatar, defaultUserName } = senderInfo || {};
   const messageRef = useRef<HTMLDivElement | null>(null);
@@ -92,7 +95,10 @@ export const MessageSimple = () => {
           <span className={ss.name}>{defaultUserName}</span>
           <span>{date}&nbsp;{timestamp}</span>
         </div>
-        <MessageInner />
+        <div style={{display: 'flex', alignItems: 'center'}}>
+          <MessageInner />
+          {msgLoading === SendMsgLoadingMap['loading'] && <Loading className={ss.msgLoad} />}
+        </div>
       </div>
       {!isThread && <ActionBtns className={ss.actionBtns} />}
     </div>

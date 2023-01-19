@@ -50,6 +50,17 @@
     }
   }
 }
+.msgLoad {
+  width: auto;
+  margin-left: 10px;
+  > div {
+    width: 21px !important;
+    height: 21px !important;
+    &::after {
+      border: 3px solid transparent !important;
+    }
+  }
+}
 
 .hideMessageMargin {
   margin: 0 !important;

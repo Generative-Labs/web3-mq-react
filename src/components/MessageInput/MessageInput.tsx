@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useCallback, useMemo } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useMemo } from 'react';
 
 import { ComponentContextValue, useComponentContext } from '../../context/ComponentContext';
 import { useChannelActionContext } from '../../context/ChannelActionContext';
@@ -22,6 +22,14 @@ export const MessageInput = (props: PropsWithChildren<MessageInputProps>) => {
   const MessageInputUIComponent = propInput || contextInput;
 
   const { client } = useChatContext('MessageInput');
+
+  const handleEvent = () => {};
+  useEffect(() => {
+    client.on('message.send', handleEvent);
+    return () => {
+      client.off('message.send', handleEvent);
+    };
+  }, []);
 
   const sendMessage = useCallback(
     (text: string) => {
