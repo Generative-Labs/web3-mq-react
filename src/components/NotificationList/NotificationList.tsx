@@ -3,20 +3,23 @@ import cx from 'classnames';
 import type { NotifyResponse } from 'web3-mq';
 
 import { usePaginatedNotifications } from './hooks/usePaginatedNotifications';
+import { Empty } from '../Empty';
 import { NotificationPreview } from '../NotificationPreview';
 import { useChatContext } from '../../context/ChatContext';
+import { NotificationIcon } from '../../icons';
 
 import ss from './index.scss';
 
 export type NotificationShowType = 'list' | 'modal';
 export type NotificationListProps = {
+  EmptyContaniner?: React.ReactNode;
   className?: string;
   Notification?: React.ComponentType<any>;
   style?: React.CSSProperties;
 }
 
 export const NotificationList: React.FC<NotificationListProps> = (props) => {
-  const { className, Notification, style } = props;
+  const { className, EmptyContaniner, Notification, style } = props;
   const { client } = useChatContext();
   const { notifications, handleEvent, setNotifications } =
     usePaginatedNotifications(client);
@@ -34,6 +37,7 @@ export const NotificationList: React.FC<NotificationListProps> = (props) => {
 
   const renderContact = (item: NotifyResponse, index: number) => {
     const props = {
+      client,
       key: index,
       notification: item
     };
@@ -42,7 +46,15 @@ export const NotificationList: React.FC<NotificationListProps> = (props) => {
 
   return (
     <div className={cx(ss.notificationContainer, className)} style={style}>
-      {notifications?.map(renderContact)}
+      {notifications?.length === 0 ? (
+        <>
+          {EmptyContaniner || <Empty description='No notification message' icon={<NotificationIcon className={ss.notificationIcon} />} />}
+        </>
+      ) : (
+        <>
+          {notifications?.map(renderContact)}
+        </>
+      )}
     </div>
   );
 };

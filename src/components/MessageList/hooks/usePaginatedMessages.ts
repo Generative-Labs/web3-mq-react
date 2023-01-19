@@ -65,12 +65,10 @@ export const usePaginatedMessages = (props: {
                 message.senderInfo = loginUserInfo;
               } else {
                 if (!curMember[senderId]) {
-                  console.log('no has');
                   const info = await getUserInfo(senderId, 'web3mq');
                   message.senderInfo = info;
                   curMember[senderId] = info;
                 } else {
-                  console.log('has');
                   message.senderInfo = curMember[senderId];
                 }
               }

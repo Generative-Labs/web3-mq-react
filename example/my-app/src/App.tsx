@@ -3,9 +3,11 @@ import { Client } from 'web3-mq';
 import {
   Chat,
   Channel,
+  ConnectMessage,
   DashBoard,
   AppTypeEnum,
   Window,
+  MessageConsole,
   MessageHeader,
   MessageList,
   MessageInput,
@@ -54,12 +56,14 @@ const App: React.FC = () => {
 
   return (
     <Chat client={client} appType={appType} logout={logout}>
+      <ConnectMessage />
       <DashBoard />
       <Channel>
         <Window>
           <MessageHeader avatarSize={40} />
           <MessageList />
-          <MessageInput Input={MsgInput} />
+          {/* <MessageInput Input={MsgInput} /> */}
+          <MessageConsole Input={<MessageInput Input={MsgInput} />} />
         </Window>
         {/* <Thread />
         <AllThreadList /> */}
