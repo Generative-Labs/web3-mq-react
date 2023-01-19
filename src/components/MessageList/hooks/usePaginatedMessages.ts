@@ -108,9 +108,10 @@ export const usePaginatedMessages = (props: {
         return;
       }
       if (type === 'message.getList') {
-        await renderMessageList(messageList);
         setMessages(messageList);
         setMsgListloading(false);
+        await renderMessageList(messageList);
+        setMessages(messageList);
         // 获取message及receive 共同触发message.getList，receive时会传入data参数 简单判断下
         if (data && data.comeFrom) {
           await saveInIndexdb(messageList);
@@ -119,8 +120,14 @@ export const usePaginatedMessages = (props: {
           scrollBottom();
         });
       }
-      if (type === 'message.delivered') {
+      if (type === 'message.send') {
         await renderMessageList(messageList);
+        setMessages(messageList);
+        setTimeout(() => {
+          scrollBottom();
+        });
+      }
+      if (type === 'message.delivered') {
         setMessages(messageList);
         // 存储indexdb
         await saveInIndexdb(messageList);
@@ -135,9 +142,11 @@ export const usePaginatedMessages = (props: {
   useEffect(() => {
     client.on('message.getList', handleEvent);
     client.on('message.delivered', handleEvent);
+    client.on('message.send', handleEvent);
     return () => {
       client.off('message.getList', handleEvent);
       client.off('message.delivered', handleEvent);
+      client.off('message.send', handleEvent);
     };
   }, [renderMessageList]);
 
