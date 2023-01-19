@@ -6,7 +6,7 @@ import { getDidsByRss3, getProfileFromRss3 } from '../../../lens/api';
 import { ACCOUNT_CONNECT_TYPE, WEB3_MQ_DID_TYPE } from '../../../types/enum';
 import { getShortAddress, getUserAvatar } from '../../../utils';
 
-export type SEARCH_DID_TYPE = 'eth' | 'starknet' | 'web3mq'
+export type SearchDidType = 'eth' | 'starknet' | 'web3mq'
 
 export const PROVIDER_ID_CONFIG: Record<ACCOUNT_CONNECT_TYPE, any> = {
   [ACCOUNT_CONNECT_TYPE.LENS]: 'web3mq:lens.xyz',
@@ -44,7 +44,7 @@ export const useQueryUserInfo = (client: Client) => {
   const [loginUserInfo, setLoginUserInfo] = useState<CommonUserInfoType | null>(null);
   const getUserInfo = async (
     didValue: string,
-    didType: SEARCH_DID_TYPE,
+    didType: SearchDidType,
     bindDid: boolean = false,
   ): Promise<CommonUserInfoType | null> => {
     const web3MqInfo = await getUserPublicProfileRequest({
@@ -125,7 +125,7 @@ export const useQueryUserInfo = (client: Client) => {
   const getLoginUserInfo = async () => {
     const myProfile = await client.user.getMyProfile();
     if (myProfile && myProfile.wallet_address) {
-      const info = await getUserInfo(myProfile.wallet_address, myProfile.wallet_type as SEARCH_DID_TYPE);
+      const info = await getUserInfo(myProfile.wallet_address, myProfile.wallet_type as SearchDidType);
       if (info) {
         // 设置permissions
         const permissions = await client.user.getUserPermissions().catch((e) => console.log(e));

@@ -1,20 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
-import { DesktopIcon, MobileIcon, WalletConnectIcon, Web3MqIcon } from '../../../icons';
+import { DesktopIcon, MobileIcon, Web3MqIcon } from '../../../icons';
 import { Button } from '../../Button';
-import { RenderWallets } from '../RenderWallets/RenderWallets';
+import { RenderWallets } from '../RenderWallets';
 import { StepStringEnum, useLoginContext } from '../../../context';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
+import { Client } from 'web3-mq';
 
 export const Home: React.FC = () => {
-  const { setHeaderTitle, step, styles } = useLoginContext();
+  const { step, styles, handleWeb3mqCallback, setStep } = useLoginContext();
 
-  useEffect(() => {
-    setHeaderTitle('Connect Dapp');
-  }, []);
-
+  const handleWeb3mqClick = () => {
+    setStep(StepStringEnum.QR_CODE);
+    Client.getQrCodeClient({ dAppID: 'SwapChat:im' }, handleWeb3mqCallback);
+  };
   return (
     <div className={cx(ss.container)} style={styles?.homeContainer}>
       {step === StepStringEnum.HOME && (
@@ -36,23 +37,22 @@ export const Home: React.FC = () => {
               <div className={ss.title}>Mobile</div>
             </div>
             <div className={ss.btnsBox}>
-              <Button className={ss.btn} style={styles?.homeButton}>
+              <Button className={ss.btn} style={styles?.homeButton} onClick={handleWeb3mqClick}>
                 <div className={ss.icon}>
                   <Web3MqIcon />
                 </div>
                 Web3MQ
               </Button>
-              <Button className={ss.btn} style={styles?.homeButton}>
-                <div className={ss.icon}>
-                  <WalletConnectIcon />
-                </div>
-                WalletConnect
-              </Button>
+              {/*<Button className={ss.btn} style={styles?.homeButton}>*/}
+              {/*  <div className={ss.icon}>*/}
+              {/*    <WalletConnectIcon />*/}
+              {/*  </div>*/}
+              {/*  WalletConnect*/}
+              {/*</Button>*/}
             </div>
           </div>
         </div>
       )}
-      {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
     </div>
   );
 };

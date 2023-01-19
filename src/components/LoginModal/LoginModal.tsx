@@ -1,89 +1,138 @@
 import React, { useMemo, useState } from 'react';
 
 import { CheveronLeft, CloseBtnIcon } from '../../icons';
-import {
-  AppTypeEnum,
-  GetEthAccountRes,
-  LoginContextValue,
-  LoginProvider,
-  StepStringEnum,
-} from '../../context';
+import { AppTypeEnum, LoginContextValue, LoginProvider, StepStringEnum } from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { Login } from './Login';
 import { SignUp } from './SignUp';
+import { QrCodeLogin } from './QrCodeLogin';
 import { Home } from './Home';
 import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
 import type { WalletType } from 'web3-mq';
+import { RenderWallets } from './RenderWallets';
+import useLogin, { LoginEventDataType, MainKeysType, UserAccountType } from './hooks/useLogin';
 
 type IProps = {
-  login: (password: string, walletType?: WalletType) => Promise<void>;
-  register: (password: string, walletType?: WalletType) => Promise<void>;
-  getEthAccount: (walletType?: WalletType) => Promise<GetEthAccountRes>;
   containerId: string;
   isShow?: boolean;
   appType?: AppTypeEnum;
   loginBtnNode?: React.ReactNode;
-  account?: {
-    address: string;
-    userExist: boolean;
-  };
+  account?: UserAccountType;
   styles?: Record<string, any>;
   modalClassName?: string;
+  handleLoginEvent: (eventData: LoginEventDataType) => void;
+  keys?: MainKeysType;
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
   const {
-    getEthAccount,
-    login,
-    register,
     isShow,
     appType = AppTypeEnum.pc,
     containerId,
     loginBtnNode = null,
-    account = null,
+    account = undefined,
     styles = null,
     modalClassName = '',
+    handleLoginEvent,
+    keys = undefined,
   } = props;
+  const {
+    getUserAccount,
+    login,
+    register,
+    userAccount,
+    setMainKeys,
+    loginByQrCode,
+    web3MqSignCallback,
+    registerByQrCode,
+    setUserAccount,
+  } = useLogin(handleLoginEvent, keys, account);
   const { visible, show, hide } = useToggle(isShow);
-  const [step, setStep] = useState(account ? StepStringEnum.LOGIN_MODAL : StepStringEnum.HOME);
-  const [headerTitle, setHeaderTitle] = useState('Log in');
-  const [address, setAddress] = useState(account?.address || '');
-  const [userExits, setUserExits] = useState(account?.userExist || false);
+  const [step, setStep] = useState(
+    userAccount
+      ? userAccount.userExist
+        ? StepStringEnum.LOGIN
+        : StepStringEnum.SIGN_UP
+      : StepStringEnum.HOME,
+  );
   const [showLoading, setShowLoading] = useState(false);
   const [walletType, setWalletType] = useState<WalletType>('eth');
-
-  const getAccount = async (didType?: WalletType) => {
+  const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const getAccount = async (didType?: WalletType, didValue?: string) => {
     setShowLoading(true);
-    const { address, userExist } = await getEthAccount(didType);
+    const { address, userExist } = await getUserAccount(didType, didValue);
     if (address) {
       if (userExist) {
-        setHeaderTitle('Log in');
+        setStep(StepStringEnum.LOGIN);
       } else {
-        setHeaderTitle('Sign up');
+        setStep(StepStringEnum.SIGN_UP);
       }
-      setAddress(address);
-      setUserExits(userExist);
-      setStep(StepStringEnum.LOGIN_MODAL);
     }
     setShowLoading(false);
   };
+  const handleWeb3mqCallback = async (eventData: any) => {
+    if (eventData.type === 'createQrcode') {
+      setQrCodeUrl(eventData.data.qrCodeUrl);
+    }
+    if (eventData.type === 'keys') {
+      const data = eventData.data || null;
+      if (data) {
+        if (data.action === 'connectResponse' && data.walletInfo) {
+          setWalletType(data.walletInfo.walletType);
+          await getAccount(data.walletInfo.walletType, data.walletInfo.address.toLowerCase());
+        }
+        if (data.action === 'signResponse') {
+          await web3MqSignCallback(eventData.data.signature, eventData.data.userInfo);
+        }
+      }
+    }
+  };
 
-  // 渲染列表列
   const handleModalShow = async () => {
     show();
-    setStep(StepStringEnum.HOME);
+    if (userAccount) {
+      if (userAccount.userExist) {
+        setStep(StepStringEnum.LOGIN);
+      } else {
+        setStep(StepStringEnum.SIGN_UP);
+      }
+    } else {
+      setStep(StepStringEnum.HOME);
+    }
   };
   const handleClose = () => {
     hide();
+    setUserAccount(undefined);
+    setStep(StepStringEnum.HOME);
+    setMainKeys(undefined);
+    setQrCodeUrl('');
   };
   const handleBack = () => {
-    setHeaderTitle('Connect Dapp');
     setStep(StepStringEnum.HOME);
+    setUserAccount(undefined);
+    setStep(StepStringEnum.HOME);
+    setMainKeys(undefined);
+    setQrCodeUrl('');
   };
+  const headerTitle = useMemo(() => {
+    switch (step) {
+    case StepStringEnum.HOME:
+      return 'Connect Dapp';
+    case StepStringEnum.LOGIN:
+      return 'Log in';
+    case StepStringEnum.QR_CODE:
+      return 'Web3MQ';
+    case StepStringEnum.SIGN_UP:
+      return 'Sign up';
+    case StepStringEnum.VIEW_ALL:
+      return 'Choose Desktop wallets';
+    }
+  }, [step]);
+
   const ModalHead = () => {
     return (
       <div className={ss.loginModalHead}>
@@ -99,20 +148,24 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const loginContextValue: LoginContextValue = useMemo(
     () => ({
       register,
-      getEthAccount: getAccount,
+      getAccount,
       login,
-      address,
-      setHeaderTitle,
       step,
       setStep,
-      styles: styles,
+      styles,
       showLoading,
       setShowLoading,
       walletType,
       setWalletType,
+      handleLoginEvent,
+      handleWeb3mqCallback,
+      qrCodeUrl,
+      userAccount,
+      setMainKeys,
+      loginByQrCode,
+      registerByQrCode,
     }),
-
-    [address, setAddress, getAccount],
+    [step, showLoading, walletType, qrCodeUrl, JSON.stringify(userAccount)],
   );
 
   return (
@@ -130,8 +183,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
           closeModal={hide}
         >
           <div className={cx(ss.modalBody)} style={styles?.modalBody}>
-            {[StepStringEnum.HOME, StepStringEnum.VIEW_ALL].includes(step) && <Home />}
-            {step === StepStringEnum.LOGIN_MODAL ? userExits ? <Login /> : <SignUp /> : null}
+            {step === StepStringEnum.HOME && <Home />}
+            {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
+            {step === StepStringEnum.LOGIN && <Login />}
+            {step === StepStringEnum.SIGN_UP && <SignUp />}
+            {step === StepStringEnum.QR_CODE && <QrCodeLogin />}
           </div>
         </Modal>
       </div>

@@ -14,13 +14,12 @@ import {
 } from 'web3-mq-react';
 import 'web3-mq-react/dist/css/index.css';
 import MsgInput from './components/MsgInput';
-import Login from "./components/Login";
+import Login from './components/Login';
 
 import useLogin from './hooks/useLogin';
 
-
 const App: React.FC = () => {
-  const { keys, fastestUrl, init, getEthAccount, logout, login, register } = useLogin();
+  const { keys, fastestUrl, init, logout, handleLoginEvent } = useLogin();
 
   const [appType, setAppType] = useState(
     window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc'],
@@ -35,9 +34,18 @@ const App: React.FC = () => {
   }, []);
 
   if (!keys) {
-    return (
-    <Login  login={login} register={register} getEthAccount={getEthAccount}/>
-    );
+    let mainKeys = null;
+    const mainPrivateKey = localStorage.getItem(`MAIN_PRIVATE_KEY`);
+    const mainPublicKey = localStorage.getItem(`MAIN_PUBLIC_KEY`);
+    const address = localStorage.getItem('WALLET_ADDRESS');
+    if (mainPublicKey && mainPrivateKey && address) {
+      mainKeys = {
+        publicKey: mainPublicKey,
+        privateKey: mainPrivateKey,
+        walletAddress: address,
+      };
+    }
+    return <Login handleLoginEvent={handleLoginEvent} mainKeys={mainKeys} />;
   }
 
   if (!fastestUrl) {

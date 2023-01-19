@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Client, EventTypes, Web3MQDBValue } from 'web3-mq';
 
-import type {CommonUserInfoType, SEARCH_DID_TYPE} from '../../Chat/hooks/useQueryUserInfo';
+import type {CommonUserInfoType, SearchDidType} from '../../Chat/hooks/useQueryUserInfo';
 
 const PAGE = {
   page: 1,
@@ -14,7 +14,7 @@ export const usePaginatedMessages = (props: {
   scrollBottom: () => void;
   getUserInfo: (
     didValue: string,
-    didType: SEARCH_DID_TYPE,
+    didType: SearchDidType,
   ) => Promise<CommonUserInfoType | null>;
 }) => {
   const { client, scrollBottom, getUserInfo, loginUserInfo } = props;
