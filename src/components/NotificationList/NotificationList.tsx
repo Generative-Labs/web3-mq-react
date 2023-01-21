@@ -20,7 +20,7 @@ export type NotificationListProps = {
 
 export const NotificationList: React.FC<NotificationListProps> = (props) => {
   const { className, EmptyContaniner, Notification, style } = props;
-  const { client } = useChatContext();
+  const { client, loginUserInfo } = useChatContext();
   const { notifications, handleEvent, setNotifications } =
     usePaginatedNotifications(client);
   const Preview = Notification || NotificationPreview;
@@ -39,7 +39,8 @@ export const NotificationList: React.FC<NotificationListProps> = (props) => {
     const props = {
       client,
       key: index,
-      notification: item
+      notification: item,
+      userInfo: loginUserInfo || undefined
     };
     return <Preview {...props} />;
   };
