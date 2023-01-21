@@ -5,6 +5,7 @@ import { AddFriends } from '../CreateChannel/AddFriends';
 import { Modal } from '../Modal';
 import { Button } from '../Button';
 
+import { useChatContext } from '../../context';
 import useToggle from '../../hooks/useToggle';
 import { ExclamationCircleIcon } from '../../icons';
 
@@ -33,18 +34,23 @@ export const FollowRequestButtonGroup: React.FC<FollowRequestButtonGroupProps> =
     onCancel,
     onFollow,
   } = props;
+  const { loginUserInfo } = useChatContext();
   const { visible, show, hide } = useToggle(false);
   const [isFollow, setIsFollow] = useState<boolean>(false);
-  const [ isRequest, setIsRequest ] = useState<boolean>(false);
+  const [isRequest, setIsRequest] = useState<boolean>(false);
   
   const handleFollow = async (callback?: () => void) => {
     try {
-      await client.user.followOperation({
-        target_userid: userId,
-        action: 'follow'
-      });
-      setIsFollow(true);
-      callback && callback();
+      if (loginUserInfo) {
+        await client.user.followOperation({
+          target_userid: userId,
+          action: 'follow',
+          address: loginUserInfo.address,
+          did_type: loginUserInfo.wallet_type as any
+        });
+        setIsFollow(true);
+        callback && callback();
+      }
     } catch (error) {
       console.log(error);
     }

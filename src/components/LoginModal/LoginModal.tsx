@@ -60,7 +60,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       : StepStringEnum.HOME,
   );
   const [showLoading, setShowLoading] = useState(false);
-  const [walletType, setWalletType] = useState<WalletType>('eth');
+  const [walletType, setWalletType] = useState<WalletType>(account?.walletType || 'eth');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const getAccount = async (didType?: WalletType, didValue?: string) => {
     setShowLoading(true);

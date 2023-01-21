@@ -24,7 +24,7 @@ type CreateChannelProps = {
 
 const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   const { ChannelSelectItem = SearchBox } = props;
-  const { client, appType, containerId } = useChatContext();
+  const { client, appType, containerId, loginUserInfo } = useChatContext();
   const { contacts, selectedContacts, handleCleanSelected, handleEvent, handleDeleteContact, handleSelectedContact } = useSelectedContacts(client);
   const { steps, current, handleNext, handlePrev, handleCleanSteps, handleUpdateSteps, setCurrent } = useSteps();
   const { followers, searchFollowers, getFollowerList, handleSearchFollers, setFollowers } = useSearchFollower(client);
@@ -79,18 +79,25 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
 
   const handleFollowOrSendFriend = useCallback(async (userid, action: 'follow') => {
     if (action === 'follow') {
-      await client.user.followOperation({target_userid: userid, action: 'follow'});
-      const _followers = followers.map(_follower => {
-        if (_follower.userid === userid) {
-          _follower.follow_status = 'follow_each';
+      if (loginUserInfo) {
+        await client.user.followOperation({
+          target_userid: userid, 
+          action: 'follow',
+          address: loginUserInfo.address,
+          did_type: loginUserInfo.wallet_type as any
+        });
+        const _followers = followers.map(_follower => {
+          if (_follower.userid === userid) {
+            _follower.follow_status = 'follow_each';
+            return _follower;
+          };
           return _follower;
-        };
-        return _follower;
-      });
-      setFollowers(_followers);
+        });
+        setFollowers(_followers);
+      }
     }
     
-  }, [followers]);
+  }, [followers, loginUserInfo]);
 
   const startChat = (userid: string) => {
     const { channelList } = client.channel;
