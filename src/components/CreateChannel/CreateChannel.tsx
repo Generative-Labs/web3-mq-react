@@ -33,12 +33,12 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   const [ searchValue, setSearchValue ] = useState<string>('');
 
   useEffect(() => {
-    client.on('contact.getList', handleEvent);
-    client.on('contact.updateList', handleEvent);
+    client.on('contact.getContactList', handleEvent);
+    client.on('contact.updateContactList', handleEvent);
     client.on('channel.activeChange', handleEvent);
     return () => {
-      client.off('contact.getList', handleEvent);
-      client.off('contact.updateList', handleEvent);
+      client.off('contact.getContactList', handleEvent);
+      client.off('contact.updateContactList', handleEvent);
       client.off('channel.activeChange', handleEvent);
     };
   }, []);
@@ -80,7 +80,7 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   const handleFollowOrSendFriend = useCallback(async (userid, action: 'follow') => {
     if (action === 'follow') {
       if (loginUserInfo) {
-        await client.user.followOperation({
+        await client.contact.followOperation({
           target_userid: userid, 
           action: 'follow',
           address: loginUserInfo.address,

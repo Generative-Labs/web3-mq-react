@@ -36,11 +36,11 @@ export const ContactList = (props: PropsWithChildren<ContactListProps>) => {
   } = usePaginatedContacts(client, getUserInfo);
 
   useEffect(() => {
-    client.on('contact.getList', handleEvent);
+    client.on('contact.getContactList', handleEvent);
     client.on('contact.activeChange', handleEvent);
-    client.on('contact.updateList', handleEvent);
+    client.on('contact.updateContactList', handleEvent);
     return () => {
-      client.off('contact.getList');
+      client.off('contact.getContactList');
       client.off('contact.activeChange');
     };
   }, []);

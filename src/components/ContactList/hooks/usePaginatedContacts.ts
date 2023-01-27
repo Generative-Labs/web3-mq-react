@@ -69,7 +69,7 @@ export const usePaginatedContacts = (
     // if (!activeContact && contactList.length !== 0) {
     //   changeActiveContactEvent(contactList[0]);
     // }
-    if (type === 'contact.getList') {
+    if (type === 'contact.getContactList') {
       await renderContactList(contactList);
       setContacts(contactList);
     }
@@ -77,7 +77,7 @@ export const usePaginatedContacts = (
       setActiveContact(activeContact);
       return;
     }
-    if (type === 'contact.updateList') {
+    if (type === 'contact.updateContactList') {
       await renderContactList(contactList);
       setContacts(contactList);
       return;

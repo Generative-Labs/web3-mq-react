@@ -15,10 +15,10 @@ export const useSelectedContacts = (client: Client) => {
     // if (!activeContact && contactList.length !== 0) {
     //   changeActiveContactEvent(contactList[0]);
     // }
-    if (type === 'contact.getList') {
+    if (type === 'contact.getContactList') {
       setContacts(contactList);
     }
-    if (type === 'contact.updateList') {
+    if (type === 'contact.updateContactList') {
       setContacts(contactList);
       return;
     }

@@ -36,7 +36,7 @@ export const NotificationPreview: React.FC<NotificationPreviewProps> = (props) =
   const handleFollowOrCancel = async () => {
     if (userInfo) {
       setLoading(true);
-      await client.user.followOperation({
+      await client.contact.followOperation({
         target_userid: targetUserid,
         action: isFollow ? 'cancel' : 'follow',
         address: userInfo.address,
