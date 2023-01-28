@@ -42,7 +42,7 @@ export const FollowRequestButtonGroup: React.FC<FollowRequestButtonGroupProps> =
   const handleFollow = async (callback?: () => void) => {
     try {
       if (loginUserInfo) {
-        await client.user.followOperation({
+        await client.contact.followOperation({
           target_userid: userId,
           action: 'follow',
           address: loginUserInfo.address,

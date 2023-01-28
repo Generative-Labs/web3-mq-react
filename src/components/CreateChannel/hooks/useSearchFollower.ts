@@ -11,8 +11,8 @@ export const useSearchFollower = (client: Client) => {
   const [searchFollowers, setSearchFollowers] = useState<any[]>([]);
 
   const getFollowerList = async () => {
-    const data = await client.user.getFollowerList(PAGE);
-    setFollowers(data.user_list);
+    const data = await client.contact.getFollowerList(PAGE);
+    setFollowers(data);
   };
 
   const handleSearchFollers = useCallback(
