@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useContext } from 'react';
-import type { Client } from 'web3-mq';
+import type { Client } from '@web3mq/client';
 import type {CommonUserInfoType, SearchDidType} from '../components/Chat/hooks/useQueryUserInfo';
 
 export type ListComponentType = 'room' | 'chat';

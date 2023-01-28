@@ -27,38 +27,35 @@ export const SignUp: React.FC = () => {
     setStep,
     qrCodeUrl,
     registerByQrCode,
+    confirmPassword,
   } = useLoginContext();
 
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [twoPassword, setTwoPassword] = useState('');
   const [errorInfo, setErrorInfo] = useState<string>();
 
   const isDisable = useMemo(() => {
-    let res = !password || !confirmPassword || showLoading;
+    let res = !password || !twoPassword || showLoading;
     if (!res) {
-      res = password !== confirmPassword;
+      res = password !== twoPassword;
     }
     return res;
-  }, [password, confirmPassword, showLoading]);
+  }, [password, twoPassword, showLoading]);
 
   const handleSubmit = async () => {
     setShowLoading(true);
+    setStep(StepStringEnum.SIGN_UP_SIGN_LOADING);
     try {
-      if (password !== confirmPassword) {
+      if (password !== twoPassword) {
         setErrorInfo('Passwords don\'t match. Please check your password inputs.');
       }
+      confirmPassword.current = password;
       if (qrCodeUrl) {
-        await registerByQrCode(password);
+        await registerByQrCode();
       } else {
-        await register(password, walletType);
-        const data = await login(password, walletType);
-        handleLoginEvent({
-          msg: '',
-          data,
-          type: 'login',
-        });
+        await register(walletType);
       }
 
       setShowLoading(false);
@@ -69,6 +66,7 @@ export const SignUp: React.FC = () => {
         type: 'error',
       });
       setErrorInfo(e.message);
+      setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
       setShowLoading(false);
     }
   };
@@ -133,8 +131,8 @@ export const SignUp: React.FC = () => {
               style={styles?.inputBoxInput}
               placeholder="Write something..."
               type={showPassword2 ? 'text' : 'password'}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              value={confirmPassword}
+              onChange={(e) => setTwoPassword(e.target.value)}
+              value={twoPassword}
             />
             {showPassword2 ? (
               <div

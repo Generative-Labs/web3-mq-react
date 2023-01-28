@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { EventTypes, Client } from 'web3-mq';
+import type { EventTypes, Client } from '@web3mq/client';
 
 type StatusType = {
   error: boolean;

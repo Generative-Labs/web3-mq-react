@@ -1,4 +1,4 @@
-import type { Client } from 'web3-mq';
+import type { Client } from '@web3mq/client';
 import { useEffect, useState } from 'react';
 import { debounce } from '../../../utils';
 

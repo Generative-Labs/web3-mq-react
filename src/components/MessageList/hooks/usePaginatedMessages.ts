@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { Client, EventTypes, Web3MQDBValue } from 'web3-mq';
+import type { Client, EventTypes, Web3MQDBValue } from '@web3mq/client';
 
 import type {CommonUserInfoType, SearchDidType} from '../../Chat/hooks/useQueryUserInfo';
 

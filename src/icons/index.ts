@@ -44,3 +44,4 @@ export * from './ArgentXIcon';
 export * from './ArgentWalletIcon';
 export * from './SuccessIcon';
 export * from './ConnectClosedIcon';
+export * from './ConnectErrorIcon';

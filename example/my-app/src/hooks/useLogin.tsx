@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Client, KeyPairsType } from 'web3-mq';
+import { Client, KeyPairsType } from '@web3mq/client';
 
 const useLogin = () => {
   const hasKeys = useMemo(() => {

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { getUserPublicProfileRequest } from 'web3-mq';
-import type { Client, SearchUsersResponse } from 'web3-mq';
+import { getUserPublicProfileRequest } from '@web3mq/client';
+import type { Client, SearchUsersResponse } from '@web3mq/client';
 
 import { getDidsByRss3, getProfileFromRss3 } from '../../../lens/api';
 import { ACCOUNT_CONNECT_TYPE, WEB3_MQ_DID_TYPE } from '../../../types/enum';

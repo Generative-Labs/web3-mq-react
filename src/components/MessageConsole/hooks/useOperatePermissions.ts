@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { Client } from 'web3-mq';
+import type { Client } from '@web3mq/client';
 
 type PermissionType = Record<string, { type: string; value: string }>;
 type UserPermissionsType = {

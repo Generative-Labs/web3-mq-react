@@ -7,14 +7,14 @@ import { StepStringEnum, useLoginContext } from '../../../context';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
-import { Client } from 'web3-mq';
+import { Client } from '@web3mq/client';
 
 export const Home: React.FC = () => {
   const { step, styles, handleWeb3mqCallback, setStep } = useLoginContext();
 
   const handleWeb3mqClick = () => {
     setStep(StepStringEnum.QR_CODE);
-    Client.getQrCodeClient({ dAppID: 'SwapChat:im' }, handleWeb3mqCallback);
+    Client.initDappConnectClient({ dAppID: 'SwapChat:im' }, handleWeb3mqCallback);
   };
   return (
     <div className={cx(ss.container)} style={styles?.homeContainer}>

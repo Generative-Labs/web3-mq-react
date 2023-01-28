@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import type { Client, NotifyResponse } from 'web3-mq';
+import type { Client, NotifyResponse } from '@web3mq/client';
 
 import { Avatar } from '../Avatar';
 import { Button } from '../Button';

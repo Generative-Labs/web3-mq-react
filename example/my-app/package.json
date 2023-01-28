@@ -10,12 +10,13 @@
     "@types/node": "^16.11.58",
     "@types/react": "^18.0.18",
     "@types/react-dom": "^18.0.6",
+    "qrcode": "^1.5.1",
     "react-scripts": "5.0.1",
     "typescript": "^4.8.2",
     "web-vitals": "^2.1.4",
     "react": "../../node_modules/react",
     "react-dom": "../../node_modules/react-dom",
-    "web3-mq": "../../node_modules/web3-mq",
+    "@web3mq/client": "../../node_modules/@web3mq/client",
     "web3-mq-react": "../../"
   },
   "scripts": {

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import cx from 'classnames';
-import type { EventTypes } from 'web3-mq';
+import type { EventTypes } from '@web3mq/client';
 
 import LoadingPng from './loading.png';
 

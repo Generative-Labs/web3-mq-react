@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { Client } from 'web3-mq';
+import type { Client } from '@web3mq/client';
 
 const PAGE = {
   page: 1,
