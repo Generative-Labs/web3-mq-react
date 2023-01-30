@@ -142,26 +142,30 @@ export const Channel = (props: PropsWithChildren<ChannelProps>) => {
       return null;
     }
     return (
-      <div
-        className={cx(
-          ss.chatContainerClass,
-          {
-            [ss.mobileStyle]: appType !== AppTypeEnum['pc'],
-          },
-          className,
-        )}
-      >
+      <>
         {children}
-      </div>
+      </>
     );
-  }, [appType, activeChannel]);
+  }, [activeChannel]);
 
   return (
     <>
       <ChannelStateProvider value={ChannelStateContextValue}>
         <ChannelActionProvider value={channelActionContextValue}>
           <ComponentProvider value={componentContextValue}>
-            <ChildrenDOM />
+            {activeChannel && (
+              <div
+                className={cx(
+                  ss.chatContainerClass,
+                  {
+                    [ss.mobileStyle]: appType !== AppTypeEnum['pc'],
+                  },
+                  className,
+                )}
+              >
+                <ChildrenDOM />
+              </div>
+            )}
           </ComponentProvider>
         </ChannelActionProvider>
       </ChannelStateProvider>

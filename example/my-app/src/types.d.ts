@@ -1,1 +1,1 @@
-declare module 'web3-mq-react';
+declare module '@web3mq/react-components';

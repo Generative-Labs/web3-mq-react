@@ -2,18 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Client } from '@web3mq/client';
 import {
   Chat,
-  Channel,
   ConnectMessage,
   DashBoard,
   AppTypeEnum,
-  Window,
-  MessageConsole,
-  MessageHeader,
-  MessageList,
-  MessageInput,
-} from 'web3-mq-react';
-import 'web3-mq-react/dist/css/index.css';
-import MsgInput from './components/MsgInput';
+} from '@web3mq/react-components';
+import '@web3mq/react-components/dist/css/index.css';
+import Main from './components/Main';
 import Login from './components/Login';
 
 import useLogin from './hooks/useLogin';
@@ -58,16 +52,17 @@ const App: React.FC = () => {
     <Chat client={client} appType={appType} logout={logout}>
       <ConnectMessage />
       <DashBoard />
-      <Channel>
+      <Main />
+      {/* <Channel>
         <Window>
           <MessageHeader avatarSize={40} />
           <MessageList />
-          {/* <MessageInput Input={MsgInput} /> */}
+          <MessageInput Input={MsgInput} />
           <MessageConsole Input={<MessageInput Input={MsgInput} />} />
         </Window>
-        {/* <Thread />
-        <AllThreadList /> */}
-      </Channel>
+        <Thread />
+        <AllThreadList />
+      </Channel> */}
     </Chat>
   );
 };

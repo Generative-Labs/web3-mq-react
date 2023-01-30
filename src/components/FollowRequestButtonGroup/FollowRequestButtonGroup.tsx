@@ -14,6 +14,7 @@ import ss from './index.scss';
 type FollowRequestButtonGroupProps = {
   client: Client;
   containerId?: string;
+  followDisabled?: boolean;
   warnText?: string,
   showFollow?: boolean,
   showBlockBtn?: boolean,
@@ -27,6 +28,7 @@ export const FollowRequestButtonGroup: React.FC<FollowRequestButtonGroupProps> =
   const { 
     client,
     containerId = '',
+    followDisabled,
     warnText,
     showFollow = false,
     showBlockBtn = false,
@@ -38,7 +40,7 @@ export const FollowRequestButtonGroup: React.FC<FollowRequestButtonGroupProps> =
   const { visible, show, hide } = useToggle(false);
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [isRequest, setIsRequest] = useState<boolean>(false);
-  
+
   const handleFollow = async (callback?: () => void) => {
     try {
       if (loginUserInfo) {
@@ -105,7 +107,7 @@ export const FollowRequestButtonGroup: React.FC<FollowRequestButtonGroupProps> =
           <Button className={ss.cancelBtn} size='large' onClick={handleCancel}>Cancel</Button>
           <Button 
             className={ss.operateBtn}
-            disabled={showFollow ? isFollow : isRequest} 
+            disabled={showFollow ? (followDisabled || isFollow) : isRequest} 
             size='large' 
             type={showBlockBtn ? 'ghost' : 'primary'} 
             onClick={() => handleFollowOrRequest(showFollow)}

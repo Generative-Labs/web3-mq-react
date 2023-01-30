@@ -202,7 +202,7 @@ export function dateFormat(time: number, format?: string) {
   return format.replace(/\w/g, (o) => {
     // @ts-ignore
     let rt = hash[o.toLocaleLowerCase()];
-    return rt > 10 || isAddZero(o) ? rt : `0${rt}`;
+    return rt >= 10 || isAddZero(o) ? rt : `0${rt}`;
   });
 }
 
