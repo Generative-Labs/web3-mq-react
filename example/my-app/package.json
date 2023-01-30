@@ -17,7 +17,7 @@
     "react": "../../node_modules/react",
     "react-dom": "../../node_modules/react-dom",
     "@web3mq/client": "../../node_modules/@web3mq/client",
-    "web3-mq-react": "../../"
+    "@web3mq/react-components": "../../"
   },
   "scripts": {
     "start": "react-scripts start",

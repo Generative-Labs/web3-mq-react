@@ -93,9 +93,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
 
     if (type === 'dapp-connect') {
       if (data) {
-        if (data.action === 'connectResponse' && data.walletInfo) {
+        if (data.action === 'connectResponse' && data.approve && data.walletInfo) {
           setWalletType(data.walletInfo.walletType);
           await getAccount(data.walletInfo.walletType, data.walletInfo.address.toLowerCase());
+        } else {
+          setStep(StepStringEnum.CONNECT_ERROR);
         }
         if (data.action === 'signResponse' && data.approve) {
           await web3MqSignCallback(eventData.data.signature, eventData.data.userInfo);
