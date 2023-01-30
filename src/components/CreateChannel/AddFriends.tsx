@@ -28,7 +28,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const [ load, setLoad ] = useState<boolean>(false);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value);
-    if (e.target.value.indexOf('user:') !== 0) {
+    if (!e.target.value.toLowerCase().startsWith('0x') && e.target.value.indexOf('user:') !== 0) {
       setIsWarn(true);
     } else {
       setIsWarn(false);
@@ -49,7 +49,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   return (
     <>
       <div className={cx(ss.addFriendContainer, className)}>
-        <div className={ss.label}>User ID</div>
+        <div className={ss.label}>Address/User ID</div>
         <input className={ss.commonInput} disabled={disabled} type='text' value={value} onChange={(e) => handleChange(e)} />
         <div className={cx(ss.warnning, {
           [ss.hide]: !isWarn

@@ -17,30 +17,27 @@ export const Notification: React.FC<NotificationProps> = (props) => {
     appType, 
     client, 
     containerId,
+    getUserInfo,
     setActiveNotification,
   } = useChatContext('Notification');
-  const [isFollow, setIsFollow] = useState(false);
+  const [username, setUsername] = useState('');
+  const [avatar, setAvatar] = useState('');
   const warnText = 'Do you want to let XXX message you? They won\'t know you\'ve seen their message until you accept.';
 
   const init = useCallback(async () => {
+    setAvatar('');
+    setUsername('');
     if (activeNotification && activeNotification.type === 'system.friend_request' && activeNotification.come_from) {
       const come_from = activeNotification.come_from;
       const isuserid = come_from.startsWith('user:');
       if (isuserid) {
-        const { data } = await client.user.getTargetUserPermissions(come_from);
-        const { permissions, follow_status } = data;
-        // permisssions key "user:chat"为空 默认为最高权限
-        if (!permissions['user:chat']) {
-          permissions['user:chat'] = {
-            type: 'enum',
-            value: 'friend'
-          };
-        }
-        const { value } = permissions['user:chat'];
-        if (follow_status === 'following' || follow_status === 'follow_each') {
-          setIsFollow(true);
-        } else {
-          setIsFollow(false);
+        try {
+          const userinfo = await getUserInfo(come_from, 'web3mq');
+          if (userinfo) {
+            setAvatar((userinfo as any).avatar_url || userinfo.defaultUserAvatar);
+            setUsername((userinfo as any).nickname || userinfo.defaultUserName);
+          }
+        } catch (error) {
         }
       }
     };
@@ -89,15 +86,15 @@ export const Notification: React.FC<NotificationProps> = (props) => {
     >
       <Window hasContainer={containerId ? true : false}>
         <div className={ss.notificationHeaderContainer}>
-          <Avatar size={32} shape="rounded" image='' />
-          <div className={ss.title}>{activeNotification.come_from}</div>
+          <Avatar size={32} shape="rounded" image={avatar} />
+          <div className={ss.title}>{username || activeNotification.come_from}</div>
         </div>
         <div className={ss.notificationBody}>
           <div className={ss.messageLine}>
-            <Avatar size={32} shape="rounded" image='' />
+            <Avatar size={32} shape="rounded" image={avatar} />
             <div className={ss.messageBody}>
               <div className={ss.wrap}>
-                <div className={ss.user}>{getShortAddress(activeNotification.come_from)}</div>
+                <div className={ss.user}>{username || getShortAddress(activeNotification.come_from)}</div>
                 <div className={ss.date}>{dateFormat(activeNotification.timestamp)}</div>
               </div>
               <div className={ss.content}>
@@ -110,7 +107,6 @@ export const Notification: React.FC<NotificationProps> = (props) => {
           client={client}
           showBlockBtn={false}
           showFollow={true}
-          // followDisabled={isFollow}
           userId={activeNotification.come_from}
           warnText={warnText}
           onCancel={() => {setActiveNotification(null)}}
