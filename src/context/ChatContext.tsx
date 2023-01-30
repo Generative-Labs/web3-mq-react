@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useContext } from 'react';
-import type { Client } from '@web3mq/client';
+import type { Client, NotifyResponse } from '@web3mq/client';
 import type {CommonUserInfoType, SearchDidType} from '../components/Chat/hooks/useQueryUserInfo';
 
 export type ListComponentType = 'room' | 'chat';
@@ -14,6 +14,8 @@ export type ChatContextValue = {
   client: Client;
   containerId: string;
   appType: AppTypeEnum;
+  activeNotification: NotifyResponse | null;
+  setActiveNotification: (notification: NotifyResponse | null) => void;
   showListTypeView: ListComponentType | string;
   setShowListTypeView: (listType: ListComponentType | string) => void;
   logout: () => void;

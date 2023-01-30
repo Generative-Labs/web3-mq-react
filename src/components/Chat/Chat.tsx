@@ -1,6 +1,6 @@
-import React, { PropsWithChildren, useEffect, useMemo } from 'react';
+import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 import cx from 'classnames';
-import type { Client } from '@web3mq/client';
+import type { Client, NotifyResponse } from '@web3mq/client';
 import { ChatProvider, ChatContextValue, AppTypeEnum } from '../../context/ChatContext';
 import { useQueryUserInfo } from './hooks/useQueryUserInfo';
 
@@ -30,6 +30,7 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
 
   const { showListTypeView, setShowListTypeView } = useShowListTypeView();
   const { getUserInfo, loginUserInfo, getLoginUserInfo } = useQueryUserInfo(client);
+  const [ activeNotification, setActiveNotification ] = useState<NotifyResponse | null>(null);
 
   useEffect(() => {
     getLoginUserInfo().then();
@@ -40,13 +41,15 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
       client,
       containerId,
       appType,
+      activeNotification,
+      setActiveNotification,
       showListTypeView,
       setShowListTypeView,
       logout,
       getUserInfo,
       loginUserInfo,
     }),
-    [showListTypeView, appType, JSON.stringify(loginUserInfo)], // channel id变化需要重新render
+    [showListTypeView, appType, activeNotification, JSON.stringify(loginUserInfo)], // channel id变化需要重新render
   );
 
   return (

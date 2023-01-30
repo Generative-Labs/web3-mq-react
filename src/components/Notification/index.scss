@@ -1,0 +1,86 @@
+@import "../../style/index.scss";
+.notificationContainerClass {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex: 1;
+  @include themeify{
+    background-color: themed(White_color);
+  }
+}
+.notificationHeaderContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 20px 16px;
+  min-height: 80px;
+
+  &.mobileStyle {
+    padding: 0 16px;
+  }
+  .title {
+    max-width: 190px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    @include themeify {
+      color: themed(Gray_900);
+      font-size: themed(Body_font-size);
+      font-weight: themed(Medium_font-weight);
+    }
+  }
+  @include themeify {
+    border-bottom: 1px solid themed(Gray_100);
+    background-color: themed(White_color);
+  }
+}
+.notificationBody {
+  height: 100%;
+  width: 100%;
+  padding: 16px;
+}
+.messageLine {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+.messageBody {
+  border-radius: 8px 8px 8px 2px;
+  padding: 12px;
+  @include themeify {
+    background: themed(Gray_100)
+  }
+}
+.wrap {
+  display: flex;
+  align-items: center;
+  font-family: Inter, sans-serif;
+  .user {
+    @include themeify {
+      font-size: themed(Body_font-size);
+      font-weight: themed(Bold_font-weight);
+      color: themed(Gray_900);
+    }
+  }
+  .date {
+    margin-left: 5px;
+    @include themeify {
+      font-size: themed(Caption1_font-size);
+      font-weight: themed(Regular_font-weight);
+      color: themed(Gray_400);
+    }
+  }
+}
+.content {
+  @include themeify {
+    font-size: themed(Headline_font-size);
+    font-weight: themed(Regular_font-weight);
+    color: themed(Gray_900);
+  }
+}
+.mobileStyle {
+  // position: fixed;
+  position: absolute;
+  border: none;
+  z-index: 99;
+}

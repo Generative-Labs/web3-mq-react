@@ -27,6 +27,8 @@ export * from './AllThreadList';
 export * from './Toast';
 export * from './Popover';
 export * from './Notify';
+export * from './Notification';
+export * from './NotificationList';
 export * from './RadioGroup';
 export * from './Button';
 export * from './LoginModal';
