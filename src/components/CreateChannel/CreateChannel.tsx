@@ -192,9 +192,9 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
                 {contacts.map((contact: any) => {
                   return (
                     <div className={ss.contactItem} key={contact.userid} onClick={() => startChat(contact.userid)}>
-                      <Avatar image={contact.avatar_url} size={40} />
+                      <Avatar image={contact.avatar_url || contact.defaultUserAvatar} size={40} />
                       <div className={ss.wrapper}>
-                        {getShortAddress(contact.userid)}
+                        {contact.nickname || contact.defaultUserName || getShortAddress(contact.userid)}
                       </div>
                     </div>
                   );
