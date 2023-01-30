@@ -5,8 +5,8 @@ import {
   ConnectMessage,
   DashBoard,
   AppTypeEnum,
-} from 'web3-mq-react';
-import 'web3-mq-react/dist/css/index.css';
+} from '@web3mq/react-components';
+import '@web3mq/react-components/dist/css/index.css';
 import Main from './components/Main';
 import Login from './components/Login';
 

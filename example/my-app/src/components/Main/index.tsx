@@ -9,7 +9,7 @@ import {
   Notification,
   Window,
   useChatContext
-} from 'web3-mq-react';
+} from '@web3mq/react-components';
 import MsgInput from '../MsgInput';
 
 import './index.css';

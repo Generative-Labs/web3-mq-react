@@ -1,6 +1,6 @@
 import React from 'react';
 import { MetaMaskIcon } from '../../icons';
-import { AppTypeEnum, LoginModal } from 'web3-mq-react';
+import { AppTypeEnum, LoginModal } from '@web3mq/react-components';
 
 import './index.css';
 
