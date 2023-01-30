@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useMemo } from 'react';
 import cx from 'classnames';
-import type { Client } from 'web3-mq';
+import type { Client } from '@web3mq/client';
 import { ChatProvider, ChatContextValue, AppTypeEnum } from '../../context/ChatContext';
 import { useQueryUserInfo } from './hooks/useQueryUserInfo';
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { Client } from 'web3-mq';
+import type { Client } from '@web3mq/client';
 
 import { AddFriends } from '../CreateChannel/AddFriends';
 import { Modal } from '../Modal';

@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useRef } from 'react';
 import cx from 'classnames';
-import { SendMsgLoadingMap } from 'web3-mq';
+import { SendMsgLoadingMap } from '@web3mq/client';
 
 import { Avatar } from '../Avatar';
 import { Loading } from '../Loading';

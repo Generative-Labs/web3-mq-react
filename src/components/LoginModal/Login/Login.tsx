@@ -26,6 +26,7 @@ export const Login: React.FC = () => {
     setStep,
     qrCodeUrl,
     loginByQrCode,
+    confirmPassword,
   } = useLoginContext();
 
   const [password, setPassword] = useState('');
@@ -34,19 +35,15 @@ export const Login: React.FC = () => {
 
   const handleSubmit = async () => {
     setShowLoading(true);
+    setStep(StepStringEnum.LOGIN_SIGN_LOADING);
+    confirmPassword.current = password;
     try {
       if (qrCodeUrl) {
         // 说明是扫码登录
-        await loginByQrCode(password);
+        await loginByQrCode();
       } else {
-        const data = await login(password, walletType);
-        handleLoginEvent({
-          msg: '',
-          type: 'login',
-          data,
-        });
+        await login(walletType);
       }
-
       setShowLoading(false);
     } catch (e: any) {
       handleLoginEvent({
@@ -56,6 +53,7 @@ export const Login: React.FC = () => {
       });
       setErrorInfo(e.message);
       setShowLoading(false);
+      setStep(StepStringEnum.LOGIN_SIGN_ERROR);
     }
   };
 

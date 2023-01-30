@@ -6,7 +6,7 @@ import React, {
   useCallback,
   useRef,
 } from 'react';
-import type { EventTypes } from 'web3-mq';
+import type { EventTypes } from '@web3mq/client';
 import cx from 'classnames';
 
 import {

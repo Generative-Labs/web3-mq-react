@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import cx from 'classnames';
-import type { NotifyResponse } from 'web3-mq';
+import type { NotifyResponse } from '@web3mq/client';
 
 import { usePaginatedNotifications } from './hooks/usePaginatedNotifications';
 import { Empty } from '../Empty';

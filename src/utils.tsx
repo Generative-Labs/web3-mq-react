@@ -1,3 +1,5 @@
+import QRCode from 'qrcode';
+
 export function getShortAddress(
   address: string = '',
   num: number = 5,
@@ -447,4 +449,12 @@ export const formatDistanceToNow = (date: number | Date) => {
  */
 export const getUserAvatar = (address: string) =>  {
   return `https://cdn.stamp.fyi/avatar/${address}?s=300`;
+};
+
+export const generateQrCode = async (text: string) => {
+  try {
+    return await QRCode.toDataURL(text);
+  } catch (err: any) {
+    throw new Error(err.message);
+  }
 };

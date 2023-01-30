@@ -20,7 +20,7 @@ const isDev = process.env.ROLLUP_WATCH || false;
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
-const externalDependencies = ['react', 'web3-mq', 'react-dom', '@babel/runtime/helpers/extends'];
+const externalDependencies = ['react', '@web3mq/client', 'react-dom', '@babel/runtime/helpers/extends'];
 
 const baseConfig = {
   input: getPath('./src/index.ts'),
@@ -82,7 +82,7 @@ const config = {
       globals: {
         react: 'React',
         'react-dom': 'ReactDOM',
-        'web3-mq': 'Web3MQ',
+        '@web3mq/client': 'Web3MQ',
       },
     },
   ],

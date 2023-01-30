@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Client, WalletType } from 'web3-mq';
+import { Client, WalletType } from '@web3mq/client';
 import { SignAuditTypeEnum } from '../../../context';
 
 export type LoginEventType = 'login' | 'register' | 'error';
@@ -46,10 +46,11 @@ const useLogin = (
   account?: UserAccountType,
 ) => {
   const [userAccount, setUserAccount] = useState<UserAccountType | undefined>(account);
+  const confirmPassword = useRef<string>('');
   const walletAddress = useRef<string>('');
   const [registerSignRes, setRegisterSignRes] = useState('');
   const [mainKeys, setMainKeys] = useState<MainKeysType | undefined>(keys);
-  const [signAuditType, setSignAuditType] = useState< SignAuditTypeEnum | undefined >();
+  const [signAuditType, setSignAuditType] = useState<SignAuditTypeEnum | undefined>();
   const getUserAccount = async (
     didType: WalletType = 'eth',
     address?: string,
@@ -79,66 +80,75 @@ const useLogin = (
     };
   };
 
-  const login = async (
-    password: string,
-    didType: WalletType = 'eth',
-  ): Promise<LoginResType | null> => {
-    if (!userAccount) {
-      return null;
-    }
-
-    let localMainPrivateKey = '';
-    let localMainPublicKey = '';
-    if (mainKeys && userAccount.address.toLowerCase() === mainKeys.walletAddress.toLowerCase()) {
-      localMainPrivateKey = mainKeys.privateKey;
-      localMainPublicKey = mainKeys.publicKey;
-    }
-    const { userid, address } = userAccount;
-    const { TempPrivateKey, TempPublicKey, pubkeyExpiredTimestamp, mainPrivateKey, mainPublicKey } =
-      await Client.register.login({
-        password,
-        userid,
-        did_value: address,
-        did_type: didType,
-        mainPublicKey: localMainPublicKey,
-        mainPrivateKey: localMainPrivateKey,
-      });
-    return {
-      privateKey: mainPrivateKey,
-      publicKey: mainPublicKey,
-      tempPrivateKey: TempPrivateKey,
-      tempPublicKey: TempPublicKey,
-      didKey: `${didType}:${address}`,
-      userid,
-      address,
-      pubkeyExpiredTimestamp,
-    };
-  };
-
-  const register = async (
-    password: string,
-    didType: WalletType = 'eth',
-  ): Promise<RegisterResType | null> => {
-    if (!userAccount) {
-      return null;
-    }
-    const { address, userid } = userAccount;
-    const { mainPrivateKey, mainPublicKey } = await Client.register.register({
-      password,
-      did_value: address,
-      userid,
-      did_type: didType,
-      avatar_url: `https://cdn.stamp.fyi/avatar/${address}?s=300`,
-    });
-    return { privateKey: mainPrivateKey, publicKey: mainPublicKey, address };
-  };
-
-  const sendGetMainKeysSign = async (password: string, signType: SignAuditTypeEnum): Promise<void> => {
+  const login = async (didType: WalletType = 'eth'): Promise<void> => {
     if (!userAccount) {
       return;
     }
-    const { signContent } = await Client.qrCodeSign.getMainKeypairSignContent({
-      password,
+    const { userid, address } = userAccount;
+    let localMainPrivateKey = '';
+    let localMainPublicKey = '';
+    if (mainKeys && address.toLowerCase() === mainKeys.walletAddress.toLowerCase()) {
+      localMainPrivateKey = mainKeys.privateKey;
+      localMainPublicKey = mainKeys.publicKey;
+    }
+    if (!localMainPublicKey || !localMainPrivateKey) {
+      const { publicKey, secretKey } = await Client.register.getMainKeypair({
+        password: confirmPassword.current,
+        did_value: address,
+        did_type: didType,
+      });
+      localMainPrivateKey = secretKey;
+      localMainPublicKey = publicKey;
+    }
+
+    await commonLogin({
+      mainPrivateKey: localMainPrivateKey,
+      mainPublicKey: localMainPublicKey,
+      userid,
+      didType,
+      didValue: address,
+    });
+  };
+
+  const register = async (didType: WalletType = 'eth', nickname?: string): Promise<void> => {
+    if (!userAccount) {
+      return;
+    }
+    const { address, userid } = userAccount;
+    const { publicKey, secretKey } = await Client.register.getMainKeypair({
+      password: confirmPassword.current,
+      did_value: address,
+      did_type: didType,
+    });
+    const { signContent } = await Client.register.getRegisterSignContent({
+      userid,
+      mainPublicKey: publicKey,
+      didType,
+      didValue: address,
+    });
+    const { sign: signRes, publicKey: did_pubkey = '' } = await Client.register.sign(
+      signContent,
+      address,
+      didType,
+    );
+    await commonRegister({
+      mainPublicKey: publicKey,
+      mainPrivateKey: secretKey,
+      userid,
+      didType,
+      didValue: address,
+      signature: signRes,
+      didPubkey: did_pubkey,
+      nickname,
+    });
+  };
+
+  const sendGetMainKeysSign = async (signType: SignAuditTypeEnum): Promise<void> => {
+    if (!userAccount) {
+      return;
+    }
+    const { signContent } = await Client.register.getMainKeypairSignContent({
+      password: confirmPassword.current,
       did_value: userAccount.address,
       did_type: userAccount.walletType,
     });
@@ -148,10 +158,26 @@ const useLogin = (
     if (!userAccount) {
       return;
     }
-    const { signContent } = await Client.qrCodeSign.getRegisterSignContent({
-      userid: userAccount.userid,
+    const { userid, address, walletType } = userAccount;
+    if (!mainKeys || mainKeys.walletAddress.toLowerCase() !== address.toLowerCase()) {
+      if (!confirmPassword.current) {
+        return;
+      }
+      await sendGetMainKeysSign(SignAuditTypeEnum.GET_KEYS_FOR_REGISTER);
+      return;
+    }
+
+    const { signContent } = await Client.register.getRegisterSignContent({
+      userid,
+      mainPublicKey: mainKeys.publicKey,
+      didType: walletType,
+      didValue: address,
     });
-    await commonSendSign(signContent, userAccount.address.toLowerCase(), SignAuditTypeEnum.REGISTER);
+    await commonSendSign(
+      signContent,
+      userAccount.address.toLowerCase(),
+      SignAuditTypeEnum.REGISTER,
+    );
   };
   const afterSignAndLogin = async () => {
     if (signAuditType === SignAuditTypeEnum.GET_KEYS_FOR_LOGIN) {
@@ -161,13 +187,20 @@ const useLogin = (
       await sendGetRegisterSign();
     }
     if (signAuditType === SignAuditTypeEnum.REGISTER && registerSignRes) {
-      await registerByQrCode(undefined, registerSignRes);
+      await registerByQrCode(registerSignRes);
     }
   };
 
-
-  const commonSendSign = async (signContent: string, address: string, signAuditType: SignAuditTypeEnum) => {
-    await Client.qrCodeSign.signWithQrCode(signContent, address, signAuditType);
+  const commonSendSign = async (
+    signContent: string,
+    address: string,
+    signAuditType: SignAuditTypeEnum,
+  ) => {
+    await Client.dappConnectClient.sendSign({
+      signContent,
+      didValue: address,
+      signType: signAuditType,
+    });
   };
 
   useEffect(() => {
@@ -177,69 +210,131 @@ const useLogin = (
     afterSignAndLogin();
   }, [mainKeys, registerSignRes, signAuditType]);
 
-  const loginByQrCode = async (password?: string) => {
+  const loginByQrCode = async () => {
     if (!userAccount) {
       return;
     }
     if (!mainKeys || mainKeys?.walletAddress.toLowerCase() !== userAccount.address.toLowerCase()) {
-      if (!password) {
+      if (!confirmPassword.current) {
         return;
       }
-      await sendGetMainKeysSign(password, SignAuditTypeEnum.GET_KEYS_FOR_LOGIN);
+      // setStep(StepStringEnum.LOGIN_SIGN_LOADING);
+      await sendGetMainKeysSign(SignAuditTypeEnum.GET_KEYS_FOR_LOGIN);
       return;
     } else {
-      const {
-        TempPrivateKey,
-        TempPublicKey,
-        pubkeyExpiredTimestamp,
-        mainPrivateKey,
-        mainPublicKey,
-      } = await Client.qrCodeSign.qrCodeLogin({
-        userid: userAccount.userid,
-        did_value: userAccount.address,
-        did_type: userAccount.walletType,
-        password,
+      await commonLogin({
         mainPrivateKey: mainKeys.privateKey,
         mainPublicKey: mainKeys.publicKey,
-      });
-
-      handleLoginEvent({
-        msg: '',
-        type: 'login',
-        data: {
-          privateKey: mainPrivateKey,
-          publicKey: mainPublicKey,
-          tempPrivateKey: TempPrivateKey,
-          tempPublicKey: TempPublicKey,
-          didKey: `${userAccount.walletType}:${userAccount.address}`,
-          userid: userAccount.userid,
-          address: userAccount.address,
-          pubkeyExpiredTimestamp,
-        },
+        userid: userAccount.userid,
+        didType: userAccount.walletType,
+        didValue: userAccount.address,
       });
     }
   };
+  const commonLogin = async (options: {
+    mainPublicKey: string;
+    mainPrivateKey: string;
+    userid: string;
+    didType: WalletType;
+    didValue: string;
+  }) => {
+    const { didType, didValue, userid } = options;
 
-  const registerByQrCode = async (password?: string, signature?: string): Promise<void> => {
+    const { tempPrivateKey, tempPublicKey, pubkeyExpiredTimestamp, mainPrivateKey, mainPublicKey } =
+      await Client.register.login({
+        ...options,
+        password: confirmPassword.current,
+      });
+
+    handleLoginEvent({
+      msg: '',
+      type: 'login',
+      data: {
+        privateKey: mainPrivateKey,
+        publicKey: mainPublicKey,
+        tempPrivateKey,
+        tempPublicKey,
+        didKey: `${didType}:${didValue}`,
+        userid: userid,
+        address: didValue,
+        pubkeyExpiredTimestamp,
+      },
+    });
+  };
+
+  const registerByQrCode = async (signature?: string): Promise<void> => {
     if (!userAccount) {
       return;
     }
+    const { address, walletType, userid } = userAccount;
     if (!mainKeys || mainKeys.walletAddress.toLowerCase() !== userAccount.address.toLowerCase()) {
-      if (!password) {
+      if (!confirmPassword.current) {
         return;
       }
-      await sendGetMainKeysSign(password, SignAuditTypeEnum.GET_KEYS_FOR_REGISTER);
+      await sendGetMainKeysSign(SignAuditTypeEnum.GET_KEYS_FOR_REGISTER);
       return;
     } else if (!signature) {
       await sendGetRegisterSign();
       return;
     } else {
-      await Client.qrCodeSign.qrCodeRegister({
-        userid: userAccount.userid,
+      await commonRegister({
+        mainPublicKey: mainKeys.publicKey,
+        mainPrivateKey: mainKeys.privateKey,
+        userid,
+        didType: walletType,
+        didValue: address,
+        nickname: '',
         signature,
       });
-      await loginByQrCode();
     }
+  };
+
+  const commonRegister = async (options: {
+    mainPublicKey: string;
+    mainPrivateKey: string;
+    userid: string;
+    didType: WalletType;
+    didValue: string;
+    signature: string;
+    didPubkey?: string;
+    nickname?: string;
+  }) => {
+    const {
+      userid,
+      mainPublicKey,
+      mainPrivateKey,
+      signature,
+      didValue,
+      didType,
+      didPubkey = '',
+      nickname = '',
+    } = options;
+    await Client.register.register({
+      userid,
+      didValue,
+      mainPublicKey,
+      did_pubkey: didPubkey,
+      didType,
+      nickname,
+      avatar_url: `https://cdn.stamp.fyi/avatar/${didValue}?s=300`,
+      signature,
+    });
+    handleLoginEvent({
+      msg: '',
+      type: 'register',
+      data: {
+        privateKey: mainPrivateKey,
+        publicKey: mainPublicKey,
+        address: didValue,
+      },
+    });
+    await commonLogin({
+      mainPrivateKey,
+      mainPublicKey,
+      didType,
+      didValue,
+      userid,
+    });
   };
 
   const web3MqSignCallback = async (signature: string, signType: SignAuditTypeEnum) => {
@@ -248,7 +343,10 @@ const useLogin = (
       setRegisterSignRes(signature);
     } else {
       // 设置主密钥对
-      const { publicKey, secretKey } = await Client.qrCodeSign.getMainKeypair(signature);
+      const { publicKey, secretKey } = await Client.register.getMainKeypairBySignature(
+        signature,
+        confirmPassword.current,
+      );
       setMainKeys({
         publicKey,
         privateKey: secretKey,
@@ -267,6 +365,7 @@ const useLogin = (
     registerByQrCode,
     web3MqSignCallback,
     setUserAccount,
+    confirmPassword,
   };
 };
 

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { Client, EventTypes, NotifyResponse } from 'web3-mq';
+import type { Client, EventTypes, NotifyResponse } from '@web3mq/client';
 
 export const usePaginatedNotifications = (client: Client) => {
   const [notifications, setNotifications] = useState<NotifyResponse[] | null>([]);

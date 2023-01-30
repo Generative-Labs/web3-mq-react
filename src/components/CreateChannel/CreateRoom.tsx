@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import cx from 'classnames';
-import type { Client } from 'web3-mq';
+import type { Client } from '@web3mq/client';
 
 import { Avatar } from '../Avatar';
 import { Button } from '../Button';

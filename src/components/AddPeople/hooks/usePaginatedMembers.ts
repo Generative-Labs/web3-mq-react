@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Client, EventTypes } from 'web3-mq';
+import type { Client, EventTypes } from '@web3mq/client';
 
 const PAGE = {
   page: 1,

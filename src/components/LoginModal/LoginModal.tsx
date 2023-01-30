@@ -8,13 +8,16 @@ import { Login } from './Login';
 import { SignUp } from './SignUp';
 import { QrCodeLogin } from './QrCodeLogin';
 import { Home } from './Home';
+import { ConnectError, ConnectLoading, SignError, SignLoading } from './loginLoading';
 import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
-import type { WalletType } from 'web3-mq';
+import type { WalletType } from '@web3mq/client';
+import { Client } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import useLogin, { LoginEventDataType, MainKeysType, UserAccountType } from './hooks/useLogin';
+import { generateQrCode } from '../../utils';
 
 type IProps = {
   containerId: string;
@@ -50,6 +53,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     web3MqSignCallback,
     registerByQrCode,
     setUserAccount,
+    confirmPassword,
   } = useLogin(handleLoginEvent, keys, account);
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
@@ -64,6 +68,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const getAccount = async (didType?: WalletType, didValue?: string) => {
     setShowLoading(true);
+    setStep(StepStringEnum.CONNECT_LOADING);
     const { address, userExist } = await getUserAccount(didType, didValue);
     if (address) {
       if (userExist) {
@@ -71,21 +76,30 @@ export const LoginModal: React.FC<IProps> = (props) => {
       } else {
         setStep(StepStringEnum.SIGN_UP);
       }
+    } else {
+      setStep(StepStringEnum.CONNECT_ERROR);
     }
     setShowLoading(false);
   };
   const handleWeb3mqCallback = async (eventData: any) => {
-    if (eventData.type === 'createQrcode') {
-      setQrCodeUrl(eventData.data.qrCodeUrl);
+    const { type, data } = eventData;
+    if (type === 'connect') {
+      if (data === 'success') {
+        const link = Client.dappConnectClient.getConnectLink();
+        const qrCodeImg = await generateQrCode(link);
+        setQrCodeUrl(qrCodeImg);
+      }
     }
-    if (eventData.type === 'keys') {
-      const data = eventData.data || null;
+
+    if (type === 'dapp-connect') {
       if (data) {
-        if (data.action === 'connectResponse' && data.walletInfo) {
+        if (data.action === 'connectResponse' && data.approve && data.walletInfo) {
           setWalletType(data.walletInfo.walletType);
           await getAccount(data.walletInfo.walletType, data.walletInfo.address.toLowerCase());
+        } else {
+          setStep(StepStringEnum.CONNECT_ERROR);
         }
-        if (data.action === 'signResponse') {
+        if (data.action === 'signResponse' && data.approve) {
           await web3MqSignCallback(eventData.data.signature, eventData.data.userInfo);
         }
       }
@@ -121,11 +135,17 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const headerTitle = useMemo(() => {
     switch (step) {
     case StepStringEnum.HOME:
+    case StepStringEnum.CONNECT_LOADING:
+    case StepStringEnum.CONNECT_ERROR:
       return 'Connect Dapp';
     case StepStringEnum.LOGIN:
+    case StepStringEnum.LOGIN_SIGN_LOADING:
+    case StepStringEnum.LOGIN_SIGN_ERROR:
       return 'Log in';
     case StepStringEnum.QR_CODE:
       return 'Web3MQ';
+    case StepStringEnum.SIGN_UP_SIGN_LOADING:
+    case StepStringEnum.SIGN_UP_SIGN_ERROR:
     case StepStringEnum.SIGN_UP:
       return 'Sign up';
     case StepStringEnum.VIEW_ALL:
@@ -164,8 +184,16 @@ export const LoginModal: React.FC<IProps> = (props) => {
       setMainKeys,
       loginByQrCode,
       registerByQrCode,
+      confirmPassword,
     }),
-    [step, showLoading, walletType, qrCodeUrl, JSON.stringify(userAccount)],
+    [
+      step,
+      showLoading,
+      walletType,
+      qrCodeUrl,
+      JSON.stringify(userAccount),
+      confirmPassword.current,
+    ],
   );
 
   return (
@@ -188,6 +216,15 @@ export const LoginModal: React.FC<IProps> = (props) => {
             {step === StepStringEnum.LOGIN && <Login />}
             {step === StepStringEnum.SIGN_UP && <SignUp />}
             {step === StepStringEnum.QR_CODE && <QrCodeLogin />}
+            {/*loading*/}
+            {step === StepStringEnum.CONNECT_LOADING && <ConnectLoading />}
+            {step === StepStringEnum.CONNECT_ERROR && <ConnectError />}
+            {[StepStringEnum.LOGIN_SIGN_LOADING, StepStringEnum.SIGN_UP_SIGN_LOADING].includes(
+              step,
+            ) && <SignLoading />}
+            {[StepStringEnum.LOGIN_SIGN_ERROR, StepStringEnum.SIGN_UP_SIGN_ERROR].includes(
+              step,
+            ) && <SignError />}
           </div>
         </Modal>
       </div>

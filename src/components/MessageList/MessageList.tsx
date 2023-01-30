@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, useCallback, useEffect, useRef, useState } from 'react';
-import type { EventTypes } from 'web3-mq';
+import type { EventTypes } from '@web3mq/client';
 
 import { useMessageListElements } from './hooks/useMessageListElements';
 import { usePaginatedMessages } from './hooks/usePaginatedMessages';

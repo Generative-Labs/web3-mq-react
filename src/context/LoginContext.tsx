@@ -1,10 +1,9 @@
 import React, { Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react';
-import type { WalletType } from 'web3-mq';
+import type { WalletType } from '@web3mq/client';
 import type {
   LoginEventDataType,
   LoginResType,
   RegisterResType,
-  UserAccountType,
 } from '../components/LoginModal/hooks/useLogin';
 
 export enum StepStringEnum {
@@ -13,17 +12,23 @@ export enum StepStringEnum {
   LOGIN = 'login',
   QR_CODE = 'qr_code',
   SIGN_UP = 'sign_up',
+  CONNECT_LOADING = 'connect_loading',
+  CONNECT_ERROR = 'connect_error',
+  LOGIN_SIGN_LOADING = 'login_sign_loading',
+  LOGIN_SIGN_ERROR = 'login_sign_error',
+  SIGN_UP_SIGN_LOADING = 'sign_up_sign_loading',
+  SIGN_UP_SIGN_ERROR = 'sign_up_sign_error',
 }
 
 export enum SignAuditTypeEnum {
   GET_KEYS_FOR_LOGIN = 'get_Keys_For_Login',
   GET_KEYS_FOR_REGISTER = 'get_keys_For_Register',
-  REGISTER = 'register'
+  REGISTER = 'register',
 }
 
 export type LoginContextValue = {
-  login: (password: string, walletType?: WalletType) => Promise<LoginResType | null>;
-  register: (password: string, walletType?: WalletType) => Promise<RegisterResType | null>;
+  login: (walletType?: WalletType) => Promise<void>;
+  register: (walletType?: WalletType) => Promise<void>;
   getAccount: (walletType?: WalletType, address?: string) => Promise<any>;
   showLoading: boolean;
   setShowLoading: Dispatch<SetStateAction<boolean>>;
@@ -39,6 +44,7 @@ export type LoginContextValue = {
   setMainKeys: any;
   loginByQrCode: any;
   registerByQrCode: any;
+  confirmPassword: React.MutableRefObject<string>
 };
 
 export const LoginContext = React.createContext<LoginContextValue | undefined>(undefined);

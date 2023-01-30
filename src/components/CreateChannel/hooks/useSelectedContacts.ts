@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { EventTypes, Client } from 'web3-mq';
+import type { EventTypes, Client } from '@web3mq/client';
 
 export const useSelectedContacts = (client: Client) => {
   const [contacts, setContacts] = useState<any[]>([]);

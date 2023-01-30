@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import cx from 'classnames';
-import type { Client } from 'web3-mq';
+import type { Client } from '@web3mq/client';
 
 import { Button } from '../Button';
 import { ExclamationCircleIcon } from '../../icons';
