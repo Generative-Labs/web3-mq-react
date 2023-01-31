@@ -48,9 +48,9 @@ export const Notification: React.FC<NotificationProps> = (props) => {
       try {
         await client.channel.updateChannels({
           chatid: activeNotification?.come_from,
-          chat_type: 'user',
+          chatType: 'user',
           topic: activeNotification?.come_from,
-          topic_type: 'user'
+          topicType: 'user'
         });
         const { channelList } = client.channel;
         let size = 20;

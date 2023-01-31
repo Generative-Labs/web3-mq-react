@@ -39,10 +39,10 @@ export const NotificationPreview: React.FC<NotificationPreviewProps> = (props) =
     if (userInfo) {
       setLoading(true);
       await client.contact.followOperation({
-        target_userid: targetUserid,
+        targetUserid: targetUserid,
         action: isFollow ? 'cancel' : 'follow',
         address: userInfo.address,
-        did_type: userInfo.wallet_type as any
+        didType: userInfo.wallet_type as any
       }).then(async () => {
         setLoading(false);
         if (isFollow) {
@@ -51,9 +51,9 @@ export const NotificationPreview: React.FC<NotificationPreviewProps> = (props) =
           setIsFollow(true);
           await client.channel.updateChannels({
             chatid: targetUserid,
-            chat_type: 'user',
+            chatType: 'user',
             topic: targetUserid,
-            topic_type: 'user'
+            topicType: 'user'
           });
           const { channelList } = client.channel;
           let size = 20;
