@@ -13,13 +13,14 @@ import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
-import type { WalletType } from '@web3mq/client';
-import { Client } from '@web3mq/client';
+import type { WalletType, Client as ClientType} from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import useLogin, { LoginEventDataType, MainKeysType, UserAccountType } from './hooks/useLogin';
 import { generateQrCode } from '../../utils';
+import { Client } from '@web3mq/client';
 
 type IProps = {
+  client?: any;
   containerId: string;
   isShow?: boolean;
   appType?: AppTypeEnum;
@@ -34,6 +35,7 @@ type IProps = {
 export const LoginModal: React.FC<IProps> = (props) => {
   const {
     isShow,
+    client = Client as any,
     appType = AppTypeEnum.pc,
     containerId,
     loginBtnNode = null,
@@ -54,7 +56,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     registerByQrCode,
     setUserAccount,
     confirmPassword,
-  } = useLogin(handleLoginEvent, keys, account);
+  } = useLogin(handleLoginEvent, client, keys, account);
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
     userAccount
@@ -85,7 +87,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     const { type, data } = eventData;
     if (type === 'connect') {
       if (data === 'success') {
-        const link = Client.dappConnectClient.getConnectLink();
+        const link = client.dappConnectClient.getConnectLink();
         const qrCodeImg = await generateQrCode(link);
         setQrCodeUrl(qrCodeImg);
       }
@@ -93,11 +95,13 @@ export const LoginModal: React.FC<IProps> = (props) => {
 
     if (type === 'dapp-connect') {
       if (data) {
-        if (data.action === 'connectResponse' && data.approve && data.walletInfo) {
-          setWalletType(data.walletInfo.walletType);
-          await getAccount(data.walletInfo.walletType, data.walletInfo.address.toLowerCase());
-        } else {
-          setStep(StepStringEnum.CONNECT_ERROR);
+        if (data.action === 'connectResponse') {
+          if (data.approve && data.walletInfo) {
+            setWalletType(data.walletInfo.walletType);
+            await getAccount(data.walletInfo.walletType, data.walletInfo.address.toLowerCase());
+          } else {
+            setStep(StepStringEnum.CONNECT_ERROR);
+          }
         }
         if (data.action === 'signResponse' && data.approve) {
           await web3MqSignCallback(eventData.data.signature, eventData.data.userInfo);
@@ -185,6 +189,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       loginByQrCode,
       registerByQrCode,
       confirmPassword,
+      client
     }),
     [
       step,

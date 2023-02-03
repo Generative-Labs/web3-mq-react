@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { Client, WalletType } from '@web3mq/client';
+import type { WalletType } from '@web3mq/client';
 import { SignAuditTypeEnum } from '../../../context';
 
 export type LoginEventType = 'login' | 'register' | 'error';
@@ -42,6 +42,7 @@ export type RegisterResType = {
 // account: For custom get users
 const useLogin = (
   handleLoginEvent: (eventData: LoginEventDataType) => void,
+  client: any,
   keys?: MainKeysType,
   account?: UserAccountType,
 ) => {
@@ -60,22 +61,22 @@ const useLogin = (
   }> => {
     let didValue = address;
     if (!didValue) {
-      const { address } = await Client.register.getAccount(didType);
+      const { address } = await client.register.getAccount(didType);
       didValue = address;
     }
-    const { userid, userExist } = await Client.register.getUserInfo({
+    const { userid, userExist } = await client.register.getUserInfo({
       did_value: didValue,
       did_type: didType,
     });
-    walletAddress.current = didValue;
+    walletAddress.current = didValue as string;
     setUserAccount({
       userid,
-      address: didValue,
+      address: didValue as string,
       walletType: didType,
       userExist,
     });
     return {
-      address: didValue,
+      address: didValue as string,
       userExist,
     };
   };
@@ -92,7 +93,7 @@ const useLogin = (
       localMainPublicKey = mainKeys.publicKey;
     }
     if (!localMainPublicKey || !localMainPrivateKey) {
-      const { publicKey, secretKey } = await Client.register.getMainKeypair({
+      const { publicKey, secretKey } = await client.register.getMainKeypair({
         password: confirmPassword.current,
         did_value: address,
         did_type: didType,
@@ -115,18 +116,18 @@ const useLogin = (
       return;
     }
     const { address, userid } = userAccount;
-    const { publicKey, secretKey } = await Client.register.getMainKeypair({
+    const { publicKey, secretKey } = await client.register.getMainKeypair({
       password: confirmPassword.current,
       did_value: address,
       did_type: didType,
     });
-    const { signContent } = await Client.register.getRegisterSignContent({
+    const { signContent } = await client.register.getRegisterSignContent({
       userid,
       mainPublicKey: publicKey,
       didType,
       didValue: address,
     });
-    const { sign: signRes, publicKey: did_pubkey = '' } = await Client.register.sign(
+    const { sign: signRes, publicKey: did_pubkey = '' } = await client.register.sign(
       signContent,
       address,
       didType,
@@ -147,7 +148,7 @@ const useLogin = (
     if (!userAccount) {
       return;
     }
-    const { signContent } = await Client.register.getMainKeypairSignContent({
+    const { signContent } = await client.register.getMainKeypairSignContent({
       password: confirmPassword.current,
       did_value: userAccount.address,
       did_type: userAccount.walletType,
@@ -167,7 +168,7 @@ const useLogin = (
       return;
     }
 
-    const { signContent } = await Client.register.getRegisterSignContent({
+    const { signContent } = await client.register.getRegisterSignContent({
       userid,
       mainPublicKey: mainKeys.publicKey,
       didType: walletType,
@@ -196,7 +197,7 @@ const useLogin = (
     address: string,
     signAuditType: SignAuditTypeEnum,
   ) => {
-    await Client.dappConnectClient.sendSign({
+    await client.dappConnectClient.sendSign({
       signContent,
       didValue: address,
       signType: signAuditType,
@@ -241,7 +242,7 @@ const useLogin = (
     const { didType, didValue, userid } = options;
 
     const { tempPrivateKey, tempPublicKey, pubkeyExpiredTimestamp, mainPrivateKey, mainPublicKey } =
-      await Client.register.login({
+      await client.register.login({
         ...options,
         password: confirmPassword.current,
       });
@@ -309,7 +310,7 @@ const useLogin = (
       didPubkey = '',
       nickname = '',
     } = options;
-    await Client.register.register({
+    await client.register.register({
       userid,
       didValue,
       mainPublicKey,
@@ -343,7 +344,7 @@ const useLogin = (
       setRegisterSignRes(signature);
     } else {
       // 设置主密钥对
-      const { publicKey, secretKey } = await Client.register.getMainKeypairBySignature(
+      const { publicKey, secretKey } = await client.register.getMainKeypairBySignature(
         signature,
         confirmPassword.current,
       );

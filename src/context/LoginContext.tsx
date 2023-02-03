@@ -1,10 +1,6 @@
 import React, { Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react';
 import type { WalletType } from '@web3mq/client';
-import type {
-  LoginEventDataType,
-  LoginResType,
-  RegisterResType,
-} from '../components/LoginModal/hooks/useLogin';
+import type { LoginEventDataType } from '../components/LoginModal/hooks/useLogin';
 
 export enum StepStringEnum {
   HOME = 'home',
@@ -27,6 +23,7 @@ export enum SignAuditTypeEnum {
 }
 
 export type LoginContextValue = {
+  client: any;
   login: (walletType?: WalletType) => Promise<void>;
   register: (walletType?: WalletType) => Promise<void>;
   getAccount: (walletType?: WalletType, address?: string) => Promise<any>;
@@ -44,7 +41,7 @@ export type LoginContextValue = {
   setMainKeys: any;
   loginByQrCode: any;
   registerByQrCode: any;
-  confirmPassword: React.MutableRefObject<string>
+  confirmPassword: React.MutableRefObject<string>;
 };
 
 export const LoginContext = React.createContext<LoginContextValue | undefined>(undefined);
