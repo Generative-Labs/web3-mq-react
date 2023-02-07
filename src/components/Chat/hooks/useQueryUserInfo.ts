@@ -77,41 +77,49 @@ export const useQueryUserInfo = (client: Client) => {
           userInfo.didValueMap[item.did_type as WEB3_MQ_DID_TYPE] = item.did_value;
         });
       }
-      const rss3Dids = await getDidsByRss3(info.wallet_address);
-      if (rss3Dids) {
-        if (rss3Dids.avatar) {
-          userInfo.defaultUserAvatar = rss3Dids.avatar;
-        }
-        const oriDidValue = {
-          ...userInfo.didValueMap,
-        };
-        if (rss3Dids.ensInfo && rss3Dids.ensInfo.name) {
-          userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
-          if (!oriDidValue.ens && bindDid) {
-            await client.user.userBindDid({
-              provider_id: PROVIDER_ID_CONFIG.ens,
-              did_type: WEB3_MQ_DID_TYPE.ENS,
-              did_value: rss3Dids.ensInfo.name,
-            });
+      try {
+        const rss3Dids = await getDidsByRss3(info.wallet_address);
+        if (rss3Dids) {
+          if (rss3Dids.avatar) {
+            userInfo.defaultUserAvatar = rss3Dids.avatar;
+          }
+          const oriDidValue = {
+            ...userInfo.didValueMap,
+          };
+          if (rss3Dids.ensInfo && rss3Dids.ensInfo.name) {
+            userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
+            if (!oriDidValue.ens && bindDid) {
+              await client.user.userBindDid({
+                provider_id: PROVIDER_ID_CONFIG.ens,
+                did_type: WEB3_MQ_DID_TYPE.ENS,
+                did_value: rss3Dids.ensInfo.name,
+              });
+            }
+          }
+          if (rss3Dids.lensInfo && rss3Dids.lensInfo.name) {
+            userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
+            if (!oriDidValue['lens.xyz'] && bindDid) {
+              await client.user.userBindDid({
+                provider_id: PROVIDER_ID_CONFIG.lens,
+                did_type: WEB3_MQ_DID_TYPE.LENS,
+                did_value: rss3Dids.lensInfo.name,
+              });
+            }
           }
         }
-        if (rss3Dids.lensInfo && rss3Dids.lensInfo.name) {
-          userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
-          if (!oriDidValue['lens.xyz'] && bindDid) {
-            await client.user.userBindDid({
-              provider_id: PROVIDER_ID_CONFIG.lens,
-              did_type: WEB3_MQ_DID_TYPE.LENS,
-              did_value: rss3Dids.lensInfo.name,
-            });
-          }
-        }
+      } catch (error) {
+        console.log(error, 'error');
       }
       // username
       if (info.nickname) {
         userInfo.defaultUserName = info.nickname;
       } else {
-        const rss3Profile = await getProfileFromRss3(info.wallet_address);
-        userInfo.defaultUserName = rss3Profile.defaultUserName;
+        try {
+          const rss3Profile = await getProfileFromRss3(info.wallet_address);
+          userInfo.defaultUserName = rss3Profile.defaultUserName;
+        } catch (error) {
+          console.log(error);
+        }
       }
       if (info.avatar_url) {
         userInfo.defaultUserAvatar = info.avatar_url;
