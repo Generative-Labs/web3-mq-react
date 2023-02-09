@@ -97,9 +97,9 @@ export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
       <div className={ss.mainContainer}>
         { selectedContacts.map(contact => (
           <label key={contact.userid} className={ss.searchContactItem}>
-            <Avatar image={contact.avatar_url} size={40} />
+            <Avatar image={contact.avatar_url || contact.defaultUserAvatar} size={40} />
             <div className={ss.wrapper}>
-              {contact.nickname ||  getShortAddress(contact.userid)}
+              {contact.nickname || contact.defaultUserName ||  getShortAddress(contact.userid)}
             </div>
           </label>
         ))}

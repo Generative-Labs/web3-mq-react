@@ -2,6 +2,9 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+  &.hasContainerId {
+    height: calc(100% - 60px);
+  }
 }
 .listItem {
   min-width: 350px;
@@ -13,7 +16,4 @@
 }
 .mobileStyle {
   height: calc(100vh - 60px);
-}
-.hasContainerId {
-  height: calc(100% - 60px);
 }
