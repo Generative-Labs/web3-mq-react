@@ -102,7 +102,7 @@ export const SelectContacts: React.FC<SelectContactsProps> = React.memo((props) 
                   />
                   <Avatar image={item.avatar_url || item.defaultUserAvatar} size={40} />
                   <div className={ss.wrapper}>
-                    {item.nickname || item.defaultUserName ||  getShortAddress(item.userid)}
+                    {item.nickname || item.defaultUserName || getShortAddress(item.userid)}
                   </div>
                 </label>
               );
