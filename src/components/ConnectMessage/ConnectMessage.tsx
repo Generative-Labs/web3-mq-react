@@ -23,6 +23,7 @@ export type ConnectMessageProps = {
   isShow?: boolean;
 };
 let timeId: NodeJS.Timeout | null = null;
+let initTimeId: NodeJS.Timeout | null = null;
 
 export const ConnectMessage: React.FC<ConnectMessageProps> = (props) => {
   const {
@@ -73,7 +74,21 @@ export const ConnectMessage: React.FC<ConnectMessageProps> = (props) => {
     client.connect.init();
   };
 
+  const initRender = () => {
+    const { ws } = client.connect;
+    if (ws) {
+      setStatus(ws.readyState);
+      if (ws.readyState == 1) {
+        initTimeId && clearTimeout(initTimeId);
+        initTimeId = setTimeout(() => {
+          hide();
+        }, 1000);
+      }
+    }
+  };
+
   useEffect(() => {
+    initRender();
     client.on('connect.changeReadyStatus', handleEvent);
     return () => {
       client.off('connect.changeReadyStatus', handleEvent);

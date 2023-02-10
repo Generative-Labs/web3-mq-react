@@ -72,6 +72,11 @@ export const usePaginatedChannels = (
       return;
     }
     if (type === 'channel.getList') {
+      setChannels(channelList);
+      setStatus({
+        ...status,
+        loading: false,
+      });
       await renderChannelList(channelList);
       setChannels(channelList);
     }
@@ -83,17 +88,15 @@ export const usePaginatedChannels = (
       return;
     }
     if (type === 'channel.updated') {
+      setChannels(channelList);
       await renderChannelList(channelList);
       setChannels(channelList);
     }
     if (type === 'channel.created') {
+      setChannels(channelList);
       await renderChannelList(channelList);
       setChannels(channelList);
     }
-    setStatus({
-      ...status,
-      loading: false,
-    });
   }, []);
 
   useEffect(() => {

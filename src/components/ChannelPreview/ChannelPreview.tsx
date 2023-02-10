@@ -32,13 +32,10 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
     defaultUserName = '', 
   } = channel.homeOwnerInfo || {};
 
-  const hasNickName = chat_name.indexOf('user:') !== 0;
   const chatName = chat_type !== 'user' ? 
     (chat_name || chatid)
-    : hasNickName 
-      ? chat_name 
-      : 
-      defaultUserName;
+    : 
+    ( defaultUserName || chat_name );
   const avatarUrl = avatar_base64 || avatar_url || (chat_type === 'user' && defaultUserAvatar);
 
   return (
