@@ -53,7 +53,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
     try {
       setBtnLoad(true);
       // create room
-      await client.channel.createRoom({group_name: roomName, avatar_base64: selectFileUrl});
+      await client.channel.createRoom({groupName: roomName, avatarBase64: selectFileUrl});
       // set room to active
       const { channelList } = client.channel;
       if (channelList) {
@@ -97,9 +97,9 @@ export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
       <div className={ss.mainContainer}>
         { selectedContacts.map(contact => (
           <label key={contact.userid} className={ss.searchContactItem}>
-            <Avatar image={contact.avatar_url} size={40} />
+            <Avatar image={contact.avatar_url || contact.defaultUserAvatar} size={40} />
             <div className={ss.wrapper}>
-              {contact.nickname ||  getShortAddress(contact.userid)}
+              {contact.nickname || contact.defaultUserName || getShortAddress(contact.userid)}
             </div>
           </label>
         ))}

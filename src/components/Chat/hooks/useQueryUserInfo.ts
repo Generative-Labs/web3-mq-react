@@ -89,9 +89,9 @@ export const useQueryUserInfo = (client: Client) => {
           userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
           if (!oriDidValue.ens && bindDid) {
             await client.user.userBindDid({
-              provider_id: PROVIDER_ID_CONFIG.ens,
-              did_type: WEB3_MQ_DID_TYPE.ENS,
-              did_value: rss3Dids.ensInfo.name,
+              providerId: PROVIDER_ID_CONFIG.ens,
+              didType: WEB3_MQ_DID_TYPE.ENS,
+              didValue: rss3Dids.ensInfo.name,
             });
           }
         }
@@ -99,9 +99,9 @@ export const useQueryUserInfo = (client: Client) => {
           userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
           if (!oriDidValue['lens.xyz'] && bindDid) {
             await client.user.userBindDid({
-              provider_id: PROVIDER_ID_CONFIG.lens,
-              did_type: WEB3_MQ_DID_TYPE.LENS,
-              did_value: rss3Dids.lensInfo.name,
+              providerId: PROVIDER_ID_CONFIG.lens,
+              didType: WEB3_MQ_DID_TYPE.LENS,
+              didValue: rss3Dids.lensInfo.name,
             });
           }
         }

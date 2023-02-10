@@ -81,10 +81,10 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
     if (action === 'follow') {
       if (loginUserInfo) {
         await client.contact.followOperation({
-          target_userid: userid, 
+          targetUserid: userid, 
           action: 'follow',
           address: loginUserInfo.address,
-          did_type: loginUserInfo.wallet_type as any
+          didType: loginUserInfo.wallet_type as any
         });
         const _followers = followers.map(_follower => {
           if (_follower.userid === userid) {

@@ -76,7 +76,7 @@ export const SelectContacts: React.FC<SelectContactsProps> = React.memo((props) 
           <div className={ss.contactSelector}>
             {selectedContacts.map((contact) => (
               <div key={contact.userid} className={ss.selectedBox}>
-                {contact.nickname || getShortAddress(contact.userid)}
+                {contact.nickname || contact.defaultUserName || getShortAddress(contact.userid)}
               </div>
             ))}
             <div style={{maxWidth: '100%', display: 'inline-flex', width: `${inputWidth}px`}}>
@@ -100,9 +100,9 @@ export const SelectContacts: React.FC<SelectContactsProps> = React.memo((props) 
                     type='checkbox'  
                     onChange={() => selectedOrDeletedContact(item)}
                   />
-                  <Avatar image={item.avatar_url} size={40} />
+                  <Avatar image={item.avatar_url || item.defaultUserAvatar} size={40} />
                   <div className={ss.wrapper}>
-                    {item.nickname ||  getShortAddress(item.userid)}
+                    {item.nickname || item.defaultUserName || getShortAddress(item.userid)}
                   </div>
                 </label>
               );

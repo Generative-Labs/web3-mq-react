@@ -45,10 +45,10 @@ export const FollowRequestButtonGroup: React.FC<FollowRequestButtonGroupProps> =
     try {
       if (loginUserInfo) {
         await client.contact.followOperation({
-          target_userid: userId,
+          targetUserid: userId,
           action: 'follow',
           address: loginUserInfo.address,
-          did_type: loginUserInfo.wallet_type as any
+          didType: loginUserInfo.wallet_type as any
         });
         setIsFollow(true);
         callback && callback();
