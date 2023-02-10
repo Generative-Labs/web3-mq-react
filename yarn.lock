@@ -1544,10 +1544,10 @@
     "@typescript-eslint/types" "5.27.1"
     eslint-visitor-keys "^3.3.0"
 
-"@web3mq/client@^1.0.5":
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/@web3mq/client/-/client-1.0.5.tgz#bc2d0e4f08f6a058b1fa88fdd7fe14c54d5049b8"
-  integrity sha512-vpVL8JV6ITk+vmI20besw5i5RavP8AnTbkx9Lz8HuEVZf/bLqVCP1h34cLp0SxR6gTKHQzS/7y+2mo3ovmo5dg==
+"@web3mq/client@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@web3mq/client/-/client-1.0.7.tgz#4279342a52a3ebd8c06f3bdbf4035aecce5e8fea"
+  integrity sha512-QG6+NwjvnWzNT3BmTJ2WQRo09OBkJFeMmrpCvsj+7A1qqHewU43XrrjxzJOKZ7A7/FukbULPziAHfd3PNrS9+g==
   dependencies:
     "@noble/ed25519" "^1.6.1"
     "@protobuf-ts/plugin" "^2.7.0"
