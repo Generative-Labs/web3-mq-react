@@ -1,7 +1,7 @@
 # web3-mq-react
 
-web3-mq-react-components
+A react ui components for wbe3mq
 
 # docs
 
-https://docs.web3messaging.online/docs/Web3MQ-UI-Components/Intro
+https://docs.web3mq.com/docs/Web3MQ-UI-Components/Web3MQ-React/Intro
