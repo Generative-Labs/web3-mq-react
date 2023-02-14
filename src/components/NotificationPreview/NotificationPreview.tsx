@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import type { Client, NotifyResponse } from '@web3mq/client';
 
 import { Avatar } from '../Avatar';
@@ -20,19 +20,6 @@ export const NotificationPreview: React.FC<NotificationPreviewProps> = (props) =
   const [isFollow, setIsFollow] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const targetUserid = notification.content.split(' ')[0];
-  useEffect(() => {
-    if (notification.type === 'system.followed') {
-      client.user.getTargetUserPermissions(targetUserid)
-        .then(res => {
-          const { data } = res;
-          if (data.follow_status === '' || data.follow_status === 'follower') {
-            setIsFollow(false);
-          } else {
-            setIsFollow(true);
-          }
-        });
-    }
-  }, []);
 
   const handleFollowOrCancel = async (e: React.BaseSyntheticEvent) => {
     e.stopPropagation();

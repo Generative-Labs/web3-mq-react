@@ -1,4 +1,14 @@
 import QRCode from 'qrcode';
+import { ethers } from 'ethers';
+
+//@ts-ignore
+// const provider = new ethers.BrowserProvider(window.ethereum);
+const provider = ethers.getDefaultProvider('homestead');
+
+export const getEnsNameByAddress = async (address: string) => {
+  const name = await provider.lookupAddress(address);
+  return name;
+};
 
 export function getShortAddress(
   address: string = '',
