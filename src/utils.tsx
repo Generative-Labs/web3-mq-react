@@ -3,7 +3,12 @@ import { ethers } from 'ethers';
 
 //@ts-ignore
 // const provider = new ethers.BrowserProvider(window.ethereum);
-const provider = ethers.getDefaultProvider('homestead');
+const provider = ethers.getDefaultProvider('homestead', {
+  etherscan: '6QGY2A72P3Y9672QYXVIFCBJND139IITH9',
+  infura: '39f2efcc47bb4b36ba2c6e0f2632c83c',
+  pocket: 'f406974353111deed43056dd',
+  alchemy: 'TaM5TunJUxJ7B0sLqAYVAyi-B6fn4aBY',
+});
 
 export const getEnsNameByAddress = async (address: string) => {
   const name = await provider.lookupAddress(address);
