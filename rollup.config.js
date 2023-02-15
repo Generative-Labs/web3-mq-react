@@ -74,6 +74,7 @@ const basePlugins = [
 const config = {
   ...baseConfig,
   external: externalDependencies,
+  context: 'window',
   output: [
     {
       file: pkg.main,

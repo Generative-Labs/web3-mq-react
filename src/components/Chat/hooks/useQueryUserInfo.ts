@@ -1,12 +1,12 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { getUserPublicProfileRequest } from '@web3mq/client';
-import type { Client, SearchUsersResponse } from '@web3mq/client';
+import type { Client } from '@web3mq/client';
 
-import { getDidsByRss3, getProfileFromRss3 } from '../../../lens/api';
+import { getDidsByRss3 } from '../../../lens/api';
 import { ACCOUNT_CONNECT_TYPE, WEB3_MQ_DID_TYPE } from '../../../types/enum';
-import { getShortAddress, getUserAvatar } from '../../../utils';
+import { getShortAddress, getUserAvatar, getEnsNameByAddress } from '../../../utils';
 
-export type SearchDidType = 'eth' | 'starknet' | 'web3mq'
+export type SearchDidType = 'eth' | 'starknet' | 'web3mq';
 
 export const PROVIDER_ID_CONFIG: Record<ACCOUNT_CONNECT_TYPE, any> = {
   [ACCOUNT_CONNECT_TYPE.LENS]: 'web3mq:lens.xyz',
@@ -15,7 +15,6 @@ export const PROVIDER_ID_CONFIG: Record<ACCOUNT_CONNECT_TYPE, any> = {
   [ACCOUNT_CONNECT_TYPE.ENS]: 'web3mq:ens:SwapChat',
   [ACCOUNT_CONNECT_TYPE.DOTBIT]: 'web3mq:dotbit:SwapChat',
 };
-
 
 export type DidValueType = {
   did_type: WEB3_MQ_DID_TYPE;
@@ -77,54 +76,51 @@ export const useQueryUserInfo = (client: Client) => {
           userInfo.didValueMap[item.did_type as WEB3_MQ_DID_TYPE] = item.did_value;
         });
       }
+      const oriDidValue = {
+        ...userInfo.didValueMap,
+      };
+      // get ens name and bind ens
+      let ensName = '';
       try {
-        const rss3Dids = await getDidsByRss3(info.wallet_address);
-        if (rss3Dids) {
-          if (rss3Dids.avatar) {
-            userInfo.defaultUserAvatar = rss3Dids.avatar;
-          }
-          const oriDidValue = {
-            ...userInfo.didValueMap,
-          };
-          if (rss3Dids.ensInfo && rss3Dids.ensInfo.name) {
-            userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
-            if (!oriDidValue.ens && bindDid) {
-              await client.user.userBindDid({
-                providerId: PROVIDER_ID_CONFIG.ens,
-                didType: WEB3_MQ_DID_TYPE.ENS,
-                didValue: rss3Dids.ensInfo.name,
-              });
-            }
-          }
-          if (rss3Dids.lensInfo && rss3Dids.lensInfo.name) {
-            userInfo.didValueMap.ens = rss3Dids.ensInfo.name;
-            if (!oriDidValue['lens.xyz'] && bindDid) {
-              await client.user.userBindDid({
-                providerId: PROVIDER_ID_CONFIG.lens,
-                didType: WEB3_MQ_DID_TYPE.LENS,
-                didValue: rss3Dids.lensInfo.name,
-              });
-            }
-          }
-        }
-      } catch (error) {
-        console.log(error, 'error');
+        const name = await getEnsNameByAddress(info.wallet_address);
+        ensName = name || '';
+      } catch (e: any) {
       }
+      if (!ensName) {
+        try {
+          const rss3Dids = await getDidsByRss3(info.wallet_address);
+          if (rss3Dids && rss3Dids.ensInfo) {
+            if (rss3Dids.ensInfo.handle) {
+              ensName = rss3Dids.ensInfo.handle;
+            }
+            if (rss3Dids.ensInfo.name) {
+              ensName = rss3Dids.ensInfo.name;
+            }
+          }
+        } catch (e: any) {
+          console.log(e);
+        }
+      }
+
       // username
       if (info.nickname) {
         userInfo.defaultUserName = info.nickname;
-      } else {
-        try {
-          const rss3Profile = await getProfileFromRss3(info.wallet_address);
-          userInfo.defaultUserName = rss3Profile.defaultUserName;
-        } catch (error) {
-          console.log(error);
+      }
+      if (ensName) {
+        userInfo.defaultUserName = ensName;
+        userInfo.didValueMap.ens = ensName;
+        if (!oriDidValue.ens && bindDid) {
+          await client.user.userBindDid({
+            providerId: PROVIDER_ID_CONFIG.ens,
+            didType: WEB3_MQ_DID_TYPE.ENS,
+            didValue: ensName,
+          });
         }
       }
+
       if (info.avatar_url) {
         userInfo.defaultUserAvatar = info.avatar_url;
       }
-
       return userInfo;
     }
     return null;
@@ -133,7 +129,10 @@ export const useQueryUserInfo = (client: Client) => {
   const getLoginUserInfo = async () => {
     const myProfile = await client.user.getMyProfile();
     if (myProfile && myProfile.wallet_address) {
-      const info = await getUserInfo(myProfile.wallet_address, myProfile.wallet_type as SearchDidType);
+      const info = await getUserInfo(
+        myProfile.wallet_address,
+        myProfile.wallet_type as SearchDidType,
+      );
       if (info) {
         // 设置permissions
         const permissions = await client.user.getUserPermissions().catch((e) => console.log(e));

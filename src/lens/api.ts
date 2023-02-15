@@ -1,4 +1,3 @@
-import { getShortAddress } from '../utils';
 
 import { RSS3_USER_DID_PROFILE_PLATFORM } from '../types/enum';
 
@@ -29,20 +28,4 @@ export const getDidsByRss3 = async (user: string) => {
     return userInfo;
   }
   return null;
-};
-export const getProfileFromRss3 = async (user: string) => {
-  const options = { method: 'GET', headers: { accept: 'application/json' } };
-  let profile = await fetch(`https://pregod.rss3.dev/v1/ns/${user}`, options)
-    .then((response) => response.json())
-    .catch((err) => console.error(err));
-  profile.defaultUserName = profile.ens
-    ? profile.ens
-    : profile.bit
-      ? profile.bit
-      : profile.lens
-        ? profile.lens
-        : profile.crossbell
-          ? profile.crossbell
-          : getShortAddress(profile.address || '');
-  return profile;
 };

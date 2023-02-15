@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { NotificationList } from '../index';
+import { NotificationList } from '../NotificationList';
 import { Modal } from '../../Modal';
 import { AppTypeEnum } from '../../../context';
 import useToggle from '../../../hooks/useToggle';
