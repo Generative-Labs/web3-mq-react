@@ -56,7 +56,9 @@
     height: 16px;
     @include themeify {
       &:hover {
-        color: themed(Gray_500);
+        svg path {
+          fill: themed(Gray_500);
+        }
       }
     }
   }
@@ -70,7 +72,9 @@
     height: 16px;
     @include themeify {
       &:hover {
-        color: themed(Gray_500);
+        svg path {
+          fill: themed(Gray_500);
+        }
       }
     }
   }
