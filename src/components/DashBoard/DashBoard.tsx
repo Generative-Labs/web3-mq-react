@@ -6,10 +6,10 @@ import { RoomsIcon, ChatsIcon, NotificationIcon, ProfileIcon } from '../../icons
 import PCBar from './PCBar';
 import MobileBar from './MobileBar';
 import { ChannelList } from '../ChannelList';
-import { ContactList } from '../ContactList';
+import { ContactTabs } from '../ContactTabs';
 import { NotificationList, NotificationModal } from '../NotificationList';
 import { Profile } from '../Profile';
-import { Main } from 'components/Main';
+import { Main } from '../Main';
 
 export type DashBoardProps = {
   defaultType?: string;
@@ -42,7 +42,7 @@ const defaultPCTabMaps: TabType[] = [
     title: 'Contact',
     icon: <ChatsIcon />,
     type: 'chat',
-    component: <ContactList />,
+    component: <ContactTabs />,
   },
   {
     title: 'Notification',
@@ -63,7 +63,7 @@ const defaultMobileTabMaps: TabType[] = [
     title: 'Contact',
     icon: <ChatsIcon />,
     type: 'chat',
-    component: <ContactList />,
+    component: <ContactTabs />,
   },
   {
     title: 'Notification',

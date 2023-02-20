@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import cx from 'classnames';
 
 import { Avatar } from '../Avatar';
@@ -6,12 +6,13 @@ import { Empty } from './Empty';
 import { Button } from '../Button';
 import { ChannelSelectItem as SearchBox, SearchItemProps } from './ChannelSelectItem';
 import { Modal } from '../Modal';
+import { Paginator } from '../Paginator';
 import { SearchInput } from './SearchInput';
 
 import { useChatContext, AppTypeEnum } from '../../context';
 import { useSelectedContacts }  from './hooks/useSelectedContacts';
 import { useSteps, StepTitleEnum } from './hooks/useSteps';
-import { useSearchFollower } from './hooks/useSearchFollower';
+import { useSearchFollowContacts } from './hooks/useSearchFollowContacts';
 
 import { AddUserIcon, CreateChannelIcon, CreateChatIcon, CloseBtnIcon, CheveronLeft } from '../../icons';
 
@@ -24,24 +25,15 @@ type CreateChannelProps = {
 
 const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
   const { ChannelSelectItem = SearchBox } = props;
-  const { client, appType, containerId, loginUserInfo } = useChatContext();
-  const { contacts, selectedContacts, handleCleanSelected, handleEvent, handleDeleteContact, handleSelectedContact } = useSelectedContacts(client);
+  const { client, appType, containerId, loginUserInfo, getUserInfo } = useChatContext();
+  const { followContacts, searchFollowContacts, refreshing, getFollowContactsList, handleSearchFollContacts, setFollowContacts, loadNextPage } = useSearchFollowContacts(client, getUserInfo);
+  const { contacts, selectedContacts, handleCleanSelected, handleDeleteContact, handleSelectedContact } = useSelectedContacts(followContacts);
   const { steps, current, handleNext, handlePrev, handleCleanSteps, handleUpdateSteps, setCurrent } = useSteps();
-  const { followers, searchFollowers, getFollowerList, handleSearchFollers, setFollowers } = useSearchFollower(client);
   const [ showCreateChannel, setShowCreateChannel ] = useState<boolean>(false);
   const [ isShowBackBtn, setIsShowBackBtn ] = useState<boolean>(false);
   const [ searchValue, setSearchValue ] = useState<string>('');
-
-  useEffect(() => {
-    client.on('contact.getContactList', handleEvent);
-    client.on('contact.updateContactList', handleEvent);
-    client.on('channel.activeChange', handleEvent);
-    return () => {
-      client.off('contact.getContactList', handleEvent);
-      client.off('contact.updateContactList', handleEvent);
-      client.off('channel.activeChange', handleEvent);
-    };
-  }, []);
+  const [ sendFriendAddress, setSendFriendAddress ] = useState<string>('');
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (steps.length) {
@@ -53,13 +45,14 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
 
   useEffect(() => {
     if (showCreateChannel) {
-      getFollowerList();
+      getFollowContactsList();
     };
   }, [showCreateChannel]);
  
   const handleClose = useCallback(() => {
     setShowCreateChannel(false);
     setCurrent(0);
+    setSendFriendAddress('');
     setSearchValue('');
     handleCleanSelected();
     handleCleanSteps();
@@ -69,16 +62,22 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
     if (current === 0) {
       handleCleanSelected();
     };
+    setSendFriendAddress('');
     handlePrev();
   }, [handlePrev]);
 
   const handleChange = useCallback((value) => {
     setSearchValue(value);
-    handleSearchFollers(value);
-  }, [handleSearchFollers]);
+    handleSearchFollContacts(value);
+  }, [handleSearchFollContacts]);
 
-  const handleFollowOrSendFriend = useCallback(async (userid, action: 'follow') => {
-    if (action === 'follow') {
+  const handleFollowOrSendFriend = useCallback(async ({
+    userid, 
+    address,
+    follow_status
+  }) => {
+    if (follow_status === 'follow_each') return;
+    if (follow_status === 'follower') {
       if (loginUserInfo) {
         await client.contact.followOperation({
           targetUserid: userid, 
@@ -86,18 +85,20 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
           address: loginUserInfo.address,
           didType: loginUserInfo.wallet_type as any
         });
-        const _followers = followers.map(_follower => {
-          if (_follower.userid === userid) {
-            _follower.follow_status = 'follow_each';
-            return _follower;
+        const _followContacts = followContacts.map(_followContact => {
+          if (_followContact.userid === userid) {
+            _followContact.follow_status = 'follow_each';
+            return _followContact;
           };
-          return _follower;
+          return _followContact;
         });
-        setFollowers(_followers);
+        setFollowContacts(_followContacts);
       }
+    } else {
+      setSendFriendAddress(address);
+      handleUpdateSteps(StepTitleEnum['ADDFRIENDS']);
     }
-    
-  }, [followers, loginUserInfo]);
+  }, [followContacts, loginUserInfo]);
 
   const startChat = (userid: string) => {
     const { channelList } = client.channel;
@@ -120,32 +121,6 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
     ),
     [current, isShowBackBtn, handleBack, steps],
   );
-  
-  const FollowerList = useCallback(() => (
-    <div className={cx(ss.mainContainer, {[ss.hide]: !searchValue})}>
-      { !searchFollowers.length ? <Empty content='No result' />
-        : (
-          searchFollowers.map(follower => (
-            <div className={ss.searchFollowerItem} key={follower.userid}>
-              <Avatar image={follower.avatar_url} size={40} />
-              <div className={ss.wrapper}>
-                <div>{follower.nickname || getShortAddress(follower.wallet_address)}</div>
-                <div className={ss.followStatus}>follows you</div>
-              </div>
-              <Button
-                className={ss.searchFollowersBtn} 
-                type='primary' 
-                disabled={follower.follow_status === 'follow_each'}
-                onClick={() => handleFollowOrSendFriend(follower.userid, 'follow')}
-              >
-                {follower.follow_status !== 'follow_each' ? 'Follow' : 'Following'}
-              </Button>
-            </div>
-          ))
-        )
-      }
-    </div>
-  ), [searchValue, searchFollowers, handleFollowOrSendFriend]);
 
   const OperaBar = useCallback(
     () => (
@@ -181,7 +156,43 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
           [ss.hide]: steps.length
         })}>
           <SearchInput style={{margin: '0px 16px'}} value={searchValue} onChange={handleChange} />
-          <FollowerList />
+          <div ref={listRef} className={cx(ss.mainContainer, {[ss.hide]: !searchValue})}>
+            { !searchFollowContacts.length ? <Empty content='No result' />
+              : (
+                <Paginator element={listRef} showLoading={refreshing} loadNextPage={loadNextPage}>
+                  {searchFollowContacts.map(follow => (
+                    <div className={ss.searchFollowerItem} key={follow.userid}>
+                      <Avatar image={follow.avatar_url || follow.defaultUserAvatar} size={40} />
+                      <div className={ss.wrapper}>
+                        <div>{follow.nickname || follow.defaultUserName || getShortAddress(follow.wallet_address)}</div>
+                        {(follow.follow_status === 'follower' || follow.follow_status === 'follow_each') && <div className={ss.followStatus}>follows you</div>}
+                        {(follow.follow_status !== 'follower' && follow.follow_status !== 'follow_each') && <div className={ss.followStatus}>Not following you, send a friend request</div>}
+                      </div>
+                      <Button
+                        className={ss.searchFollowersBtn} 
+                        type='primary' 
+                        disabled={follow.follow_status === 'follow_each'}
+                        onClick={() => handleFollowOrSendFriend({
+                          follow_status: follow.follow_status,
+                          userid: follow.userid,
+                          address: follow.wallet_address
+                        })}
+                      >
+                        {follow.follow_status === 'follow_each' ? 
+                          'Following' 
+                          : 
+                          follow.follow_status === 'follower' ? 
+                            'Follow' 
+                            :
+                            'Request'
+                        }
+                      </Button>
+                    </div>
+                  ))}
+                </Paginator>
+              )
+            }
+          </div>
           <OperaBar />
           <div className={cx(ss.contactsContainer, {
             [ss.hide]: searchValue
@@ -211,6 +222,8 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
             client,
             contactList: contacts,
             selectedContacts,
+            disabled: sendFriendAddress && true, 
+            userId: sendFriendAddress ? sendFriendAddress : undefined,
             onClose: handleClose,
             onSubmit: handleClose,
             onSelected: handleSelectedContact,

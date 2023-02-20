@@ -1,28 +1,10 @@
-import { useState, useCallback } from 'react';
-import type { EventTypes, Client } from '@web3mq/client';
+import { useState, useCallback, useMemo } from 'react';
 
-export const useSelectedContacts = (client: Client) => {
-  const [contacts, setContacts] = useState<any[]>([]);
+export const useSelectedContacts = (followList: any[]) => {
+  const contacts = useMemo(() => {
+    return followList.filter(follow => follow.follow_status === 'follow_each');
+  }, [followList]);
   const [selectedContacts, setSelectedContacts] = useState<any[]>([]);
-
-  const handleEvent = useCallback((props: { type: EventTypes }) => {
-    const { type } = props;
-
-    const { contactList } = client.contact;
-    if (!contactList) {
-      return;
-    }
-    // if (!activeContact && contactList.length !== 0) {
-    //   changeActiveContactEvent(contactList[0]);
-    // }
-    if (type === 'contact.getContactList') {
-      setContacts(contactList);
-    }
-    if (type === 'contact.updateContactList') {
-      setContacts(contactList);
-      return;
-    }
-  }, []);
 
   const handleSelectedContact = useCallback(
     (contact: any) => {
@@ -51,7 +33,6 @@ export const useSelectedContacts = (client: Client) => {
     contacts,
     selectedContacts,
     handleCleanSelected,
-    handleEvent,
     handleDeleteContact,
     handleSelectedContact,
   };
