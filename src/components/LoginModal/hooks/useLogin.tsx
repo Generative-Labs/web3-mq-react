@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { WalletType } from '@web3mq/client';
 import { SignAuditTypeEnum } from '../../../context';
+import type { DappConnect } from '@web3mq/dapp-connect';
 
 export type LoginEventType = 'login' | 'register' | 'error';
 export type LoginEventDataType = {
@@ -43,6 +44,7 @@ export type RegisterResType = {
 const useLogin = (
   handleLoginEvent: (eventData: LoginEventDataType) => void,
   client: any,
+  dappConnectClient?: DappConnect,
   keys?: MainKeysType,
   account?: UserAccountType,
 ) => {
@@ -51,7 +53,7 @@ const useLogin = (
   const walletAddress = useRef<string>('');
   const [registerSignRes, setRegisterSignRes] = useState('');
   const [mainKeys, setMainKeys] = useState<MainKeysType | undefined>(keys);
-  const [signAuditType, setSignAuditType] = useState<SignAuditTypeEnum | undefined>();
+  const signType = useRef<SignAuditTypeEnum>();
   const getUserAccount = async (
     didType: WalletType = 'eth',
     address?: string,
@@ -181,13 +183,13 @@ const useLogin = (
     );
   };
   const afterSignAndLogin = async () => {
-    if (signAuditType === SignAuditTypeEnum.GET_KEYS_FOR_LOGIN) {
+    if (signType.current === SignAuditTypeEnum.GET_KEYS_FOR_LOGIN) {
       await loginByQrCode();
     }
-    if (signAuditType === SignAuditTypeEnum.GET_KEYS_FOR_REGISTER) {
+    if (signType.current === SignAuditTypeEnum.GET_KEYS_FOR_REGISTER) {
       await sendGetRegisterSign();
     }
-    if (signAuditType === SignAuditTypeEnum.REGISTER && registerSignRes) {
+    if (signType.current === SignAuditTypeEnum.REGISTER && registerSignRes) {
       await registerByQrCode(registerSignRes);
     }
   };
@@ -197,11 +199,17 @@ const useLogin = (
     address: string,
     signAuditType: SignAuditTypeEnum,
   ) => {
-    await client.dappConnectClient.sendSign({
+    signType.current = signAuditType;
+    await dappConnectClient?.sendSign({
+      address,
       signContent,
-      didValue: address,
-      signType: signAuditType,
+      password: ''
     });
+    // await client.dappConnectClient.sendSign({
+    //   signContent,
+    //   didValue: address,
+    //   signType: signAuditType,
+    // });
   };
 
   useEffect(() => {
@@ -209,7 +217,7 @@ const useLogin = (
       return;
     }
     afterSignAndLogin();
-  }, [mainKeys, registerSignRes, signAuditType]);
+  }, [mainKeys, registerSignRes]);
 
   const loginByQrCode = async () => {
     if (!userAccount) {
@@ -338,9 +346,8 @@ const useLogin = (
     });
   };
 
-  const web3MqSignCallback = async (signature: string, signType: SignAuditTypeEnum) => {
-    setSignAuditType(signType);
-    if (signType === SignAuditTypeEnum.REGISTER) {
+  const web3MqSignCallback = async (signature: string) => {
+    if (signType.current === SignAuditTypeEnum.REGISTER) {
       setRegisterSignRes(signature);
     } else {
       // 设置主密钥对

@@ -42,6 +42,8 @@ export type LoginContextValue = {
   loginByQrCode: any;
   registerByQrCode: any;
   confirmPassword: React.MutableRefObject<string>;
+  dappConnectClient: any
+  env: 'dev' | 'test'
 };
 
 export const LoginContext = React.createContext<LoginContextValue | undefined>(undefined);

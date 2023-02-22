@@ -20,7 +20,7 @@ const isDev = process.env.ROLLUP_WATCH || false;
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
-const externalDependencies = ['react', '@web3mq/client', 'react-dom', '@babel/runtime/helpers/extends'];
+const externalDependencies = ['react', '@web3mq/client','@web3mq/dapp-connect','@web3mq/dapp-connect-react', 'react-dom', '@babel/runtime/helpers/extends'];
 
 const baseConfig = {
   input: getPath('./src/index.ts'),
@@ -84,6 +84,8 @@ const config = {
         react: 'React',
         'react-dom': 'ReactDOM',
         '@web3mq/client': 'Web3MQ',
+        '@web3mq/dapp-connect': 'DappConnect',
+        '@web3mq/dapp-connect-react': 'DappConnectReact',
       },
     },
   ],
