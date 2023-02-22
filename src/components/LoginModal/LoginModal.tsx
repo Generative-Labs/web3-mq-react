@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 
 import { CheveronLeft, CloseBtnIcon } from '../../icons';
 import { AppTypeEnum, LoginContextValue, LoginProvider, StepStringEnum } from '../../context';
@@ -6,18 +6,20 @@ import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { Login } from './Login';
 import { SignUp } from './SignUp';
-import { QrCodeLogin } from './QrCodeLogin';
 import { Home } from './Home';
 import { ConnectError, ConnectLoading, SignError, SignLoading } from './loginLoading';
 import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
-import type { WalletType, Client as ClientType} from '@web3mq/client';
+import type { WalletType } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import useLogin, { LoginEventDataType, MainKeysType, UserAccountType } from './hooks/useLogin';
-import { generateQrCode } from '../../utils';
 import { Client } from '@web3mq/client';
+import type { DappConnect } from '@web3mq/dapp-connect';
+import { WalletMethodMap } from '@web3mq/dapp-connect';
+import { DappConnectModal } from '@web3mq/dapp-connect-react';
+import '@web3mq/dapp-connect-react/dist/css/index.css';
 
 type IProps = {
   client?: any;
@@ -33,6 +35,7 @@ type IProps = {
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
+  const dappConnectClient = useRef<DappConnect>();
   const {
     isShow,
     client = Client as any,
@@ -56,7 +59,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     registerByQrCode,
     setUserAccount,
     confirmPassword,
-  } = useLogin(handleLoginEvent, client, keys, account);
+  } = useLogin(handleLoginEvent, client, dappConnectClient.current, keys, account);
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
     userAccount
@@ -84,29 +87,13 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setShowLoading(false);
   };
   const handleWeb3mqCallback = async (eventData: any) => {
-    const { type, data } = eventData;
-    if (type === 'connect') {
-      if (data === 'success') {
-        const link = client.dappConnectClient.getConnectLink();
-        const qrCodeImg = await generateQrCode(link);
-        setQrCodeUrl(qrCodeImg);
-      }
+    const { method, result } = eventData;
+    if (method === WalletMethodMap.providerAuthorization) {
+      setWalletType('eth');
+      await getAccount('eth', result.address.toLowerCase());
     }
-
-    if (type === 'dapp-connect') {
-      if (data) {
-        if (data.action === 'connectResponse') {
-          if (data.approve && data.walletInfo) {
-            setWalletType(data.walletInfo.walletType);
-            await getAccount(data.walletInfo.walletType, data.walletInfo.address.toLowerCase());
-          } else {
-            setStep(StepStringEnum.CONNECT_ERROR);
-          }
-        }
-        if (data.action === 'signResponse' && data.approve) {
-          await web3MqSignCallback(eventData.data.signature, eventData.data.userInfo);
-        }
-      }
+    if (method === WalletMethodMap.personalSign) {
+      await web3MqSignCallback(result.signature);
     }
   };
 
@@ -189,7 +176,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       loginByQrCode,
       registerByQrCode,
       confirmPassword,
-      client
+      client,
+      dappConnectClient,
     }),
     [
       step,
@@ -220,7 +208,13 @@ export const LoginModal: React.FC<IProps> = (props) => {
             {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
             {step === StepStringEnum.LOGIN && <Login />}
             {step === StepStringEnum.SIGN_UP && <SignUp />}
-            {step === StepStringEnum.QR_CODE && <QrCodeLogin />}
+            {/*{step === StepStringEnum.QR_CODE && <QrCodeLogin />}*/}
+            {step === StepStringEnum.QR_CODE &&  (
+              <DappConnectModal
+                client={dappConnectClient.current as DappConnect}
+                handleSuccess={handleWeb3mqCallback}
+              />
+            )}
             {/*loading*/}
             {step === StepStringEnum.CONNECT_LOADING && <ConnectLoading />}
             {step === StepStringEnum.CONNECT_ERROR && <ConnectError />}

@@ -16,7 +16,7 @@ import cx from 'classnames';
 
 export const SignUp: React.FC = () => {
   const {
-    login,
+    dappConnectClient,
     register,
     styles,
     showLoading,
@@ -52,7 +52,7 @@ export const SignUp: React.FC = () => {
         setErrorInfo('Passwords don\'t match. Please check your password inputs.');
       }
       confirmPassword.current = password;
-      if (qrCodeUrl) {
+      if (dappConnectClient.current) {
         await registerByQrCode();
       } else {
         await register(walletType);

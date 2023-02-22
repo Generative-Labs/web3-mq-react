@@ -27,6 +27,7 @@ export const Login: React.FC = () => {
     qrCodeUrl,
     loginByQrCode,
     confirmPassword,
+    dappConnectClient,
   } = useLoginContext();
 
   const [password, setPassword] = useState('');
@@ -38,7 +39,7 @@ export const Login: React.FC = () => {
     setStep(StepStringEnum.LOGIN_SIGN_LOADING);
     confirmPassword.current = password;
     try {
-      if (qrCodeUrl) {
+      if (dappConnectClient.current) {
         // 说明是扫码登录
         await loginByQrCode();
       } else {
