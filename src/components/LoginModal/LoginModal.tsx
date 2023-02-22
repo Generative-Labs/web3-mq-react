@@ -31,6 +31,7 @@ type IProps = {
   modalClassName?: string;
   handleLoginEvent: (eventData: LoginEventDataType) => void;
   keys?: MainKeysType;
+  env?: 'dev' | 'test';
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
@@ -46,6 +47,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     modalClassName = '',
     handleLoginEvent,
     keys = undefined,
+    env = 'test',
   } = props;
   const {
     getUserAccount,
@@ -177,6 +179,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       confirmPassword,
       client,
       dappConnectClient,
+      env,
     }),
     [
       step,
@@ -185,6 +188,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       qrCodeUrl,
       JSON.stringify(userAccount),
       confirmPassword.current,
+      env,
     ],
   );
 
@@ -208,7 +212,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
             {step === StepStringEnum.LOGIN && <Login />}
             {step === StepStringEnum.SIGN_UP && <SignUp />}
             {/*{step === StepStringEnum.QR_CODE && <QrCodeLogin />}*/}
-            {step === StepStringEnum.QR_CODE &&  (
+            {step === StepStringEnum.QR_CODE && (
               <DappConnectModal
                 client={dappConnectClient.current as DappConnect}
                 handleSuccess={handleWeb3mqCallback}

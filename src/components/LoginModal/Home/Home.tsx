@@ -10,12 +10,12 @@ import cx from 'classnames';
 import { DappConnect } from '@web3mq/dapp-connect';
 
 export const Home: React.FC = () => {
-  const { step, styles, setStep, dappConnectClient } = useLoginContext();
+  const { step, styles, setStep, dappConnectClient, env } = useLoginContext();
 
   const handleWeb3mqClick = () => {
     new Promise((resolve) => {
       dappConnectClient.current = new DappConnect(
-        { dAppID: 'SwapChat:im', keepAlive: false },
+        { dAppID: 'SwapChat:im', keepAlive: false, env },
         () => {},
       );
       resolve('success');
