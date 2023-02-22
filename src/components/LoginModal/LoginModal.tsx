@@ -19,7 +19,6 @@ import { Client } from '@web3mq/client';
 import type { DappConnect } from '@web3mq/dapp-connect';
 import { WalletMethodMap } from '@web3mq/dapp-connect';
 import { DappConnectModal } from '@web3mq/dapp-connect-react';
-import '@web3mq/dapp-connect-react/dist/css/index.css';
 
 type IProps = {
   client?: any;
