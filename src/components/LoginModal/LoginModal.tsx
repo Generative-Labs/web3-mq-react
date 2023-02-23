@@ -1,7 +1,7 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 
 import { CheveronLeft, CloseBtnIcon } from '../../icons';
-import { AppTypeEnum, LoginContextValue, LoginProvider, StepStringEnum } from '../../context';
+import {AppTypeEnum, LoginContextValue, LoginProvider, StepStringEnum, WalletInfoType} from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { Login } from './Login';
@@ -75,6 +75,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const [showLoading, setShowLoading] = useState(false);
   const [walletType, setWalletType] = useState<WalletType>(account?.walletType || 'eth');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
 
   useEffect(() => {
     if (!mainKeys) {
@@ -113,6 +114,10 @@ export const LoginModal: React.FC<IProps> = (props) => {
     const { method, result } = eventData;
     if (method === WalletMethodMap.providerAuthorization) {
       setWalletType('eth');
+      setWalletInfo({
+        name: result?.walletInfo?.name || 'Web3MQ Wallet',
+        type: 'web3mq'
+      });
       await getAccount('eth', result.address.toLowerCase());
     }
     if (method === WalletMethodMap.personalSign) {
@@ -204,6 +209,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       client,
       dappConnectClient,
       env,
+      walletInfo,
+      setWalletInfo
     }),
     [
       step,

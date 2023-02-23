@@ -2191,8 +2191,9 @@
     "@typescript-eslint/types" "5.27.1"
     "eslint-visitor-keys" "^3.3.0"
 
-"@web3mq/client@file:../../web3-Mq/web3-mq-sdk":
-  "resolved" "file:../../web3-Mq/web3-mq-sdk"
+"@web3mq/client@^1.0.7":
+  "integrity" "sha512-QG6+NwjvnWzNT3BmTJ2WQRo09OBkJFeMmrpCvsj+7A1qqHewU43XrrjxzJOKZ7A7/FukbULPziAHfd3PNrS9+g=="
+  "resolved" "https://registry.npmjs.org/@web3mq/client/-/client-1.0.7.tgz"
   "version" "1.0.7"
   dependencies:
     "@noble/ed25519" "^1.6.1"
@@ -2204,17 +2205,16 @@
     "js-sha3" "^0.8.0"
     "starknet" "^4.17.1"
 
-"@web3mq/dapp-connect-react@^1.0.1":
-  "integrity" "sha512-EXGPWbF4q7BdZC3/FVbDhIKM0EWtrVCKw4lOLoZpOzjmg9UKnj6SbsV6/CfxiuiGfma9/ZJiYLGZJ7r99r3k3g=="
-  "resolved" "https://registry.npmjs.org/@web3mq/dapp-connect-react/-/dapp-connect-react-1.0.1.tgz"
-  "version" "1.0.1"
-  dependencies:
-    "@web3mq/dapp-connect" "^1.0.0"
-
-"@web3mq/dapp-connect@^1.0.0", "@web3mq/dapp-connect@^1.0.2":
-  "integrity" "sha512-cucB6ykPDKs33FLnJjvs+Sl0M72J39vOsY3Z1TI0fEWv58XnhGjCaJhC4Z+mDVzBAWbnCu5M+ZzC0BapYP/haQ=="
-  "resolved" "https://registry.npmmirror.com/@web3mq/dapp-connect/-/dapp-connect-1.0.2.tgz"
+"@web3mq/dapp-connect-react@^1.0.2":
+  "integrity" "sha512-pHbmoQy6B/yjvtVIFWa1Kq4yNgLIgb2sqgD5vkqtuwOmnU0+9ymjnd+EChzbgNzZ6G8rMPaCsSPEHgp4GY3O6w=="
+  "resolved" "https://registry.npmjs.org/@web3mq/dapp-connect-react/-/dapp-connect-react-1.0.2.tgz"
   "version" "1.0.2"
+  dependencies:
+    "@web3mq/dapp-connect" "^1.0.3"
+
+"@web3mq/dapp-connect@^1.0.3", "@web3mq/dapp-connect@file:../DappConnect-sdk":
+  "resolved" "file:../DappConnect-sdk"
+  "version" "1.0.3"
   dependencies:
     "@noble/ed25519" "^1.6.1"
     "@protobuf-ts/plugin" "^2.7.0"
@@ -2704,11 +2704,6 @@
     "ansi-styles" "^4.1.0"
     "supports-color" "^7.1.0"
 
-"charenc@>= 0.0.1":
-  "integrity" "sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA=="
-  "resolved" "https://registry.npmmirror.com/charenc/-/charenc-0.0.2.tgz"
-  "version" "0.0.2"
-
 "chownr@^2.0.0":
   "integrity" "sha512-bIomtDF5KGpdogkLd9VspvFzk9KfpyyGlS8YFVZl7TGPBHL5snIOnxeshwVgPteQ9b4Eydl+pVbIyE1DcvCWgQ=="
   "resolved" "https://registry.npmjs.org/chownr/-/chownr-2.0.0.tgz"
@@ -2920,11 +2915,6 @@
     "path-key" "^3.1.0"
     "shebang-command" "^2.0.0"
     "which" "^2.0.1"
-
-"crypt@>= 0.0.1":
-  "integrity" "sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow=="
-  "resolved" "https://registry.npmmirror.com/crypt/-/crypt-0.0.2.tgz"
-  "version" "0.0.2"
 
 "css-declaration-sorter@^6.2.2":
   "integrity" "sha512-Ufadglr88ZLsrvS11gjeu/40Lw74D9Am/Jpr3LlYm5Q4ZP5KdlUhG+6u2EjyXeZcxmZ2h1ebCKngDjolpeLHpg=="
@@ -5871,14 +5861,6 @@
   "integrity" "sha1-BF+XgtARrppoA93TgrJDkrPYkPc="
   "resolved" "https://registry.npmjs.org/set-blocking/-/set-blocking-2.0.0.tgz"
   "version" "2.0.0"
-
-"sha1@^1.1.1":
-  "integrity" "sha512-dZBS6OrMjtgVkopB1Gmo4RQCDKiZsqcpAQpkV/aaj+FCrCg8r4I4qMkDPQjBgLIxlmu9k4nUbWq6ohXahOneYA=="
-  "resolved" "https://registry.npmmirror.com/sha1/-/sha1-1.1.1.tgz"
-  "version" "1.1.1"
-  dependencies:
-    "charenc" ">= 0.0.1"
-    "crypt" ">= 0.0.1"
 
 "shebang-command@^1.2.0":
   "integrity" "sha1-RKrGW2lbAzmJaMOfNj/uXer98eo="

@@ -6,6 +6,7 @@ import {
   LoginErrorIcon,
   MetaMaskIcon,
   OpenEyesIcon,
+  Web3MqWalletIcon,
 } from '../../../icons';
 import { StepStringEnum, useLoginContext } from '../../../context';
 import { getShortAddress } from '../../../utils';
@@ -24,7 +25,7 @@ export const Login: React.FC = () => {
     handleLoginEvent,
     userAccount,
     setStep,
-    qrCodeUrl,
+    walletInfo,
     loginByQrCode,
     confirmPassword,
     dappConnectClient,
@@ -69,9 +70,19 @@ export const Login: React.FC = () => {
   return (
     <div className={cx(ss.container)} style={styles?.loginContainer}>
       <div className={cx(ss.addressBox)} style={styles?.addressBox}>
-        {userAccount.walletType === 'starknet' ? <ArgentXIcon /> : <MetaMaskIcon />}
+        {walletInfo?.type ? (
+          walletInfo.type === 'web3mq' ? (
+            <Web3MqWalletIcon />
+          ) : walletInfo.type === 'starknet' ? (
+            <ArgentXIcon />
+          ) : (
+            <MetaMaskIcon />
+          )
+        ) : (
+          <MetaMaskIcon />
+        )}
         <div className={ss.centerText}>
-          {userAccount.walletType === 'starknet' ? 'Argent X' : 'MetaMask'}
+          {walletInfo?.name || 'MetaMask'}
         </div>
         <div className={ss.addressText}>{getShortAddress(userAccount.address)}</div>
       </div>

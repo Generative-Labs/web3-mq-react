@@ -12,7 +12,7 @@ type IProps = {
 
 export const RenderWallets: React.FC<IProps> = (props) => {
   const { showCount = 0 } = props;
-  const { styles, showLoading, setWalletType, getAccount, setStep } = useLoginContext();
+  const { styles, showLoading, setWalletType, getAccount, setStep, setWalletInfo } = useLoginContext();
   const walletsConfig = [
     {
       type: 'eth',
@@ -20,6 +20,10 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       icon: <WalletMetaMaskIcon />,
       handleClick: async () => {
         setWalletType('eth');
+        setWalletInfo({
+          name: 'MetaMask',
+          type: 'eth'
+        });
         await getAccount('eth');
       },
     },
@@ -28,6 +32,10 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       title: 'Argent X',
       icon: <ArgentWalletIcon />,
       handleClick: async () => {
+        setWalletInfo({
+          name: 'Argent X',
+          type: 'starknet'
+        });
         await getAccount('starknet');
         setWalletType('starknet');
       },

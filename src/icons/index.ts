@@ -45,3 +45,4 @@ export * from './ArgentWalletIcon';
 export * from './SuccessIcon';
 export * from './ConnectClosedIcon';
 export * from './ConnectErrorIcon';
+export * from './Web3MqWalletIcon';
