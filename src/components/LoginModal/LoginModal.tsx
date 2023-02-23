@@ -1,7 +1,7 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 
 import { CheveronLeft, CloseBtnIcon } from '../../icons';
-import { AppTypeEnum, LoginContextValue, LoginProvider, StepStringEnum } from '../../context';
+import {AppTypeEnum, LoginContextValue, LoginProvider, StepStringEnum, WalletInfoType} from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { Login } from './Login';
@@ -50,6 +50,9 @@ export const LoginModal: React.FC<IProps> = (props) => {
     env = 'test',
   } = props;
   const {
+    mainKeys,
+    registerSignRes,
+    afterSignAndLogin,
     getUserAccount,
     login,
     register,
@@ -72,6 +75,26 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const [showLoading, setShowLoading] = useState(false);
   const [walletType, setWalletType] = useState<WalletType>(account?.walletType || 'eth');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
+  const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
+
+  useEffect(() => {
+    if (!mainKeys) {
+      return;
+    }
+    afterSignAndLogin().then(() => {
+      setShowLoading(false);
+    }).catch((e) => {
+      handleLoginEvent({
+        msg: e.message,
+        data: null,
+        type: 'error',
+      });
+      setMainKeys(undefined);
+      setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
+      setShowLoading(false);
+    });
+  }, [mainKeys, registerSignRes]);
+
   const getAccount = async (didType?: WalletType, didValue?: string) => {
     setShowLoading(true);
     setStep(StepStringEnum.CONNECT_LOADING);
@@ -91,6 +114,10 @@ export const LoginModal: React.FC<IProps> = (props) => {
     const { method, result } = eventData;
     if (method === WalletMethodMap.providerAuthorization) {
       setWalletType('eth');
+      setWalletInfo({
+        name: result?.walletInfo?.name || 'Web3MQ Wallet',
+        type: 'web3mq'
+      });
       await getAccount('eth', result.address.toLowerCase());
     }
     if (method === WalletMethodMap.personalSign) {
@@ -116,6 +143,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setStep(StepStringEnum.HOME);
     setMainKeys(undefined);
     setQrCodeUrl('');
+    dappConnectClient.current = undefined;
   };
   const handleBack = () => {
     setStep(StepStringEnum.HOME);
@@ -123,6 +151,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setStep(StepStringEnum.HOME);
     setMainKeys(undefined);
     setQrCodeUrl('');
+    dappConnectClient.current = undefined;
   };
   const headerTitle = useMemo(() => {
     switch (step) {
@@ -180,6 +209,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       client,
       dappConnectClient,
       env,
+      walletInfo,
+      setWalletInfo
     }),
     [
       step,

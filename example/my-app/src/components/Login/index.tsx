@@ -80,6 +80,7 @@ const Login: React.FC<IProps> = (props) => {
       </div>
       <div className="button_box">
         <LoginModal
+          env={'dev'}
           keys={mainKeys}
           handleLoginEvent={handleLoginEvent}
           appType={AppTypeEnum.pc}

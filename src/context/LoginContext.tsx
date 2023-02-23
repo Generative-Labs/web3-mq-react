@@ -44,7 +44,14 @@ export type LoginContextValue = {
   confirmPassword: React.MutableRefObject<string>;
   dappConnectClient: any
   env: 'dev' | 'test'
+  walletInfo?: WalletInfoType
+  setWalletInfo: Dispatch<SetStateAction<WalletInfoType | undefined>>;
 };
+
+export type WalletInfoType = {
+  name: string,
+  type: 'eth' | 'starknet' | 'web3mq'
+}
 
 export const LoginContext = React.createContext<LoginContextValue | undefined>(undefined);
 
