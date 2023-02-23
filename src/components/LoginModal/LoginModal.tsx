@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 
 import { CheveronLeft, CloseBtnIcon } from '../../icons';
 import { AppTypeEnum, LoginContextValue, LoginProvider, StepStringEnum } from '../../context';
@@ -50,6 +50,9 @@ export const LoginModal: React.FC<IProps> = (props) => {
     env = 'test',
   } = props;
   const {
+    mainKeys,
+    registerSignRes,
+    afterSignAndLogin,
     getUserAccount,
     login,
     register,
@@ -72,6 +75,25 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const [showLoading, setShowLoading] = useState(false);
   const [walletType, setWalletType] = useState<WalletType>(account?.walletType || 'eth');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
+
+  useEffect(() => {
+    if (!mainKeys) {
+      return;
+    }
+    afterSignAndLogin().then(() => {
+      setShowLoading(false);
+    }).catch((e) => {
+      handleLoginEvent({
+        msg: e.message,
+        data: null,
+        type: 'error',
+      });
+      setMainKeys(undefined);
+      setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
+      setShowLoading(false);
+    });
+  }, [mainKeys, registerSignRes]);
+
   const getAccount = async (didType?: WalletType, didValue?: string) => {
     setShowLoading(true);
     setStep(StepStringEnum.CONNECT_LOADING);
@@ -116,6 +138,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setStep(StepStringEnum.HOME);
     setMainKeys(undefined);
     setQrCodeUrl('');
+    dappConnectClient.current = undefined;
   };
   const handleBack = () => {
     setStep(StepStringEnum.HOME);
@@ -123,6 +146,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setStep(StepStringEnum.HOME);
     setMainKeys(undefined);
     setQrCodeUrl('');
+    dappConnectClient.current = undefined;
   };
   const headerTitle = useMemo(() => {
     switch (step) {

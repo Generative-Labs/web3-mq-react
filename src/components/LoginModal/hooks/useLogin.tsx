@@ -212,12 +212,12 @@ const useLogin = (
     // });
   };
 
-  useEffect(() => {
-    if (!mainKeys) {
-      return;
-    }
-    afterSignAndLogin();
-  }, [mainKeys, registerSignRes]);
+  // useEffect(() => {
+  //   if (!mainKeys) {
+  //     return;
+  //   }
+  //   afterSignAndLogin();
+  // }, [mainKeys, registerSignRes]);
 
   const loginByQrCode = async () => {
     if (!userAccount) {
@@ -364,6 +364,9 @@ const useLogin = (
   };
 
   return {
+    mainKeys,
+    registerSignRes,
+    afterSignAndLogin,
     login,
     getUserAccount,
     register,
