@@ -39,7 +39,7 @@ const App: React.FC = () => {
         walletAddress: address,
       };
     }
-    return <Login handleLoginEvent={handleLoginEvent} mainKeys={mainKeys} />;
+    return <Login appType={appType} handleLoginEvent={handleLoginEvent} mainKeys={mainKeys} />;
   }
 
   if (!fastestUrl) {

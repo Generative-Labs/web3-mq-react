@@ -54,7 +54,7 @@ export const SignUp: React.FC = () => {
         setErrorInfo('Passwords don\'t match. Please check your password inputs.');
       }
       confirmPassword.current = password;
-      if (dappConnectClient.current) {
+      if (dappConnectClient) {
         await registerByQrCode();
       } else if (walletConnectClient.current) {
         await registerByWalletConnect();

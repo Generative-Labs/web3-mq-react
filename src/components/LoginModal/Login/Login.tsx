@@ -41,7 +41,7 @@ export const Login: React.FC = () => {
     setStep(StepStringEnum.LOGIN_SIGN_LOADING);
     confirmPassword.current = password;
     try {
-      if (dappConnectClient.current) {
+      if (dappConnectClient) {
         // 说明是扫码登录
         await loginByQrCode();
       } else if (walletConnectClient.current) {

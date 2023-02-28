@@ -2,10 +2,10 @@ import React, { useMemo, useRef, useState, useEffect } from 'react';
 import type SignClient from '@walletconnect/sign-client';
 import { CheveronLeft, CloseBtnIcon } from '../../icons';
 import {
-  AppTypeEnum, 
-  LoginContextValue, 
-  LoginProvider, 
-  StepStringEnum, 
+  AppTypeEnum,
+  LoginContextValue,
+  LoginProvider,
+  StepStringEnum,
   WalletInfoType,
   WalletConnectContextValue,
   WalletConnectProvider
@@ -44,12 +44,12 @@ type IProps = {
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
-  const dappConnectClient = useRef<DappConnect>();
+  const [dappConnectClient, setDappConnectClient] = useState<DappConnect>();
   const walletConnectClient = useRef<SignClient>();
   const {
     isShow,
     client = Client as any,
-    appType = AppTypeEnum.pc,
+    appType = window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc'],
     containerId,
     loginBtnNode = null,
     account = undefined,
@@ -73,8 +73,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
     registerByQrCode,
     setUserAccount,
     confirmPassword,
-  } = useLogin(handleLoginEvent, client, dappConnectClient.current, keys, account);
-  const { 
+  } = useLogin(handleLoginEvent, client, dappConnectClient, keys, account, appType);
+  const {
     wcSession,
     create,
     connect,
@@ -107,18 +107,20 @@ export const LoginModal: React.FC<IProps> = (props) => {
     if (!mainKeys) {
       return;
     }
-    afterSignAndLogin().then(() => {
-      setShowLoading(false);
-    }).catch((e) => {
-      handleLoginEvent({
-        msg: e.message,
-        data: null,
-        type: 'error',
+    afterSignAndLogin()
+      .then(() => {
+        setShowLoading(false);
+      })
+      .catch((e) => {
+        handleLoginEvent({
+          msg: e.message,
+          data: null,
+          type: 'error',
+        });
+        setMainKeys(undefined);
+        setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
+        setShowLoading(false);
       });
-      setMainKeys(undefined);
-      setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
-      setShowLoading(false);
-    });
   }, [mainKeys, registerSignRes]);
 
   const getAccount = async (didType?: WalletType, didValue?: string) => {
@@ -142,7 +144,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       setWalletType('eth');
       setWalletInfo({
         name: result?.walletInfo?.name || 'Web3MQ Wallet',
-        type: 'web3mq'
+        type: 'web3mq',
       });
       await getAccount('eth', result.address.toLowerCase());
     }
@@ -169,7 +171,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setStep(StepStringEnum.HOME);
     setMainKeys(undefined);
     setQrCodeUrl('');
-    dappConnectClient.current = undefined;
+    setDappConnectClient(undefined);
+    // dappConnectClient.current = undefined;
   };
   const handleBack = () => {
     setStep(StepStringEnum.HOME);
@@ -177,8 +180,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setStep(StepStringEnum.HOME);
     setMainKeys(undefined);
     setQrCodeUrl('');
+    setDappConnectClient(undefined);
     setShowLoading(false);
-    dappConnectClient.current = undefined;
   };
   const headerTitle = useMemo(() => {
     switch (step) {
@@ -239,7 +242,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       dappConnectClient,
       env,
       walletInfo,
-      setWalletInfo
+      setWalletInfo,
+      setDappConnectClient
     }),
     [
       step,
@@ -287,12 +291,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
               {step === StepStringEnum.LOGIN && <Login />}
               {step === StepStringEnum.SIGN_UP && <SignUp />}
               {/*{step === StepStringEnum.QR_CODE && <QrCodeLogin />}*/}
-              {step === StepStringEnum.QR_CODE && (
-                <DappConnectModal
-                  client={dappConnectClient.current as DappConnect}
-                  handleSuccess={handleWeb3mqCallback}
-                />
-              )}
               {/*loading*/}
               {step === StepStringEnum.CONNECT_LOADING && <ConnectLoading />}
               {step === StepStringEnum.CONNECT_ERROR && <ConnectError />}
@@ -302,6 +300,13 @@ export const LoginModal: React.FC<IProps> = (props) => {
               {[StepStringEnum.LOGIN_SIGN_ERROR, StepStringEnum.SIGN_UP_SIGN_ERROR].includes(
                 step,
               ) && <SignError />}
+              {dappConnectClient && (
+                <DappConnectModal
+                  client={dappConnectClient as DappConnect}
+                  handleSuccess={handleWeb3mqCallback}
+                  appType={appType}
+                />
+              )}
               {step === StepStringEnum.REJECT_CONNECT && <RejectError />}
             </div>
           </Modal>

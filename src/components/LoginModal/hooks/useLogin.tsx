@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import type { WalletType } from '@web3mq/client';
-import { SignAuditTypeEnum } from '../../../context';
+import { AppTypeEnum, SignAuditTypeEnum } from '../../../context';
 import type { DappConnect } from '@web3mq/dapp-connect';
 
 export type LoginEventType = 'login' | 'register' | 'error';
@@ -47,6 +47,7 @@ const useLogin = (
   dappConnectClient?: DappConnect,
   keys?: MainKeysType,
   account?: UserAccountType,
+  appType?: AppTypeEnum,
 ) => {
   const [userAccount, setUserAccount] = useState<UserAccountType | undefined>(account);
   const confirmPassword = useRef<string>('');
@@ -203,7 +204,8 @@ const useLogin = (
     await dappConnectClient?.sendSign({
       address,
       signContent,
-      password: ''
+      password: '',
+      needJump: appType !== AppTypeEnum.pc
     });
     // await client.dappConnectClient.sendSign({
     //   signContent,

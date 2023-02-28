@@ -1,16 +1,17 @@
 import React from 'react';
 import { MetaMaskIcon } from '../../icons';
-import { AppTypeEnum, LoginModal } from '@web3mq/react-components';
-
+import { LoginModal } from '@web3mq/react-components';
 import './index.css';
+import {AppTypeEnum} from "@web3mq/dapp-connect-react";
 
 interface IProps {
   handleLoginEvent: any;
   mainKeys?: any;
+  appType?: AppTypeEnum;
 }
 
 const Login: React.FC<IProps> = (props) => {
-  const { handleLoginEvent, mainKeys = null } = props;
+  const { handleLoginEvent, mainKeys = null, appType = AppTypeEnum.pc } = props;
 
   const styles = {
     modalBody: {
@@ -83,7 +84,7 @@ const Login: React.FC<IProps> = (props) => {
           env={'dev'}
           keys={mainKeys}
           handleLoginEvent={handleLoginEvent}
-          appType={AppTypeEnum.pc}
+          appType={appType}
           loginBtnNode={
             <button className="sign_btn">
               <MetaMaskIcon />
