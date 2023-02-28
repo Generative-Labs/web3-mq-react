@@ -8,7 +8,7 @@ import {
   StepStringEnum,
   WalletInfoType,
   WalletConnectContextValue,
-  WalletConnectProvider
+  WalletConnectProvider,
 } from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
@@ -243,7 +243,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       env,
       walletInfo,
       setWalletInfo,
-      setDappConnectClient
+      setDappConnectClient,
     }),
     [
       step,
@@ -267,7 +267,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       loginByWalletConnect,
       registerByWalletConnect,
     }),
-    [wcSession]
+    [wcSession],
   );
 
   return (
