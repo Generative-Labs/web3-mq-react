@@ -6,10 +6,12 @@ import {
   LoginErrorIcon,
   MetaMaskIcon,
   OpenEyesIcon,
+  Web3MqWalletIcon,
+  WalletConnectIcon,
 } from '../../../icons';
 import { getShortAddress } from '../../../utils';
 import { Button } from '../../Button';
-import { StepStringEnum, useLoginContext } from '../../../context';
+import { StepStringEnum, useLoginContext, useWalletConnectContext } from '../../../context';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
@@ -25,11 +27,11 @@ export const SignUp: React.FC = () => {
     handleLoginEvent,
     userAccount,
     setStep,
-    qrCodeUrl,
+    walletInfo,
     registerByQrCode,
     confirmPassword,
   } = useLoginContext();
-
+  const { walletConnectClient, registerByWalletConnect } = useWalletConnectContext();
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
@@ -54,6 +56,8 @@ export const SignUp: React.FC = () => {
       confirmPassword.current = password;
       if (dappConnectClient) {
         await registerByQrCode();
+      } else if (walletConnectClient.current) {
+        await registerByWalletConnect();
       } else {
         await register(walletType);
       }
@@ -66,7 +70,12 @@ export const SignUp: React.FC = () => {
         type: 'error',
       });
       setErrorInfo(e.message);
-      setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
+      // wallet Connect when rejected
+      if (e.code === -32000 && e.message === 'User rejected methods.') {
+        setStep(StepStringEnum.REJECT_CONNECT);
+      } else {
+        setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
+      }
       setShowLoading(false);
     }
   };
@@ -78,9 +87,21 @@ export const SignUp: React.FC = () => {
   return (
     <div className={cx(ss.container)} style={styles?.loginContainer}>
       <div className={ss.addressBox} style={styles?.addressBox}>
-        {userAccount.walletType === 'starknet' ? <ArgentXIcon /> : <MetaMaskIcon />}
+        {walletInfo?.type ? (
+          walletInfo.type === 'web3mq' ? (
+            <Web3MqWalletIcon />
+          ) : walletInfo.type === 'starknet' ? (
+            <ArgentXIcon />
+          ) : walletInfo.type === 'eth' ? (
+            <MetaMaskIcon />
+          ) : (
+            <WalletConnectIcon style={{height: '21px'}} />
+          )
+        ) : (
+          <MetaMaskIcon />
+        )}
         <div className={ss.centerText}>
-          {userAccount.walletType === 'starknet' ? 'Argent X' : 'MetaMask'}
+          {walletInfo?.name || 'MetaMask'}
         </div>
         <div className={ss.addressText}>{getShortAddress(userAccount.address)}</div>
       </div>

@@ -1,10 +1,9 @@
 import React from 'react';
-
-import { DesktopIcon, MobileIcon, Web3MqIcon } from '../../../icons';
+import { DesktopIcon, MobileIcon, Web3MqIcon, WalletConnectIcon } from '../../../icons';
 import { Button } from '../../Button';
 import { RenderWallets } from '../RenderWallets';
+import { WalletConnectButton } from '../WalletConnectButton';
 import { StepStringEnum, useLoginContext } from '../../../context';
-
 import ss from './index.module.scss';
 import cx from 'classnames';
 import { DappConnect } from '@web3mq/dapp-connect';
@@ -22,6 +21,7 @@ export const Home: React.FC = () => {
       setStep(StepStringEnum.QR_CODE);
     });
   };
+
   return (
     <div className={cx(ss.container)} style={styles?.homeContainer}>
       {step === StepStringEnum.HOME && (
@@ -49,6 +49,7 @@ export const Home: React.FC = () => {
                 </div>
                 Web3MQ
               </Button>
+              <WalletConnectButton />
               {/*<Button className={ss.btn} style={styles?.homeButton}>*/}
               {/*  <div className={ss.icon}>*/}
               {/*    <WalletConnectIcon />*/}

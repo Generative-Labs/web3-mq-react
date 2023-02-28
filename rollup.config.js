@@ -20,7 +20,7 @@ const isDev = process.env.ROLLUP_WATCH || false;
 
 const extensions = ['.js', '.jsx', '.ts', '.tsx'];
 
-const externalDependencies = ['react', '@web3mq/client','@web3mq/dapp-connect','@web3mq/dapp-connect-react', 'react-dom', '@babel/runtime/helpers/extends'];
+const externalDependencies = ['react', '@web3mq/client','@web3mq/dapp-connect','@web3mq/dapp-connect-react', '@walletconnect/sign-client', '@web3modal/standalone', 'react-dom', '@babel/runtime/helpers/extends'];
 
 const baseConfig = {
   input: getPath('./src/index.ts'),
@@ -74,7 +74,10 @@ const basePlugins = [
 const config = {
   ...baseConfig,
   external: externalDependencies,
-  context: 'window',
+  onwarn(warning, warn) {
+    if (warning.code === 'THIS_IS_UNDEFINED') return;
+    warn(warning);
+  },
   output: [
     {
       file: pkg.main,

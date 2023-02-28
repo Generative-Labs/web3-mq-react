@@ -15,6 +15,7 @@ export enum StepStringEnum {
   LOGIN_SIGN_ERROR = 'login_sign_error',
   SIGN_UP_SIGN_LOADING = 'sign_up_sign_loading',
   SIGN_UP_SIGN_ERROR = 'sign_up_sign_error',
+  REJECT_CONNECT = 'reject_connect',
 }
 
 export enum SignAuditTypeEnum {
@@ -52,7 +53,7 @@ export type LoginContextValue = {
 
 export type WalletInfoType = {
   name: string;
-  type: 'eth' | 'starknet' | 'web3mq';
+  type: 'eth' | 'starknet' | 'web3mq' | 'walletConnect';
 };
 
 export const LoginContext = React.createContext<LoginContextValue | undefined>(undefined);
@@ -73,7 +74,7 @@ export const useLoginContext = (componentName?: string) => {
 
   if (!contextValue) {
     console.warn(
-      `The useChatContext hook was called outside of the ChatContext provider. Make sure this hook is called within a child of the Chat component. The errored call is located in the ${componentName} component.`,
+      `The useLoginContext hook was called outside of the ChatContext provider. Make sure this hook is called within a child of the Chat component. The errored call is located in the ${componentName} component.`,
     );
 
     return {} as LoginContextValue;
