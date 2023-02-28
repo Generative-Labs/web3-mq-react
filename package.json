@@ -77,6 +77,9 @@
     "react-dom": "^18.2.0 || ^17.0.0 || ^16.8.0"
   },
   "dependencies": {
+    "@walletconnect/encoding": "^1.0.2",
+    "@walletconnect/sign-client": "^2.4.6",
+    "@web3modal/standalone": "^2.1.1",
     "@web3mq/dapp-connect": "^1.0.3",
     "@web3mq/dapp-connect-react": "^1.0.2",
     "ethers": "5.4"

@@ -1,13 +1,21 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
-
+import type SignClient from '@walletconnect/sign-client';
 import { CheveronLeft, CloseBtnIcon } from '../../icons';
-import {AppTypeEnum, LoginContextValue, LoginProvider, StepStringEnum, WalletInfoType} from '../../context';
+import {
+  AppTypeEnum, 
+  LoginContextValue, 
+  LoginProvider, 
+  StepStringEnum, 
+  WalletInfoType,
+  WalletConnectContextValue,
+  WalletConnectProvider
+} from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { Login } from './Login';
 import { SignUp } from './SignUp';
 import { Home } from './Home';
-import { ConnectError, ConnectLoading, SignError, SignLoading } from './loginLoading';
+import { ConnectError, ConnectLoading, SignError, SignLoading, RejectError } from './loginLoading';
 import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
@@ -15,6 +23,7 @@ import cx from 'classnames';
 import type { WalletType } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import useLogin, { LoginEventDataType, MainKeysType, UserAccountType } from './hooks/useLogin';
+import useWalletConnect from './hooks/useWalletConnect';
 import { Client } from '@web3mq/client';
 import type { DappConnect } from '@web3mq/dapp-connect';
 import { WalletMethodMap } from '@web3mq/dapp-connect';
@@ -36,6 +45,7 @@ type IProps = {
 
 export const LoginModal: React.FC<IProps> = (props) => {
   const dappConnectClient = useRef<DappConnect>();
+  const walletConnectClient = useRef<SignClient>();
   const {
     isShow,
     client = Client as any,
@@ -64,6 +74,22 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setUserAccount,
     confirmPassword,
   } = useLogin(handleLoginEvent, client, dappConnectClient.current, keys, account);
+  const { 
+    wcSession,
+    create,
+    connect,
+    closeModal,
+    onSessionConnected,
+    registerByWalletConnect,
+    loginByWalletConnect,
+  } = useWalletConnect({
+    confirmPassword,
+    client,
+    walletConnectClient: walletConnectClient,
+    mainKeys,
+    userAccount,
+    handleLoginEvent,
+  });
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
     userAccount
@@ -151,6 +177,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setStep(StepStringEnum.HOME);
     setMainKeys(undefined);
     setQrCodeUrl('');
+    setShowLoading(false);
     dappConnectClient.current = undefined;
   };
   const headerTitle = useMemo(() => {
@@ -165,6 +192,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       return 'Log in';
     case StepStringEnum.QR_CODE:
       return 'Web3MQ';
+    case StepStringEnum.REJECT_CONNECT:
+      return 'Wallet Connect';
     case StepStringEnum.SIGN_UP_SIGN_LOADING:
     case StepStringEnum.SIGN_UP_SIGN_ERROR:
     case StepStringEnum.SIGN_UP:
@@ -223,44 +252,61 @@ export const LoginModal: React.FC<IProps> = (props) => {
     ],
   );
 
+  const WalletConnectContextValue: WalletConnectContextValue = useMemo(
+    () => ({
+      walletConnectClient,
+      wcSession,
+      create,
+      connect,
+      closeModal,
+      onSessionConnected,
+      loginByWalletConnect,
+      registerByWalletConnect,
+    }),
+    [wcSession]
+  );
+
   return (
     <LoginProvider value={loginContextValue}>
-      <div className={cx(ss.container)}>
-        <div onClick={handleModalShow}>
-          {loginBtnNode || <Button className={ss.iconBtn}>Login</Button>}
-        </div>
-        <Modal
-          dialogClassName={modalClassName}
-          containerId={containerId}
-          appType={appType}
-          visible={visible}
-          modalHeader={<ModalHead />}
-          closeModal={hide}
-        >
-          <div className={cx(ss.modalBody)} style={styles?.modalBody}>
-            {step === StepStringEnum.HOME && <Home />}
-            {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
-            {step === StepStringEnum.LOGIN && <Login />}
-            {step === StepStringEnum.SIGN_UP && <SignUp />}
-            {/*{step === StepStringEnum.QR_CODE && <QrCodeLogin />}*/}
-            {step === StepStringEnum.QR_CODE && (
-              <DappConnectModal
-                client={dappConnectClient.current as DappConnect}
-                handleSuccess={handleWeb3mqCallback}
-              />
-            )}
-            {/*loading*/}
-            {step === StepStringEnum.CONNECT_LOADING && <ConnectLoading />}
-            {step === StepStringEnum.CONNECT_ERROR && <ConnectError />}
-            {[StepStringEnum.LOGIN_SIGN_LOADING, StepStringEnum.SIGN_UP_SIGN_LOADING].includes(
-              step,
-            ) && <SignLoading />}
-            {[StepStringEnum.LOGIN_SIGN_ERROR, StepStringEnum.SIGN_UP_SIGN_ERROR].includes(
-              step,
-            ) && <SignError />}
+      <WalletConnectProvider value={WalletConnectContextValue}>
+        <div className={cx(ss.container)}>
+          <div onClick={handleModalShow}>
+            {loginBtnNode || <Button className={ss.iconBtn}>Login</Button>}
           </div>
-        </Modal>
-      </div>
+          <Modal
+            dialogClassName={cx(modalClassName)}
+            containerId={containerId}
+            appType={appType}
+            visible={visible}
+            modalHeader={<ModalHead />}
+            closeModal={hide}
+          >
+            <div className={cx(ss.modalBody)} style={styles?.modalBody}>
+              {step === StepStringEnum.HOME && <Home />}
+              {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
+              {step === StepStringEnum.LOGIN && <Login />}
+              {step === StepStringEnum.SIGN_UP && <SignUp />}
+              {/*{step === StepStringEnum.QR_CODE && <QrCodeLogin />}*/}
+              {step === StepStringEnum.QR_CODE && (
+                <DappConnectModal
+                  client={dappConnectClient.current as DappConnect}
+                  handleSuccess={handleWeb3mqCallback}
+                />
+              )}
+              {/*loading*/}
+              {step === StepStringEnum.CONNECT_LOADING && <ConnectLoading />}
+              {step === StepStringEnum.CONNECT_ERROR && <ConnectError />}
+              {[StepStringEnum.LOGIN_SIGN_LOADING, StepStringEnum.SIGN_UP_SIGN_LOADING].includes(
+                step,
+              ) && <SignLoading />}
+              {[StepStringEnum.LOGIN_SIGN_ERROR, StepStringEnum.SIGN_UP_SIGN_ERROR].includes(
+                step,
+              ) && <SignError />}
+              {step === StepStringEnum.REJECT_CONNECT && <RejectError />}
+            </div>
+          </Modal>
+        </div>
+      </WalletConnectProvider>
     </LoginProvider>
   );
 };

@@ -7,8 +7,9 @@ import {
   MetaMaskIcon,
   OpenEyesIcon,
   Web3MqWalletIcon,
+  WalletConnectIcon,
 } from '../../../icons';
-import { StepStringEnum, useLoginContext } from '../../../context';
+import { StepStringEnum, useLoginContext, useWalletConnectContext } from '../../../context';
 import { getShortAddress } from '../../../utils';
 import { Button } from '../../Button';
 
@@ -30,7 +31,7 @@ export const Login: React.FC = () => {
     confirmPassword,
     dappConnectClient,
   } = useLoginContext();
-
+  const { walletConnectClient, loginByWalletConnect } = useWalletConnectContext();
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorInfo, setErrorInfo] = useState<string>();
@@ -43,6 +44,8 @@ export const Login: React.FC = () => {
       if (dappConnectClient.current) {
         // 说明是扫码登录
         await loginByQrCode();
+      } else if (walletConnectClient.current) {
+        await loginByWalletConnect();
       } else {
         await login(walletType);
       }
@@ -75,8 +78,10 @@ export const Login: React.FC = () => {
             <Web3MqWalletIcon />
           ) : walletInfo.type === 'starknet' ? (
             <ArgentXIcon />
-          ) : (
+          ) : walletInfo.type === 'eth' ? (
             <MetaMaskIcon />
+          ) : (
+            <WalletConnectIcon style={{height: '21px'}} />
           )
         ) : (
           <MetaMaskIcon />

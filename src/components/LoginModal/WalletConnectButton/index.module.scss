@@ -1,0 +1,15 @@
+.btn {
+  width: 100%;
+  margin-top: 16px;
+  height: 40px;
+
+  span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .icon {
+    margin-right: 8px;
+  }
+}
