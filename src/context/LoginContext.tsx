@@ -1,6 +1,7 @@
 import React, { Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react';
 import type { WalletType } from '@web3mq/client';
 import type { LoginEventDataType } from '../components/LoginModal/hooks/useLogin';
+import type { DappConnect } from '@web3mq/dapp-connect';
 
 export enum StepStringEnum {
   HOME = 'home',
@@ -42,16 +43,17 @@ export type LoginContextValue = {
   loginByQrCode: any;
   registerByQrCode: any;
   confirmPassword: React.MutableRefObject<string>;
-  dappConnectClient: any
-  env: 'dev' | 'test'
-  walletInfo?: WalletInfoType
+  dappConnectClient?: DappConnect;
+  setDappConnectClient: Dispatch<SetStateAction<DappConnect | undefined>>;
+  env: 'dev' | 'test';
+  walletInfo?: WalletInfoType;
   setWalletInfo: Dispatch<SetStateAction<WalletInfoType | undefined>>;
 };
 
 export type WalletInfoType = {
-  name: string,
-  type: 'eth' | 'starknet' | 'web3mq'
-}
+  name: string;
+  type: 'eth' | 'starknet' | 'web3mq';
+};
 
 export const LoginContext = React.createContext<LoginContextValue | undefined>(undefined);
 

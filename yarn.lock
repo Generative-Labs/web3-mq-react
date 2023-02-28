@@ -2143,17 +2143,17 @@
     js-sha3 "^0.8.0"
     starknet "^4.17.1"
 
-"@web3mq/dapp-connect-react@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/@web3mq/dapp-connect-react/-/dapp-connect-react-1.0.2.tgz"
-  integrity sha512-pHbmoQy6B/yjvtVIFWa1Kq4yNgLIgb2sqgD5vkqtuwOmnU0+9ymjnd+EChzbgNzZ6G8rMPaCsSPEHgp4GY3O6w==
+"@web3mq/dapp-connect-react@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@web3mq/dapp-connect-react/-/dapp-connect-react-1.0.4.tgz#0910be8cb9004a89f459f31753648aa431664a6f"
+  integrity sha512-0NzUWO8tkmLp0rItk1Kq6GJWVHIgP9eOB1hO3yeNHPLsbNVMqoMtrKePN0+7ev4+pj+ke6mCQPMd8XSB+CYYgQ==
   dependencies:
-    "@web3mq/dapp-connect" "^1.0.3"
+    "@web3mq/dapp-connect" "^1.0.6"
 
-"@web3mq/dapp-connect@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@web3mq/dapp-connect/-/dapp-connect-1.0.3.tgz#23e1813fecdfe1b4eff2a52eb7ca828ff2af0cbe"
-  integrity sha512-2VxoXraEQFj4whbA3g0C2wuyKe2XJ2QduPUT0Qnkz61LNJfPTr+QCenLpUykv+iw/YXXgnjYgr6Vzt7gxZCvrQ==
+"@web3mq/dapp-connect@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@web3mq/dapp-connect/-/dapp-connect-1.0.6.tgz#c9b00419deb85b3b3477b97d847452a328a336ea"
+  integrity sha512-4cOCGBOA1YTcJ+av2XNI5uudgpRqoPOMz6RrFw0pLo6z8TjWwx2FQc8XkbKKrmKvSG8SxkZMSsjApAvBr58+3g==
   dependencies:
     "@noble/ed25519" "^1.6.1"
     "@protobuf-ts/plugin" "^2.7.0"
