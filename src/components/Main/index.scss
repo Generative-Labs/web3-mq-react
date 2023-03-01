@@ -1,5 +1,5 @@
 .mainContainer {
-  height: 100vh;
+  height: calc(var(--web3mq-viewport-hight, 1vh) * 100);
   display: flex;
   flex-direction: column;
   &.hasContainerId {
@@ -15,5 +15,5 @@
   display: none;
 }
 .mobileStyle {
-  height: calc(100vh - 60px);
+  height: calc(var(--web3mq-viewport-hight, 1vh) * 100 - 60px);
 }

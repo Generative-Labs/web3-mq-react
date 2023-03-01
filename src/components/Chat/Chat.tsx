@@ -1,4 +1,4 @@
-import React, { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import React, { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react';
 import cx from 'classnames';
 import type { Client, NotifyResponse } from '@web3mq/client';
 import { ChatProvider, ChatContextValue, AppTypeEnum } from '../../context/ChatContext';
@@ -32,8 +32,18 @@ const UnMemoizedChat = (props: PropsWithChildren<ChatProps>) => {
   const { getUserInfo, loginUserInfo, getLoginUserInfo } = useQueryUserInfo(client);
   const [ activeNotification, setActiveNotification ] = useState<NotifyResponse | null>(null);
 
+  const convertStyle = useCallback(() => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--web3mq-viewport-hight', `${vh}px`);
+  }, []);
+
   useEffect(() => {
     getLoginUserInfo().then();
+    convertStyle();
+    window.addEventListener('resize', convertStyle);
+    return () => {
+      window.removeEventListener('resize', convertStyle);
+    };
   }, []);
 
   const chatContextValue: ChatContextValue = useMemo(
