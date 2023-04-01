@@ -1,0 +1,42 @@
+@import "../../../style/index.scss";
+
+.connectContainer {
+
+}
+
+.iconBox {
+  width: 100%;
+  height: 42px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+.title {
+  width: 100%;
+  @include themeify{
+    margin-top: 16px;
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 18px;
+    text-align: center;
+    color: #18181B;
+  }
+}
+
+.textContent {
+  margin-top: 8px;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  text-align: center;
+  color: #71717A;
+}
+
+.buttonBox {
+  margin-top: 42px;
+  button {
+    width: 100%;
+  }
+}

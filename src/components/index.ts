@@ -31,4 +31,5 @@ export * from './Notification';
 export * from './NotificationList';
 export * from './RadioGroup';
 export * from './Button';
+export * from './BindDidModal';
 export * from './LoginModal';

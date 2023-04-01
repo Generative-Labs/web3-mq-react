@@ -1,0 +1,73 @@
+@import "../../style/index.scss";
+@import '@web3mq/dapp-connect-react/dist/css/index.css';
+
+.loginModalHead {
+  display: flex;
+  position: relative;
+  height: 50px;
+  border-radius: 0px;
+  padding: 14px 16px 14px 16px;
+
+  .title {
+    width: 100%;
+    line-height: 22px;
+    letter-spacing: 0em;
+    text-align: center;
+    @include themeify {
+      font-size: themed(title3_font-size);
+      font-weight: themed(Medium_font-weight);
+    }
+  }
+
+  .backBtn {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @include themeify {
+      font-size: themed(Headline_font-size);
+      &:hover {
+        color: themed(Gray_500);
+      }
+    }
+  }
+
+
+  .closeBtn {
+    position: absolute;
+    right: 16px;
+    cursor: pointer;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    @include themeify {
+      font-size: themed(Headline_font-size);
+
+      &:hover {
+        color: themed(Gray_500);
+      }
+    }
+
+  }
+}
+
+
+.modalBody {
+  width: 100%;
+  height: calc(100% - 65px);
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #fff;
+  padding: 0 16px;
+}
+

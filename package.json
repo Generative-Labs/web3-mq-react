@@ -82,6 +82,8 @@
     "@web3modal/standalone": "^2.1.1",
     "@web3mq/dapp-connect": "^1.0.6",
     "@web3mq/dapp-connect-react": "^1.0.5",
-    "ethers": "5.4"
+    "ethers": "5.4",
+    "js-sha3": "^0.8.0",
+    "moment": "^2.29.4"
   }
 }
