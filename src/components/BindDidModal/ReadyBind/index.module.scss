@@ -1,6 +1,13 @@
 @import "../../../style/index.scss";
 
 .readyBind {
+
+  .successIconBox {
+    display: flex;
+    justify-content: center;
+    margin-top: 14px;
+    margin-bottom: 22px;
+  }
   .addressBox {
     display: flex;
     width: 280px;
@@ -34,6 +41,8 @@
 
   .contentText {
     @include themeify {
+      margin-top: 12px;
+      margin-bottom: 16px;
       font-family: 'Inter', sans-serif;
       font-style: normal;
       font-weight: themed(Regular_font-weight);
@@ -44,7 +53,7 @@
   }
 
   .btnBox {
-    margin-top: 16px;
+    margin-top: 32px;
     height: 40px;
 
     .button {

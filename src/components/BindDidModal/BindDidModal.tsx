@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type SignClient from '@walletconnect/sign-client';
 import { CheveronLeft, CloseBtnIcon } from '../../icons';
 import {
@@ -13,10 +13,10 @@ import { Home } from './Home';
 import {
   ConnectError,
   ConnectLoading,
+  ReadySignUp,
   RejectError,
   SignError,
   SignLoading,
-  ReadySignUp,
 } from './loginLoading';
 import useToggle from '../../hooks/useToggle';
 
@@ -32,9 +32,15 @@ import useBindDid from './hooks/useBindDid';
 import { ReadyBind } from './ReadyBind';
 import moment from 'moment';
 import { sha3_224 } from 'js-sha3';
+import type { bindDidV2Params } from '../../utils';
+import { bindDidV2 } from '../../utils';
+import { BindSuccess } from './loginLoading/BindSuccess';
+import { DidBindError } from './loginLoading/DidBindError';
+import { DidBindLoading } from './loginLoading/DidBindLoading';
 
 type IProps = {
   client?: any;
+  url: string;
   containerId: string;
   isShow?: boolean;
   appType?: AppTypeEnum;
@@ -62,6 +68,7 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     env = 'test',
     didValue,
     didType,
+    url,
   } = props;
   const {
     wcSession,
@@ -76,13 +83,16 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     setUserAccount,
     sendSignByDappConnect,
     sendSignByWalletConnect,
-  } = useBindDid(handleBindDidEvent, client, walletConnectClient, dappConnectClient, appType);
+    signRes,
+  } = useBindDid(client, walletConnectClient, dappConnectClient, appType);
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(BindStepStringEnum.HOME);
   const [showLoading, setShowLoading] = useState(false);
   const [walletType, setWalletType] = useState<WalletType>('eth');
   const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
+  const [signTime, setSignTime] = useState<number>();
+  const [signContent, setSignContent] = useState<string>();
 
   const getAccount = async (didType?: WalletType, didValue?: string) => {
     setShowLoading(true);
@@ -139,6 +149,39 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     setDappConnectClient(undefined);
   };
 
+  useEffect(() => {
+    if (signRes && userAccount && signTime && signContent) {
+      setStep(BindStepStringEnum.DID_BINDING);
+      const params: bindDidV2Params = {
+        userid: userAccount.userid,
+        did_signature: signRes,
+        did_type: userAccount.walletType,
+        did_value: userAccount.address,
+        timestamp: signTime,
+        sign_content: signContent,
+        bind_type: didType,
+        bind_action: 'bind',
+        bind_value: didValue,
+      };
+      bindDidV2(url, params)
+        .then((res) => {
+          console.log(res, 'res');
+          if (res) {
+            setStep(BindStepStringEnum.DID_BIND_SUCCESS);
+            handleBindDidEvent(res);
+          } else {
+            setStep(BindStepStringEnum.DID_BIND_ERROR);
+          }
+        })
+        .catch((e) => {
+          console.log(e, 'e');
+          setStep(BindStepStringEnum.DID_BIND_ERROR);
+        });
+      console.log('sign success ready bind did');
+      handleBindDidEvent(signRes);
+    }
+  }, [signRes]);
+
   const handleBack = () => {
     setStep(BindStepStringEnum.HOME);
     setUserAccount(undefined);
@@ -192,7 +235,7 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     const NonceContent = sha3_224(
       userid + address + walletType + 'bind' + didType + didValue + timestamp,
     );
-    const signContent = `Web3MQ wants you to sign in with your ${wallet_type_name} account:
+    const content = `Web3MQ wants you to sign in with your ${wallet_type_name} account:
 ${address}
 For Web3MQ bind did
 URI: ${url}
@@ -200,13 +243,14 @@ Version: 1
 
 Nonce: ${NonceContent}
 Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
+    setSignContent(content);
+    setSignTime(timestamp);
     if (dappConnectClient) {
-      // 说明是扫码登录
-      await sendSignByDappConnect(signContent, address);
+      await sendSignByDappConnect(content, address);
     } else if (walletConnectClient.current) {
-      await sendSignByWalletConnect(signContent, address);
+      await sendSignByWalletConnect(content, address);
     } else {
-      await normalSign(signContent, address, walletType);
+      await normalSign(content, address, walletType);
     }
   };
 
@@ -239,7 +283,7 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       sendSign,
       containerId,
       appType,
-      setUserAccount
+      setUserAccount,
     }),
     [wcSession, step, showLoading, walletType, qrCodeUrl, JSON.stringify(userAccount), env],
   );
@@ -275,6 +319,9 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
               />
             )}
             {step === BindStepStringEnum.REJECT_CONNECT && <RejectError />}
+            {step === BindStepStringEnum.DID_BIND_SUCCESS && <BindSuccess />}
+            {step === BindStepStringEnum.DID_BIND_ERROR && <DidBindError />}
+            {step === BindStepStringEnum.DID_BINDING && <DidBindLoading />}
           </div>
         </Modal>
       </div>

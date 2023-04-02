@@ -6,9 +6,6 @@ import { Web3Modal } from '@web3modal/standalone';
 import type { WalletType } from '@web3mq/client';
 import type { SessionTypes } from '@walletconnect/types';
 import * as encoding from '@walletconnect/encoding';
-import * as events from 'events';
-import { sha3_224 } from 'js-sha3';
-import moment from 'moment/moment';
 
 export type LoginEventType = 'login' | 'register' | 'error';
 export type LoginEventDataType = {
@@ -57,7 +54,6 @@ const web3Modal = new Web3Modal({
 });
 
 const useBindDid = (
-  handleBindDidEvent: (eventData: any) => void,
   client: any,
   walletConnectClient: React.MutableRefObject<SignClient | undefined>,
   dappConnectClient?: DappConnect,
@@ -229,12 +225,7 @@ const useBindDid = (
     setSignRes(did_signature);
   };
 
-  useEffect(() => {
-    if (signRes) {
-      console.log('sign success ready bind did');
-      handleBindDidEvent(signRes);
-    }
-  }, [signRes]);
+
 
   return {
     sendSignByDappConnect,
@@ -249,6 +240,7 @@ const useBindDid = (
     web3MqSignCallback,
     setUserAccount,
     wcSession,
+    signRes,
   };
 };
 

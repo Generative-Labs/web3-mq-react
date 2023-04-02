@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BindStepStringEnum, useBindDidContext } from '../../../context';
-import { ArgentXIcon, MetaMaskIcon, WalletConnectIcon, Web3MqWalletIcon } from '../../../icons';
+import {ArgentXIcon, ConnectSuccessIcon, MetaMaskIcon, WalletConnectIcon, Web3MqWalletIcon} from '../../../icons';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
@@ -49,6 +49,9 @@ export const ReadyBind: React.FC<IProps> = (props) => {
 
   return (
     <div className={ss.readyBind}>
+      <div className={ss.successIconBox}>
+        <ConnectSuccessIcon />
+      </div>
       <div className={cx(ss.addressBox)} style={styles?.addressBox}>
         {walletInfo?.type ? (
           walletInfo.type === 'web3mq' ? (
@@ -75,7 +78,7 @@ export const ReadyBind: React.FC<IProps> = (props) => {
           type="primary"
           onClick={handleSubmit}
         >
-          Signature in
+          Bind wallet
         </Button>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import QRCode from 'qrcode';
 import { ethers } from 'ethers';
+import type { WalletType } from '@web3mq/client';
 
 //@ts-ignore
 // const provider = new ethers.BrowserProvider(window.ethereum);
@@ -472,4 +473,34 @@ export const generateQrCode = async (text: string) => {
   } catch (err: any) {
     throw new Error(err.message);
   }
+};
+
+
+export type bindDidV2Params = {
+  userid: string;
+  did_signature: string;
+  did_type: WalletType;
+  did_value: string;
+  timestamp: number;
+  sign_content: string;
+  bind_type: string;
+  bind_action: 'bind' | 'unbind';
+  bind_value: string;
+};
+
+export const bindDidV2 = async (url: string, payload: bindDidV2Params) => {
+  return await fetch(`${url}/api/user_bind_did_v2/`, {
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+    method: 'POST',
+    mode: 'cors',
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .catch((e) => {
+      console.log(e);
+    });
 };

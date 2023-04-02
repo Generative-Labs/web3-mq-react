@@ -4,6 +4,14 @@
 
 }
 
+
+.successIconBox {
+  display: flex;
+  justify-content: center;
+  margin-top: 14px;
+  margin-bottom: 22px;
+}
+
 .iconBox {
   width: 100%;
   height: 42px;
@@ -11,9 +19,10 @@
   display: flex;
   justify-content: center;
 }
+
 .title {
   width: 100%;
-  @include themeify{
+  @include themeify {
     margin-top: 16px;
     font-family: 'Inter', sans-serif;
     font-style: normal;
@@ -36,6 +45,7 @@
 
 .buttonBox {
   margin-top: 42px;
+
   button {
     width: 100%;
   }

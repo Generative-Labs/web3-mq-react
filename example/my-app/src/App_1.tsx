@@ -6,7 +6,7 @@ import '@web3mq/react-components/dist/css/index.css';
 import useLogin from './hooks/useLogin';
 
 const App: React.FC = () => {
-  const { init } = useLogin();
+  const { init, fastestUrl } = useLogin();
 
   const [appType, setAppType] = useState(
     window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc'],
@@ -24,11 +24,16 @@ const App: React.FC = () => {
     console.log(event, 'event');
   };
 
+  if (!fastestUrl) {
+    return null;
+  }
+
   return (
     <div>
       <BindDidModal
+        url={fastestUrl}
         didType={'telegram'}
-        didValue={'zw204801'}
+        didValue={'5818490985111'}
         client={Client}
         appType={appType}
         containerId={''}

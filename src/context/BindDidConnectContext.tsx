@@ -17,6 +17,9 @@ export enum BindStepStringEnum {
   REJECT_CONNECT = 'reject_connect',
   READY_BIND = 'ready_bind',
   READY_SIGN_UP = 'ready_sign_up',
+  DID_BINDING = 'did_binding',
+  DID_BIND_SUCCESS = 'did_bind_success',
+  DID_BIND_ERROR = 'did_bind_error',
 }
 
 export type BindDidContextValue = {

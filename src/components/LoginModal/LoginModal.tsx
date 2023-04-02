@@ -28,6 +28,7 @@ import { Client } from '@web3mq/client';
 import type { DappConnect } from '@web3mq/dapp-connect';
 import { WalletMethodMap } from '@web3mq/dapp-connect';
 import { DappConnectModal } from '@web3mq/dapp-connect-react';
+import type { SessionTypes } from '@walletconnect/types';
 
 type IProps = {
   client?: any;
@@ -41,11 +42,12 @@ type IProps = {
   handleLoginEvent: (eventData: LoginEventDataType) => void;
   keys?: MainKeysType;
   env?: 'dev' | 'test';
+  propWalletConnectClient?: SignClient;
+  propWcSession?: SessionTypes.Struct;
+  propDappConnectClient?: DappConnect
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
-  const [dappConnectClient, setDappConnectClient] = useState<DappConnect>();
-  const walletConnectClient = useRef<SignClient>();
   const {
     isShow,
     client = Client as any,
@@ -58,7 +60,15 @@ export const LoginModal: React.FC<IProps> = (props) => {
     handleLoginEvent,
     keys = undefined,
     env = 'test',
+    propWcSession,
+    propWalletConnectClient,
+    propDappConnectClient
   } = props;
+  const [dappConnectClient, setDappConnectClient] = useState<DappConnect | undefined>(propDappConnectClient);
+  const walletConnectClient = useRef<SignClient>();
+  if (propWalletConnectClient) {
+    walletConnectClient.current = propWalletConnectClient;
+  }
   const {
     mainKeys,
     registerSignRes,
@@ -89,6 +99,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     mainKeys,
     userAccount,
     handleLoginEvent,
+    propWcSession,
   });
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
@@ -121,7 +132,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
         setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
         setShowLoading(false);
       });
-  }, [mainKeys, registerSignRes]);
+  }, [JSON.stringify(mainKeys), registerSignRes]);
 
   const getAccount = async (didType?: WalletType, didValue?: string) => {
     setShowLoading(true);
@@ -203,6 +214,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       return 'Sign up';
     case StepStringEnum.VIEW_ALL:
       return 'Choose Desktop wallets';
+    default:
+      return 'Connect Dapp';
     }
   }, [step]);
 
