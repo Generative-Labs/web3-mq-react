@@ -2,7 +2,7 @@ import React from 'react';
 import { DesktopIcon, MobileIcon, Web3MqIcon, WalletConnectIcon } from '../../../icons';
 import { Button } from '../../Button';
 import { RenderWallets } from '../RenderWallets';
-import { WalletConnectButton } from '../WalletConnectButton';
+import { WalletConnectButton } from '../../WalletConnectButton';
 import { StepStringEnum, useLoginContext } from '../../../context';
 import ss from './index.module.scss';
 import cx from 'classnames';

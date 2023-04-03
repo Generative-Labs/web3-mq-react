@@ -7,7 +7,7 @@ import { Button, LoginModal } from '../../../components';
 import { BindDidWarningIcon } from '../../../icons';
 
 export const ReadySignUp: React.FC = () => {
-  const { styles, setStep, userAccount, appType, containerId, client, env, setUserAccount } =
+  const { styles, setStep, userAccount, appType, containerId, client, env, setUserAccount, walletConnectClient, wcSession } =
     useBindDidContext();
 
   const handleLoginEvent = (eventData: any) => {
@@ -50,8 +50,10 @@ export const ReadySignUp: React.FC = () => {
           handleLoginEvent={handleLoginEvent}
           containerId={containerId}
           appType={appType}
-          // account={userAccount}
+          propWalletConnectClient={walletConnectClient.current}
+          propWcSession={wcSession}
           loginBtnNode={<Button type={'primary'}>SignUp</Button>}
+          account={userAccount}
         />
       </div>
     </div>

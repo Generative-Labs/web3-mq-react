@@ -44,6 +44,12 @@ export type RegisterResType = {
 const useLogin = (
   handleLoginEvent: (eventData: LoginEventDataType) => void,
   client: any,
+  sendSignByWalletConnect: (
+    signContent: string,
+    address: string,
+  ) => Promise<{
+    signature: unknown;
+  }>,
   dappConnectClient?: DappConnect,
   keys?: MainKeysType,
   account?: UserAccountType,
@@ -55,6 +61,7 @@ const useLogin = (
   const [registerSignRes, setRegisterSignRes] = useState('');
   const [mainKeys, setMainKeys] = useState<MainKeysType | undefined>(keys);
   const signType = useRef<SignAuditTypeEnum>();
+
   const getUserAccount = async (
     didType: WalletType = 'eth',
     address?: string,
@@ -147,6 +154,71 @@ const useLogin = (
     });
   };
 
+  const getMainKeypairByWalletConnect = async (options: {
+    password: string;
+    did_value: string;
+    did_type: string;
+  }) => {
+    const { password, did_value, did_type } = options;
+    const { signContent } = await client.register.getMainKeypairSignContent({
+      password: password,
+      did_value,
+      did_type,
+    });
+    const { signature } = await sendSignByWalletConnect(signContent, did_value.toLowerCase());
+    const { publicKey, secretKey } = await client.register.getMainKeypairBySignature(
+      signature,
+      confirmPassword.current,
+    );
+    return { publicKey, secretKey };
+  };
+
+  const getRegisterSignContentByWalletConnect = async (options: {
+    userid: string;
+    mainPublicKey: string;
+    didType: string;
+    didValue: string;
+  }) => {
+    const { userid, mainPublicKey, didValue, didType } = options;
+    const { signContent } = await client.register.getRegisterSignContent({
+      userid,
+      mainPublicKey,
+      didType,
+      didValue,
+    });
+    const { signature } = await sendSignByWalletConnect(signContent, didValue.toLowerCase());
+    return {
+      signature,
+    };
+  };
+
+  const registerByWalletConnect = async (nickname?: string): Promise<void> => {
+    if (!userAccount) {
+      return;
+    }
+    const { address, userid, walletType } = userAccount;
+    const { publicKey, secretKey } = await getMainKeypairByWalletConnect({
+      password: confirmPassword.current,
+      did_value: address,
+      did_type: walletType,
+    });
+    const { signature } = await getRegisterSignContentByWalletConnect({
+      userid,
+      mainPublicKey: publicKey,
+      didType: walletType,
+      didValue: address,
+    });
+    await commonRegister({
+      mainPublicKey: publicKey,
+      mainPrivateKey: secretKey,
+      userid,
+      didType: walletType,
+      didValue: address,
+      signature: signature as string,
+      nickname,
+    });
+  };
+
   const sendGetMainKeysSign = async (signType: SignAuditTypeEnum): Promise<void> => {
     if (!userAccount) {
       return;
@@ -205,7 +277,7 @@ const useLogin = (
       address,
       signContent,
       password: '',
-      needJump: appType !== AppTypeEnum.pc
+      needJump: appType !== AppTypeEnum.pc,
     });
     // await client.dappConnectClient.sendSign({
     //   signContent,
@@ -348,6 +420,37 @@ const useLogin = (
     });
   };
 
+
+  const loginByWalletConnect = async () => {
+    if (!userAccount) {
+      return;
+    }
+    const { address, userid, walletType } = userAccount;
+    let localMainPrivateKey = '';
+    let localMainPublicKey = '';
+    if (mainKeys && address.toLowerCase() === mainKeys.walletAddress.toLowerCase()) {
+      localMainPrivateKey = mainKeys.privateKey;
+      localMainPublicKey = mainKeys.publicKey;
+    }
+    if (!localMainPublicKey || !localMainPrivateKey) {
+      const { publicKey, secretKey } = await getMainKeypairByWalletConnect({
+        password: confirmPassword.current,
+        did_value: address,
+        did_type: walletType,
+      });
+      localMainPrivateKey = secretKey;
+      localMainPublicKey = publicKey;
+    }
+
+    await commonLogin({
+      mainPrivateKey: localMainPrivateKey,
+      mainPublicKey: localMainPublicKey,
+      userid,
+      didType: walletType,
+      didValue: address,
+    });
+  };
+
   const web3MqSignCallback = async (signature: string) => {
     if (signType.current === SignAuditTypeEnum.REGISTER) {
       setRegisterSignRes(signature);
@@ -379,6 +482,8 @@ const useLogin = (
     web3MqSignCallback,
     setUserAccount,
     confirmPassword,
+    registerByWalletConnect,
+    loginByWalletConnect
   };
 };
 

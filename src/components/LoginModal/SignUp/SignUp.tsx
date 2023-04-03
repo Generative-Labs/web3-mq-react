@@ -11,27 +11,23 @@ import {
 } from '../../../icons';
 import { getShortAddress } from '../../../utils';
 import { Button } from '../../Button';
-import { StepStringEnum, useLoginContext, useWalletConnectContext } from '../../../context';
+import { StepStringEnum, useLoginContext } from '../../../context';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
 
 export const SignUp: React.FC = () => {
   const {
-    dappConnectClient,
     register,
     styles,
     showLoading,
     setShowLoading,
-    walletType,
     handleLoginEvent,
     userAccount,
     setStep,
     walletInfo,
-    registerByQrCode,
     confirmPassword,
   } = useLoginContext();
-  const { walletConnectClient, registerByWalletConnect } = useWalletConnectContext();
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
@@ -54,14 +50,7 @@ export const SignUp: React.FC = () => {
         setErrorInfo('Passwords don\'t match. Please check your password inputs.');
       }
       confirmPassword.current = password;
-      if (dappConnectClient) {
-        await registerByQrCode();
-      } else if (walletConnectClient.current) {
-        await registerByWalletConnect();
-      } else {
-        await register(walletType);
-      }
-
+      await register();
       setShowLoading(false);
     } catch (e: any) {
       handleLoginEvent({

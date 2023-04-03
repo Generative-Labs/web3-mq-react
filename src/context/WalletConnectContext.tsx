@@ -7,8 +7,6 @@ export type WalletConnectContextValue = {
   connect: () => Promise<SessionTypes.Struct>,
   closeModal: () => void,
   onSessionConnected: (session: SessionTypes.Struct) => void,
-  registerByWalletConnect: (nickname?: string) => Promise<void>,
-  loginByWalletConnect: () => Promise<void>,
   walletConnectClient: any,
 };
 

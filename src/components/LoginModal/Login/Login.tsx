@@ -22,16 +22,12 @@ export const Login: React.FC = () => {
     styles,
     showLoading,
     setShowLoading,
-    walletType,
     handleLoginEvent,
     userAccount,
     setStep,
     walletInfo,
-    loginByQrCode,
     confirmPassword,
-    dappConnectClient,
   } = useLoginContext();
-  const { walletConnectClient, loginByWalletConnect } = useWalletConnectContext();
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorInfo, setErrorInfo] = useState<string>();
@@ -41,14 +37,7 @@ export const Login: React.FC = () => {
     setStep(StepStringEnum.LOGIN_SIGN_LOADING);
     confirmPassword.current = password;
     try {
-      if (dappConnectClient) {
-        // 说明是扫码登录
-        await loginByQrCode();
-      } else if (walletConnectClient.current) {
-        await loginByWalletConnect();
-      } else {
-        await login(walletType);
-      }
+      await login();
       setShowLoading(false);
     } catch (e: any) {
       handleLoginEvent({

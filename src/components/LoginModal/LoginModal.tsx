@@ -23,11 +23,12 @@ import cx from 'classnames';
 import type { WalletType } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import useLogin, { LoginEventDataType, MainKeysType, UserAccountType } from './hooks/useLogin';
-import useWalletConnect from './hooks/useWalletConnect';
+import useWalletConnect from '../WalletConnectButton/hooks/useWalletConnect';
 import { Client } from '@web3mq/client';
 import type { DappConnect } from '@web3mq/dapp-connect';
 import { WalletMethodMap } from '@web3mq/dapp-connect';
 import { DappConnectModal } from '@web3mq/dapp-connect-react';
+import type { SessionTypes } from '@walletconnect/types';
 
 type IProps = {
   client?: any;
@@ -41,11 +42,11 @@ type IProps = {
   handleLoginEvent: (eventData: LoginEventDataType) => void;
   keys?: MainKeysType;
   env?: 'dev' | 'test';
+  propWalletConnectClient?: SignClient;
+  propWcSession?: SessionTypes.Struct;
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
-  const [dappConnectClient, setDappConnectClient] = useState<DappConnect>();
-  const walletConnectClient = useRef<SignClient>();
   const {
     isShow,
     client = Client as any,
@@ -58,7 +59,19 @@ export const LoginModal: React.FC<IProps> = (props) => {
     handleLoginEvent,
     keys = undefined,
     env = 'test',
+    propWalletConnectClient,
+    propWcSession,
   } = props;
+  const [dappConnectClient, setDappConnectClient] = useState<DappConnect>();
+  const walletConnectClient = useRef<SignClient>();
+  if (propWalletConnectClient) {
+    walletConnectClient.current = propWalletConnectClient;
+  }
+  const { wcSession, create, connect, closeModal, onSessionConnected, sendSignByWalletConnect } =
+    useWalletConnect({
+      walletConnectClient: walletConnectClient,
+      propWcSession,
+    });
   const {
     mainKeys,
     registerSignRes,
@@ -73,23 +86,17 @@ export const LoginModal: React.FC<IProps> = (props) => {
     registerByQrCode,
     setUserAccount,
     confirmPassword,
-  } = useLogin(handleLoginEvent, client, dappConnectClient, keys, account, appType);
-  const {
-    wcSession,
-    create,
-    connect,
-    closeModal,
-    onSessionConnected,
     registerByWalletConnect,
     loginByWalletConnect,
-  } = useWalletConnect({
-    confirmPassword,
-    client,
-    walletConnectClient: walletConnectClient,
-    mainKeys,
-    userAccount,
+  } = useLogin(
     handleLoginEvent,
-  });
+    client,
+    sendSignByWalletConnect,
+    dappConnectClient,
+    keys,
+    account,
+    appType,
+  );
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
     userAccount
@@ -183,27 +190,53 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setDappConnectClient(undefined);
     setShowLoading(false);
   };
+
+  const handleSignUp = async () => {
+    if (dappConnectClient) {
+      await registerByQrCode();
+    } else if (walletConnectClient.current) {
+      await registerByWalletConnect();
+    } else {
+      await register(walletType);
+    }
+  };
+
+  const handleLogin = async () => {
+    if (dappConnectClient) {
+      await loginByQrCode();
+    } else if (walletConnectClient.current) {
+      await loginByWalletConnect();
+    } else {
+      await login(walletType);
+    }
+  };
   const headerTitle = useMemo(() => {
-    switch (step) {
-    case StepStringEnum.HOME:
-    case StepStringEnum.CONNECT_LOADING:
-    case StepStringEnum.CONNECT_ERROR:
+    if (
+      step === StepStringEnum.HOME ||
+      step === StepStringEnum.CONNECT_LOADING ||
+      step === StepStringEnum.CONNECT_ERROR
+    ) {
       return 'Connect Dapp';
-    case StepStringEnum.LOGIN:
-    case StepStringEnum.LOGIN_SIGN_LOADING:
-    case StepStringEnum.LOGIN_SIGN_ERROR:
+    } else if (
+      step === StepStringEnum.LOGIN ||
+      step === StepStringEnum.LOGIN_SIGN_LOADING ||
+      step === StepStringEnum.LOGIN_SIGN_ERROR
+    ) {
       return 'Log in';
-    case StepStringEnum.QR_CODE:
+    } else if (step === StepStringEnum.QR_CODE) {
       return 'Web3MQ';
-    case StepStringEnum.REJECT_CONNECT:
+    } else if (step === StepStringEnum.REJECT_CONNECT) {
       return 'Wallet Connect';
-    case StepStringEnum.SIGN_UP_SIGN_LOADING:
-    case StepStringEnum.SIGN_UP_SIGN_ERROR:
-    case StepStringEnum.SIGN_UP:
+    } else if (
+      step === StepStringEnum.SIGN_UP_SIGN_LOADING ||
+      step === StepStringEnum.SIGN_UP_SIGN_ERROR ||
+      step === StepStringEnum.SIGN_UP
+    ) {
       return 'Sign up';
-    case StepStringEnum.VIEW_ALL:
+    } else if (step === StepStringEnum.VIEW_ALL) {
       return 'Choose Desktop wallets';
     }
+    return 'Connect Dapp';
   }, [step]);
 
   const ModalHead = () => {
@@ -220,9 +253,9 @@ export const LoginModal: React.FC<IProps> = (props) => {
 
   const loginContextValue: LoginContextValue = useMemo(
     () => ({
-      register,
+      register: handleSignUp,
       getAccount,
-      login,
+      login: handleLogin,
       step,
       setStep,
       styles,
@@ -235,8 +268,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
       qrCodeUrl,
       userAccount,
       setMainKeys,
-      loginByQrCode,
-      registerByQrCode,
       confirmPassword,
       client,
       dappConnectClient,
@@ -264,8 +295,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
       connect,
       closeModal,
       onSessionConnected,
-      loginByWalletConnect,
-      registerByWalletConnect,
     }),
     [wcSession],
   );

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button } from '../../Button';
-import { useLoginContext, StepStringEnum, useWalletConnectContext } from '../../../context';
-import { WalletConnectIcon } from '../../../icons';
+import { Button } from '../Button';
+import { useLoginContext, StepStringEnum, useWalletConnectContext } from '../../context';
+import { WalletConnectIcon } from '../../icons';
 
 import ss from './index.module.scss';
 

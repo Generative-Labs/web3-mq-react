@@ -26,8 +26,10 @@ export enum SignAuditTypeEnum {
 
 export type LoginContextValue = {
   client: any;
-  login: (walletType?: WalletType) => Promise<void>;
-  register: (walletType?: WalletType) => Promise<void>;
+  // login: (walletType?: WalletType) => Promise<void>;
+  login: () => Promise<void>
+  // register: (walletType?: WalletType) => Promise<void>;
+  register: () => Promise<void>
   getAccount: (walletType?: WalletType, address?: string) => Promise<any>;
   showLoading: boolean;
   setShowLoading: Dispatch<SetStateAction<boolean>>;
@@ -41,8 +43,8 @@ export type LoginContextValue = {
   qrCodeUrl: any;
   userAccount: any;
   setMainKeys: any;
-  loginByQrCode: any;
-  registerByQrCode: any;
+  // loginByQrCode: any;
+  // registerByQrCode: any;
   confirmPassword: React.MutableRefObject<string>;
   dappConnectClient?: DappConnect;
   setDappConnectClient: Dispatch<SetStateAction<DappConnect | undefined>>;
