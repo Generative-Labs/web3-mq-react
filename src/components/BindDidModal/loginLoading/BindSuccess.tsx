@@ -7,7 +7,7 @@ import { Button } from '../../Button';
 import { ConnectSuccessIcon } from '../../../icons';
 
 export const BindSuccess: React.FC = () => {
-  const { styles } = useBindDidContext();
+  const { styles, clearModal } = useBindDidContext();
   return (
     <div className={cx(ss.connectErrorContainer)} style={styles?.connectErrorContainer}>
       <div className={ss.successIconBox}>
@@ -16,7 +16,9 @@ export const BindSuccess: React.FC = () => {
       <div className={ss.title}>Bind successfully</div>
       <div className={ss.textContent}>The wallet has been successfully bound to Web3MQ Bot</div>
       <div className={ss.buttonBox}>
-        <Button type={'primary'}>OK</Button>
+        <Button type={'primary'} onClick={clearModal}>
+          OK
+        </Button>
       </div>
     </div>
   );

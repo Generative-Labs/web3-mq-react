@@ -284,6 +284,7 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       containerId,
       appType,
       setUserAccount,
+      clearModal: handleClose
     }),
     [wcSession, step, showLoading, walletType, qrCodeUrl, JSON.stringify(userAccount), env],
   );

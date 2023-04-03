@@ -51,6 +51,7 @@ export type BindDidContextValue = {
   sendSign: any;
   appType: AppTypeEnum;
   containerId: string;
+  clearModal: () => void
 };
 
 export const BindDidConnectContext = React.createContext<BindDidContextValue | undefined>(
