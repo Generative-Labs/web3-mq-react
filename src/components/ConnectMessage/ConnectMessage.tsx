@@ -38,7 +38,7 @@ export const ConnectMessage: React.FC<ConnectMessageProps> = (props) => {
   } = props;
   const { client, containerId } = useChatContext();
   const { visible, show, hide } = useToggle(isShow);
-  const [status, setStatus] = useState<number>(0);
+  const [status, setStatus] = useState<number>(client.connect.ws?.readyState || 0);
   const defaultDescription = useMemo(() => {
     return status === 0 
       ? 

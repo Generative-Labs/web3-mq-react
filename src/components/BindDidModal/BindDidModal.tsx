@@ -168,6 +168,7 @@ export const BindDidModal: React.FC<IProps> = (props) => {
           console.log(res, 'res');
           if (res) {
             setStep(BindStepStringEnum.DID_BIND_SUCCESS);
+            res.address = userAccount.address;
             handleBindDidEvent(res);
           } else {
             setStep(BindStepStringEnum.DID_BIND_ERROR);
