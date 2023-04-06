@@ -489,7 +489,7 @@ export type bindDidV2Params = {
 };
 
 export const bindDidV2 = async (url: string, payload: bindDidV2Params) => {
-  return await fetch(`${url}/api/user_bind_did_v2/`, {
+  return await fetch(url, {
     headers: {
       'content-type': 'application/json',
     },
