@@ -1,7 +1,13 @@
 import React from 'react';
 
 import { BindStepStringEnum, useBindDidContext } from '../../../context';
-import {ArgentXIcon, ConnectSuccessIcon, MetaMaskIcon, WalletConnectIcon, Web3MqWalletIcon} from '../../../icons';
+import {
+  ArgentXIcon,
+  ConnectSuccessIcon,
+  MetaMaskIcon,
+  WalletConnectIcon,
+  Web3MqWalletIcon,
+} from '../../../icons';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
@@ -22,6 +28,7 @@ export const ReadyBind: React.FC<IProps> = (props) => {
     userAccount,
     setShowLoading,
     handleBindDidEvent,
+    dappConnectClient,
     sendSign,
   } = useBindDidContext();
 
@@ -34,6 +41,11 @@ export const ReadyBind: React.FC<IProps> = (props) => {
     setShowLoading(true);
     setStep(BindStepStringEnum.SIGN_LOADING);
     try {
+      if (dappConnectClient) {
+        setTimeout(() => {
+          window.open('web3mq://');
+        }, 500);
+      }
       await sendSign();
       setShowLoading(false);
     } catch (e: any) {
