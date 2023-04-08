@@ -1,6 +1,37 @@
 @import "../../style/index.scss";
 @import '@web3mq/dapp-connect-react/dist/css/index.css';
 
+.addressBox {
+  display: flex;
+  width: 280px;
+  height: 40px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 48px;
+  margin: 20px auto 0;
+  padding: 0 10px;
+  @include themeify {
+    border: 1px solid themed(Gray_200);
+    color: themed(Gray_700);
+    .centerText {
+      margin-left: 4px;
+      margin-right: 6px;
+      font-style: normal;
+      font-weight: themed(Bold_font-weight);
+      font-size: themed(Headline_font-size);
+    }
+    .addressText {
+      font-weight: themed(Bold_font-weight);
+      font-size: themed(Headline_font-size);
+      line-height: 20px;
+    }
+  }
+
+  div:first-child {
+    height: 30px;
+  }
+}
+
 .loginModalHead {
   display: flex;
   position: relative;

@@ -23,31 +23,11 @@ export enum BindStepStringEnum {
 }
 
 export type BindDidContextValue = {
-  client: any;
-  showLoading: boolean;
-  step: string;
-  setStep: Dispatch<SetStateAction<BindStepStringEnum>>;
-  walletType: WalletType;
-  setWalletType: Dispatch<SetStateAction<WalletType>>;
-  handleBindDidEvent: (eventData: any) => void;
-  setShowLoading: Dispatch<SetStateAction<boolean>>;
   styles?: Record<string, any> | null;
-  handleWeb3mqCallback: any;
-  dappConnectClient?: DappConnect;
-  setDappConnectClient: Dispatch<SetStateAction<DappConnect | undefined>>;
-  env: 'dev' | 'test';
-  walletInfo?: WalletInfoType;
-  setWalletInfo: Dispatch<SetStateAction<WalletInfoType | undefined>>;
+  showLoading: boolean;
   getAccount: (walletType?: WalletType, address?: string) => Promise<any>;
-  qrCodeUrl: any;
-  userAccount: UserAccountType | undefined;
-  setUserAccount: Dispatch<SetStateAction<UserAccountType | undefined>>;
-  wcSession: SessionTypes.Struct | undefined;
-  walletConnectClient: any;
-  sendSign: any;
-  appType: AppTypeEnum;
-  containerId: string;
-  clearModal: () => void
+  setWalletInfo: Dispatch<SetStateAction<WalletInfoType | undefined>>;
+  setConnectLoadingStep: ( step: BindStepStringEnum ) => void;
 };
 
 export const BindDidConnectContext = React.createContext<BindDidContextValue | undefined>(
