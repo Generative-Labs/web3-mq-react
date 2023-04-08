@@ -12,7 +12,7 @@ type IProps = {
 
 export const RenderWallets: React.FC<IProps> = (props) => {
   const { showCount = 0 } = props;
-  const { styles, showLoading, setWalletType, getAccount, setStep, setWalletInfo } =
+  const { styles, showLoading, getAccount, setConnectLoadingStep, setWalletInfo } =
     useBindDidContext();
   const walletsConfig = [
     {
@@ -20,7 +20,6 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       title: 'MetaMask',
       icon: <WalletMetaMaskIcon />,
       handleClick: async () => {
-        setWalletType('eth');
         setWalletInfo({
           name: 'MetaMask',
           type: 'eth',
@@ -38,7 +37,6 @@ export const RenderWallets: React.FC<IProps> = (props) => {
           type: 'starknet',
         });
         await getAccount('starknet');
-        setWalletType('starknet');
       },
     },
   ];
@@ -82,7 +80,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
         <div
           className={ss.walletItem}
           onClick={() => {
-            setStep(BindStepStringEnum.VIEW_ALL);
+            setConnectLoadingStep(BindStepStringEnum.VIEW_ALL);
           }}
           style={styles?.walletItem}
         >

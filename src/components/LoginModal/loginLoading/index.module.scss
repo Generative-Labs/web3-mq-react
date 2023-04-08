@@ -6,14 +6,15 @@
 
 .iconBox {
   width: 100%;
-  height: 42px;
+  //height: 42px;
   margin-top: 20px;
   display: flex;
   justify-content: center;
 }
+
 .title {
   width: 100%;
-  @include themeify{
+  @include themeify {
     margin-top: 16px;
     font-family: 'Inter', sans-serif;
     font-style: normal;
@@ -36,6 +37,7 @@
 
 .buttonBox {
   margin-top: 42px;
+
   button {
     width: 100%;
   }

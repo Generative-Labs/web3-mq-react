@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { AppTypeEnum, SignAuditTypeEnum } from '../../../context';
+import React, { useRef, useState } from 'react';
+import { AppTypeEnum } from '../../../context';
 import type { DappConnect } from '@web3mq/dapp-connect';
 import SignClient from '@walletconnect/sign-client';
 import { Web3Modal } from '@web3modal/standalone';
@@ -7,42 +7,12 @@ import type { WalletType } from '@web3mq/client';
 import type { SessionTypes } from '@walletconnect/types';
 import * as encoding from '@walletconnect/encoding';
 
-export type LoginEventType = 'login' | 'register' | 'error';
-export type LoginEventDataType = {
-  type: LoginEventType;
-  msg: string;
-  data: LoginResType | RegisterResType | null;
-};
-
-export type MainKeysType = {
-  publicKey: string;
-  privateKey: string;
-  walletAddress: string;
-};
-
 export type UserAccountType = {
   userid: string;
   address: string;
   walletType: WalletType;
   userExist: boolean;
 };
-
-export type LoginResType = {
-  privateKey: string;
-  publicKey: string;
-  tempPrivateKey: string;
-  tempPublicKey: string;
-  didKey: string;
-  userid: string;
-  address: string;
-  pubkeyExpiredTimestamp: number;
-};
-export type RegisterResType = {
-  privateKey: string;
-  publicKey: string;
-  address: string;
-};
-
 const projectId = '1c5ee52c12a9145d5b184e06120462cc';
 const relay = 'wss://relay.walletconnect.com';
 
@@ -59,38 +29,8 @@ const useBindDid = (
   dappConnectClient?: DappConnect,
   appType?: AppTypeEnum,
 ) => {
-  const [userAccount, setUserAccount] = useState<UserAccountType | undefined>();
-  const walletAddress = useRef<string>('');
-  const [wcSession, setWcSession] = useState<SessionTypes.Struct>();
+  const wcSession = useRef<SessionTypes.Struct | undefined>();
   const [signRes, setSignRes] = useState('');
-  const getUserAccount = async (
-    didType: WalletType = 'eth',
-    address?: string,
-  ): Promise<{
-    address: string;
-    userExist: boolean;
-  }> => {
-    let didValue = address;
-    if (!didValue) {
-      const { address } = await client.register.getAccount(didType);
-      didValue = address;
-    }
-    const { userid, userExist } = await client.register.getUserInfo({
-      did_value: didValue,
-      did_type: didType,
-    });
-    walletAddress.current = didValue as string;
-    setUserAccount({
-      userid,
-      address: didValue as string,
-      walletType: didType,
-      userExist,
-    });
-    return {
-      address: didValue as string,
-      userExist,
-    };
-  };
   const sendSignByDappConnect = async (signContent: string, address: string) => {
     await dappConnectClient?.sendSign({
       address,
@@ -134,7 +74,7 @@ const useBindDid = (
     // setPairings(curPairing);
     console.log('RESTORED PAIRINGS: ', _client.pairing.getAll({ active: true }));
 
-    if (typeof wcSession !== 'undefined') return;
+    if (typeof wcSession.current !== 'undefined') return;
     // populates (the last) existing session to state
     if (_client.session.length) {
       const lastKeyIndex = _client.session.keys.length - 1;
@@ -188,11 +128,13 @@ const useBindDid = (
   };
 
   const onSessionConnected = (_session: SessionTypes.Struct) => {
+    console.log('onSessionConnected"', _session);
     // const allNamespaceAccounts = Object.values(_session.namespaces)
     //   .map((namespace) => namespace.accounts)
     //   .flat();
     // const allNamespaceChains = Object.keys(_session.namespaces);
-    setWcSession(_session);
+    // setWcSession(_session);
+    wcSession.current = _session;
   };
 
   const sendSignByWalletConnect = async (signContent: string, address: string) => {
@@ -202,7 +144,7 @@ const useBindDid = (
     const params = [hexMsg, address];
     // send message
     const signature = await walletConnectClient.current?.request({
-      topic: wcSession?.topic as string,
+      topic: wcSession.current?.topic as string,
       chainId: 'eip155:1',
       request: {
         method: 'personal_sign',
@@ -225,8 +167,6 @@ const useBindDid = (
     setSignRes(did_signature);
   };
 
-
-
   return {
     sendSignByDappConnect,
     normalSign,
@@ -234,11 +174,8 @@ const useBindDid = (
     connect,
     closeModal,
     sendSignByWalletConnect,
-    getUserAccount,
     onSessionConnected,
-    userAccount,
     web3MqSignCallback,
-    setUserAccount,
     wcSession,
     signRes,
   };

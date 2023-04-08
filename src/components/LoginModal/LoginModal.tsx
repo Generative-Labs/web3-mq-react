@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
 import type SignClient from '@walletconnect/sign-client';
-import { CheveronLeft, CloseBtnIcon } from '../../icons';
+import { CheveronLeft, CloseBtnIcon, ConnectErrorIcon } from '../../icons';
 import {
   AppTypeEnum,
   LoginContextValue,
@@ -9,14 +9,13 @@ import {
   WalletInfoType,
   WalletConnectContextValue,
   WalletConnectProvider,
-  BindStepStringEnum,
 } from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { Login } from './Login';
 import { SignUp } from './SignUp';
 import { Home } from './Home';
-import { ConnectError, ConnectLoading, SignError, SignLoading, RejectError } from './loginLoading';
+import { CommonCenterStatus } from './loginLoading';
 import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
@@ -31,6 +30,7 @@ import { WalletMethodMap } from '@web3mq/dapp-connect';
 import { DappConnectModal } from '@web3mq/dapp-connect-react';
 import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectButton } from '../WalletConnectButton';
+import { Loading } from '../Loading';
 
 type IProps = {
   client?: any;
@@ -199,26 +199,31 @@ export const LoginModal: React.FC<IProps> = (props) => {
     setShowLoading(false);
   };
   const headerTitle = useMemo(() => {
-    switch (step) {
-    case StepStringEnum.HOME:
-    case StepStringEnum.CONNECT_LOADING:
-    case StepStringEnum.CONNECT_ERROR:
+    if (
+      step === StepStringEnum.HOME ||
+      step === StepStringEnum.CONNECT_LOADING ||
+      step === StepStringEnum.CONNECT_ERROR
+    ) {
       return 'Connect Dapp';
-    case StepStringEnum.LOGIN:
-    case StepStringEnum.LOGIN_SIGN_LOADING:
-    case StepStringEnum.LOGIN_SIGN_ERROR:
+    } else if (
+      step === StepStringEnum.LOGIN ||
+      step === StepStringEnum.LOGIN_SIGN_LOADING ||
+      step === StepStringEnum.LOGIN_SIGN_ERROR
+    ) {
       return 'Log in';
-    case StepStringEnum.QR_CODE:
+    } else if (step === StepStringEnum.QR_CODE) {
       return 'Web3MQ';
-    case StepStringEnum.REJECT_CONNECT:
+    } else if (step === StepStringEnum.REJECT_CONNECT) {
       return 'Wallet Connect';
-    case StepStringEnum.SIGN_UP_SIGN_LOADING:
-    case StepStringEnum.SIGN_UP_SIGN_ERROR:
-    case StepStringEnum.SIGN_UP:
+    } else if (
+      step === StepStringEnum.SIGN_UP_SIGN_LOADING ||
+      step === StepStringEnum.SIGN_UP_SIGN_ERROR ||
+      step === StepStringEnum.SIGN_UP
+    ) {
       return 'Sign up';
-    case StepStringEnum.VIEW_ALL:
+    } else if (step === StepStringEnum.VIEW_ALL) {
       return 'Choose Desktop wallets';
-    default:
+    } else {
       return 'Connect Dapp';
     }
   }, [step]);
@@ -328,16 +333,60 @@ export const LoginModal: React.FC<IProps> = (props) => {
               {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
               {step === StepStringEnum.LOGIN && <Login />}
               {step === StepStringEnum.SIGN_UP && <SignUp />}
-              {/*{step === StepStringEnum.QR_CODE && <QrCodeLogin />}*/}
-              {/*loading*/}
-              {step === StepStringEnum.CONNECT_LOADING && <ConnectLoading />}
-              {step === StepStringEnum.CONNECT_ERROR && <ConnectError />}
+              {step === StepStringEnum.CONNECT_LOADING && (
+                <CommonCenterStatus
+                  styles={styles}
+                  icon={<Loading />}
+                  title={'Waiting to connect'}
+                  textContent={'Confirm this connection in your wallet'}
+                />
+              )}
+              {step === StepStringEnum.CONNECT_ERROR && (
+                <CommonCenterStatus
+                  styles={styles}
+                  icon={<ConnectErrorIcon />}
+                  title={'Error connecting'}
+                  textContent={
+                    'The connection attempt failed. Please click try again and follow the steps to connect in your wallet.'
+                  }
+                  showBtn={true}
+                  btnText={'Try Again'}
+                  handleBtnClick={() => {
+                    setStep(StepStringEnum.HOME);
+                  }}
+                />
+              )}
               {[StepStringEnum.LOGIN_SIGN_LOADING, StepStringEnum.SIGN_UP_SIGN_LOADING].includes(
                 step,
-              ) && <SignLoading />}
+              ) && (
+                <CommonCenterStatus
+                  icon={<Loading />}
+                  title={'Waiting for signature'}
+                  textContent={'Confirm the signature in your wallet'}
+                  styles={styles}
+                />
+              )}
               {[StepStringEnum.LOGIN_SIGN_ERROR, StepStringEnum.SIGN_UP_SIGN_ERROR].includes(
                 step,
-              ) && <SignError />}
+              ) && (
+                <CommonCenterStatus
+                  icon={<ConnectErrorIcon />}
+                  title={'signature error'}
+                  textContent={
+                    'The signature attempt failed. Click try again and follow the steps to connect to your wallet.'
+                  }
+                  styles={styles}
+                  btnText={'Try Again'}
+                  showBtn={true}
+                  handleBtnClick={() => {
+                    if (userAccount?.userExist) {
+                      setStep(StepStringEnum.LOGIN);
+                    } else {
+                      setStep(StepStringEnum.SIGN_UP);
+                    }
+                  }}
+                />
+              )}
               {dappConnectClient && (
                 <DappConnectModal
                   client={dappConnectClient as DappConnect}
@@ -345,7 +394,19 @@ export const LoginModal: React.FC<IProps> = (props) => {
                   appType={appType}
                 />
               )}
-              {step === StepStringEnum.REJECT_CONNECT && <RejectError />}
+              {step === StepStringEnum.REJECT_CONNECT && (
+                <CommonCenterStatus
+                  styles={styles}
+                  icon={<ConnectErrorIcon />}
+                  title={'Error Reject'}
+                  textContent={'User rejected methods.'}
+                  showBtn={true}
+                  btnText={'Try Again'}
+                  handleBtnClick={() => {
+                    setStep(StepStringEnum.HOME);
+                  }}
+                />
+              )}
             </div>
           </Modal>
         </div>

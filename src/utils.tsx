@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 import { ethers } from 'ethers';
-import type { WalletType } from '@web3mq/client';
+import type { WalletType, FollowOperationApiParams } from '@web3mq/client';
 
 //@ts-ignore
 // const provider = new ethers.BrowserProvider(window.ethereum);
@@ -488,7 +488,7 @@ export type bindDidV2Params = {
   bind_value: string;
 };
 
-export const bindDidV2 = async (url: string, payload: bindDidV2Params) => {
+export const selfRequest = async (url: string, payload: bindDidV2Params | FollowOperationApiParams) => {
   return await fetch(url, {
     headers: {
       'content-type': 'application/json',
