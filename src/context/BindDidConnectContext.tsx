@@ -43,10 +43,6 @@ export type BindDidContextValue = {
   userAccount: UserAccountType | undefined;
   setUserAccount: Dispatch<SetStateAction<UserAccountType | undefined>>;
   wcSession: SessionTypes.Struct | undefined;
-  create: () => Promise<void>;
-  connect: () => Promise<SessionTypes.Struct>;
-  closeModal: () => void;
-  onSessionConnected: (session: SessionTypes.Struct) => void;
   walletConnectClient: any;
   sendSign: any;
   appType: AppTypeEnum;

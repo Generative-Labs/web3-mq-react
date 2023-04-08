@@ -9,6 +9,7 @@ import {
   WalletInfoType,
   WalletConnectContextValue,
   WalletConnectProvider,
+  BindStepStringEnum,
 } from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
@@ -29,6 +30,7 @@ import type { DappConnect } from '@web3mq/dapp-connect';
 import { WalletMethodMap } from '@web3mq/dapp-connect';
 import { DappConnectModal } from '@web3mq/dapp-connect-react';
 import type { SessionTypes } from '@walletconnect/types';
+import { WalletConnectButton } from '../WalletConnectButton';
 
 type IProps = {
   client?: any;
@@ -44,7 +46,7 @@ type IProps = {
   env?: 'dev' | 'test';
   propWalletConnectClient?: SignClient;
   propWcSession?: SessionTypes.Struct;
-  propDappConnectClient?: DappConnect
+  propDappConnectClient?: DappConnect;
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
@@ -62,9 +64,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
     env = 'test',
     propWcSession,
     propWalletConnectClient,
-    propDappConnectClient
+    propDappConnectClient,
   } = props;
-  const [dappConnectClient, setDappConnectClient] = useState<DappConnect | undefined>(propDappConnectClient);
+  const [dappConnectClient, setDappConnectClient] = useState<DappConnect | undefined>(
+    propDappConnectClient,
+  );
   const walletConnectClient = useRef<SignClient>();
   if (propWalletConnectClient) {
     walletConnectClient.current = propWalletConnectClient;
@@ -273,10 +277,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
     () => ({
       walletConnectClient,
       wcSession,
-      create,
-      connect,
-      closeModal,
-      onSessionConnected,
       loginByWalletConnect,
       registerByWalletConnect,
     }),
@@ -299,7 +299,32 @@ export const LoginModal: React.FC<IProps> = (props) => {
             closeModal={hide}
           >
             <div className={cx(ss.modalBody)} style={styles?.modalBody}>
-              {step === StepStringEnum.HOME && <Home />}
+              {step === StepStringEnum.HOME && (
+                <Home
+                  WalletConnectBtnNode={
+                    <WalletConnectButton
+                      handleClientStep={() => {
+                        setStep(StepStringEnum.CONNECT_LOADING);
+                      }}
+                      handleError={() => {
+                        setStep(StepStringEnum.REJECT_CONNECT);
+                      }}
+                      handleConnectEvent={async (event) => {
+                        setWalletInfo({
+                          name: event.walletName,
+                          type: event.walletType,
+                        });
+                        setWalletType('eth');
+                        await getAccount('eth', event.address);
+                      }}
+                      create={create}
+                      connect={connect}
+                      closeModal={closeModal}
+                      onSessionConnected={onSessionConnected}
+                    />
+                  }
+                />
+              )}
               {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
               {step === StepStringEnum.LOGIN && <Login />}
               {step === StepStringEnum.SIGN_UP && <SignUp />}
