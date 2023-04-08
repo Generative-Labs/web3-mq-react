@@ -31,9 +31,9 @@ const App: React.FC = () => {
   return (
     <div>
       <BindDidModal
-        url={fastestUrl}
+        url={'https://dev-dapp-server.web3mq.com/api/bots/bind_did/'}
         didType={'telegram'}
-        didValue={'5818490985111'}
+        didValue={'5818490985'}
         client={Client}
         appType={appType}
         containerId={''}

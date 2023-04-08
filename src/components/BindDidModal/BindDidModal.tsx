@@ -37,6 +37,7 @@ import { bindDidV2 } from '../../utils';
 import { BindSuccess } from './loginLoading/BindSuccess';
 import { DidBindError } from './loginLoading/DidBindError';
 import { DidBindLoading } from './loginLoading/DidBindLoading';
+import { WalletConnectButton } from '../WalletConnectButton';
 
 type IProps = {
   client?: any;
@@ -259,10 +260,6 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
     () => ({
       walletConnectClient,
       wcSession,
-      create,
-      connect,
-      closeModal,
-      onSessionConnected,
       client,
       showLoading,
       step,
@@ -285,7 +282,7 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       containerId,
       appType,
       setUserAccount,
-      clearModal: handleClose
+      clearModal: handleClose,
     }),
     [wcSession, step, showLoading, walletType, qrCodeUrl, JSON.stringify(userAccount), env],
   );
@@ -305,7 +302,32 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
           closeModal={hide}
         >
           <div className={cx(ss.modalBody)} style={styles?.modalBody}>
-            {step === BindStepStringEnum.HOME && <Home />}
+            {step === BindStepStringEnum.HOME && (
+              <Home
+                WalletConnectBtnNode={
+                  <WalletConnectButton
+                    handleClientStep={() => {
+                      setStep(BindStepStringEnum.CONNECT_LOADING);
+                    }}
+                    handleError={() => {
+                      setStep(BindStepStringEnum.REJECT_CONNECT);
+                    }}
+                    handleConnectEvent={async (event) => {
+                      setWalletInfo({
+                        name: event.walletName,
+                        type: event.walletType,
+                      });
+                      setWalletType('eth');
+                      await getAccount('eth', event.address);
+                    }}
+                    create={create}
+                    connect={connect}
+                    closeModal={closeModal}
+                    onSessionConnected={onSessionConnected}
+                  />
+                }
+              />
+            )}
             {step === BindStepStringEnum.READY_BIND && <ReadyBind />}
             {step === BindStepStringEnum.READY_SIGN_UP && <ReadySignUp />}
             {step === BindStepStringEnum.VIEW_ALL && <RenderWallets />}
