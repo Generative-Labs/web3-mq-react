@@ -24,8 +24,8 @@ import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
-import type { WalletType } from '@web3mq/client';
-import { Client } from '@web3mq/client';
+import type { FollowOperationApiParams, WalletType } from '@web3mq/client';
+import { Client, getUserPublicProfileRequest } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
 import { DappConnect, WalletMethodMap } from '@web3mq/dapp-connect';
@@ -44,13 +44,38 @@ type IProps = {
   containerId: string;
   isShow?: boolean;
   appType?: AppTypeEnum;
-  didType: string;
-  didValue: string;
   loginBtnNode?: React.ReactNode;
   styles?: Record<string, any>;
   modalClassName?: string;
-  handleBindDidEvent: (eventData: any) => void;
   env?: 'dev' | 'test';
+  handleOperationEvent: (eventData: any) => void;
+  operationType: string;
+  operationValue: string;
+  operationMode?: 'bind_did' | 'follow_user';
+};
+
+export type didItemType = {
+  did_type: string;
+  did_value: string;
+  provider_id: string;
+  bind_type: string;
+  bind_value: string;
+  bind_name?: string;
+};
+
+export type userPublicProfileType = {
+  avatar_url: string;
+  bind_did_list: didItemType[];
+  is_my_following: boolean;
+  nickname: string;
+  stats: {
+    total_followers: number;
+    total_following: number;
+  };
+  timestamp: number;
+  userid: string;
+  wallet_address: string;
+  wallet_type: string;
 };
 
 export const BindDidModal: React.FC<IProps> = (props) => {
@@ -64,10 +89,11 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     loginBtnNode = null,
     styles = null,
     modalClassName = '',
-    handleBindDidEvent,
+    handleOperationEvent,
     env = 'test',
-    didValue,
-    didType,
+    operationValue,
+    operationType,
+    operationMode = 'bind_did',
     url,
   } = props;
   const {
@@ -81,6 +107,7 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     sendSignByDappConnect,
     sendSignByWalletConnect,
     signRes,
+    didPubKey,
   } = useBindDid(client, walletConnectClient, dappConnectClient, appType);
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(BindStepStringEnum.HOME);
@@ -89,6 +116,7 @@ export const BindDidModal: React.FC<IProps> = (props) => {
   const [signTime, setSignTime] = useState<number>();
   const [signContent, setSignContent] = useState<string>();
   const userAccount = useRef<UserAccountType | undefined>();
+  const targetUserAccount = useRef<userPublicProfileType | undefined>();
   const [commonCenterStatusData, setCommonCenterStatusData] = useState<
     CommonCenterStatusIProp | undefined
   >();
@@ -118,6 +146,14 @@ export const BindDidModal: React.FC<IProps> = (props) => {
         },
       });
     } else if (currentStep === BindStepStringEnum.READY_BIND) {
+      let btnText = 'Bind wallet';
+      if (operationMode === 'follow_user') {
+        if (targetUserAccount.current?.is_my_following) {
+          btnText = ' - Unfollow';
+        } else {
+          btnText = '+ Follow';
+        }
+      }
       setCommonCenterStatusData({
         styles,
         icon: <ConnectSuccessIcon />,
@@ -133,7 +169,7 @@ export const BindDidModal: React.FC<IProps> = (props) => {
             type="primary"
             onClick={handleBindDid}
           >
-            Bind wallet
+            {btnText}
           </Button>
         ),
       });
@@ -146,18 +182,38 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     } else if (currentStep === BindStepStringEnum.QR_CODE) {
       setCommonCenterStatusData(undefined);
     } else if (currentStep === BindStepStringEnum.DID_BINDING) {
+      let title = 'Waiting for binding';
+      let textContent = 'Waiting for telegram to bind wallet';
+      if (operationMode === 'follow_user') {
+        title = 'Waiting for following';
+        textContent = 'Waiting for follow user';
+        if (targetUserAccount.current?.is_my_following) {
+          title = 'Waiting for unfollowing';
+          textContent = 'Waiting for unfollow user';
+        }
+      }
       setCommonCenterStatusData({
         styles,
         icon: <Loading />,
-        title: 'Waiting for binding',
-        textContent: 'Waiting for telegram to bind wallet',
+        title,
+        textContent,
       });
     } else if (currentStep === BindStepStringEnum.DID_BIND_ERROR) {
+      let title = 'Bind failure';
+      let textContent = 'Wallet bind failed, please click back to re-sign';
+      if (operationMode === 'follow_user') {
+        title = 'Follow failure';
+        textContent = 'Follow user failed, please click back to re-sign';
+        if (targetUserAccount.current?.is_my_following) {
+          title = 'Unfollow failure';
+          textContent = 'Unfollow user failed, please click back to re-sign';
+        }
+      }
       setCommonCenterStatusData({
         styles,
         icon: <ConnectErrorIcon />,
-        title: 'Bind failure',
-        textContent: 'Wallet bind failed, please click back to re-sign',
+        title,
+        textContent,
         showBtn: true,
         btnText: 'Try Again',
         handleBtnClick: () => {
@@ -189,11 +245,21 @@ export const BindDidModal: React.FC<IProps> = (props) => {
         },
       });
     } else if (currentStep === BindStepStringEnum.DID_BIND_SUCCESS) {
+      let title = 'Bind successfully';
+      let textContent = 'The wallet has been successfully bound to Web3MQ Bot';
+      if (operationMode === 'follow_user') {
+        title = 'Follow successfully';
+        textContent = `Follow ${getShortAddress(operationValue, 6, 4)} Success`;
+        if (targetUserAccount.current?.is_my_following) {
+          title = 'Unfollow successfully';
+          textContent = `Unfollow ${getShortAddress(operationValue, 6, 4)} Success`;
+        }
+      }
       setCommonCenterStatusData({
         styles,
         icon: <ConnectSuccessIcon />,
-        title: 'Bind successfully',
-        textContent: 'The wallet has been successfully bound to Web3MQ Bot',
+        title,
+        textContent,
         showBtn: true,
         btnText: 'OK',
         handleBtnClick: handleClose,
@@ -226,13 +292,23 @@ export const BindDidModal: React.FC<IProps> = (props) => {
         did_value: address,
         did_type: didType,
       });
-      // const { address, userExist } = await getUserAccount(didType, didValue);
       userAccount.current = {
         userid,
         address: address as string,
         walletType: didType || 'eth',
         userExist,
       };
+      if (operationMode === 'follow_user') {
+        const userPublicProfileRes = await getUserPublicProfileRequest({
+          did_type: operationType,
+          did_value: operationValue,
+          my_userid: userid,
+          timestamp: Date.now(),
+        });
+        if (userPublicProfileRes && userPublicProfileRes.data) {
+          targetUserAccount.current = userPublicProfileRes.data;
+        }
+      }
       if (address) {
         if (userExist) {
           setConnectLoadingStep(BindStepStringEnum.READY_BIND);
@@ -265,19 +341,9 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     show();
     setConnectLoadingStep(BindStepStringEnum.HOME);
     setCommonCenterStatusData(undefined);
-    // if (userAccount) {
-    //   if (userAccount.current?.userExist) {
-    //     setConnectLoadingStep(BindStepStringEnum.READY_BIND);
-    //   } else {
-    //     setStep(BindStepStringEnum.READY_SIGN_UP);
-    //   }
-    // } else {
-    //   setStep(BindStepStringEnum.HOME);
-    // }
   };
   const handleClose = () => {
     hide();
-    // setUserAccount(undefined);
     userAccount.current = undefined;
     setConnectLoadingStep(BindStepStringEnum.HOME);
     setCommonCenterStatusData(undefined);
@@ -287,40 +353,67 @@ export const BindDidModal: React.FC<IProps> = (props) => {
   useEffect(() => {
     if (signRes && userAccount.current && signTime && signContent) {
       setConnectLoadingStep(BindStepStringEnum.DID_BINDING);
-      const params: bindDidV2Params = {
-        userid: userAccount.current.userid,
-        did_signature: signRes,
-        did_type: userAccount.current.walletType,
-        did_value: userAccount.current.address,
-        timestamp: signTime,
-        sign_content: signContent,
-        bind_type: didType,
-        bind_action: 'bind',
-        bind_value: didValue,
-      };
-      selfRequest(url, params)
-        .then((res) => {
-          console.log(res, 'res');
-          if (res) {
-            setConnectLoadingStep(BindStepStringEnum.DID_BIND_SUCCESS);
-            res.address = userAccount.current?.address || '';
-            handleBindDidEvent(res);
-          } else {
+      const { userid, address, walletType } = userAccount.current;
+      if (operationMode === 'follow_user' && targetUserAccount.current) {
+        const params: FollowOperationApiParams = {
+          did_pubkey: didPubKey,
+          did_signature: signRes,
+          sign_content: signContent,
+          userid,
+          timestamp: signTime,
+          address,
+          action: targetUserAccount.current.is_my_following ? 'cancel' : 'follow',
+          did_type: walletType,
+          target_userid: targetUserAccount.current.userid,
+        };
+        selfRequest(url, params)
+          .then((res) => {
+            console.log(res, 'FollowOperationApiParams - res');
+            if (res) {
+              setConnectLoadingStep(BindStepStringEnum.DID_BIND_SUCCESS);
+              res.address = userAccount.current?.address || '';
+              handleOperationEvent(res);
+            } else {
+              setConnectLoadingStep(BindStepStringEnum.DID_BIND_ERROR);
+            }
+          })
+          .catch((e) => {
+            console.log(e, 'e');
             setConnectLoadingStep(BindStepStringEnum.DID_BIND_ERROR);
-          }
-        })
-        .catch((e) => {
-          console.log(e, 'e');
-          setConnectLoadingStep(BindStepStringEnum.DID_BIND_ERROR);
-        });
-      console.log('sign success ready bind did');
-      handleBindDidEvent(signRes);
+          });
+      } else {
+        const bindParams: bindDidV2Params = {
+          userid,
+          did_signature: signRes,
+          did_type: walletType,
+          did_value: address,
+          timestamp: signTime,
+          sign_content: signContent,
+          bind_type: operationType,
+          bind_action: 'bind',
+          bind_value: operationValue,
+        };
+        selfRequest(url, bindParams)
+          .then((res) => {
+            console.log(res, 'res');
+            if (res) {
+              setConnectLoadingStep(BindStepStringEnum.DID_BIND_SUCCESS);
+              res.address = userAccount.current?.address || '';
+              handleOperationEvent(res);
+            } else {
+              setConnectLoadingStep(BindStepStringEnum.DID_BIND_ERROR);
+            }
+          })
+          .catch((e) => {
+            console.log(e, 'e');
+            setConnectLoadingStep(BindStepStringEnum.DID_BIND_ERROR);
+          });
+      }
     }
   }, [signRes]);
 
   const handleBack = () => {
     setConnectLoadingStep(BindStepStringEnum.HOME);
-    // setUserAccount(undefined);
     userAccount.current = undefined;
     setDappConnectClient(undefined);
     setShowLoading(false);
@@ -340,10 +433,14 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     } else if (step === BindStepStringEnum.VIEW_ALL) {
       return 'Choose Desktop wallets';
     } else if (step === BindStepStringEnum.READY_BIND || step === BindStepStringEnum.SIGN_LOADING) {
-      if (didType === 'telegram') {
-        return 'Bind Telegram Bot';
+      if (operationMode === 'follow_user') {
+        return 'Follow User';
+      } else {
+        if (operationType === 'telegram') {
+          return 'Bind Telegram Bot';
+        }
+        return 'Bind Did';
       }
-      return 'Bind Did';
     } else {
       return 'Connect Dapp';
     }
@@ -362,17 +459,14 @@ export const BindDidModal: React.FC<IProps> = (props) => {
   };
 
   const sendSign = async (url = window.location.href) => {
-    console.log('send sign');
-    console.log(userAccount.current, 'userAccount.current');
     if (!userAccount.current) return;
     const { address, walletType, userid } = userAccount.current;
     let wallet_type_name = walletType === 'starknet' ? 'Argent' : 'Ethereum'; // or StarkNet another wallet
     const timestamp = Date.now();
-    // userid = `user:${sha3_224(did_type + did_value + timestamp)}`;
-    const NonceContent = sha3_224(
-      userid + address + walletType + 'bind' + didType + didValue + timestamp,
+    let NonceContent = sha3_224(
+      userid + address + walletType + 'bind' + operationType + operationValue + timestamp,
     );
-    const content = `Web3MQ wants you to sign in with your ${wallet_type_name} account:
+    let content = `Web3MQ wants you to sign in with your ${wallet_type_name} account:
 ${address}
 For Web3MQ bind did
 URI: ${url}
@@ -380,6 +474,18 @@ Version: 1
 
 Nonce: ${NonceContent}
 Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
+
+    if (operationMode === 'follow_user') {
+      let nonce = sha3_224(userid + operationType + operationValue + timestamp);
+      content = `
+    Web3MQ wants you to sign in with your ${wallet_type_name} account:
+    ${address}
+    For follow signature
+    URI: ${url}
+    
+    Nonce: ${nonce}
+    Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
+    }
     setSignContent(content);
     setSignTime(timestamp);
     if (dappConnectClient) {
@@ -401,12 +507,6 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
           walletType: 'eth',
           userExist: true,
         };
-        // setUserAccount({
-        //   userid,
-        //   address,
-        //   walletType: 'eth',
-        //   userExist: true,
-        // });
         setConnectLoadingStep(BindStepStringEnum.READY_BIND);
       }
       if (eventData.type === 'register') {
@@ -417,12 +517,6 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
           walletType: 'eth',
           userExist: true,
         };
-        // setUserAccount({
-        //   userid: userAccount?.userid || '',
-        //   address,
-        //   walletType: 'eth',
-        //   userExist: true,
-        // });
       }
     }
   };
@@ -450,7 +544,7 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       await sendSign();
       setShowLoading(false);
     } catch (e: any) {
-      handleBindDidEvent({
+      handleOperationEvent({
         msg: e.message,
         data: null,
         type: 'error',
@@ -497,7 +591,11 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
     <BindDidProvider value={bindDidContextValue}>
       <div className={cx(ss.container)}>
         <div onClick={handleModalShow}>
-          {loginBtnNode || <Button className={ss.iconBtn}>Bind Did</Button>}
+          {loginBtnNode || (
+            <Button className={ss.iconBtn}>
+              {operationMode === 'follow_user' ? 'Follow User' : 'Bind Did'}
+            </Button>
+          )}
         </div>
         <Modal
           dialogClassName={cx(modalClassName)}
@@ -567,123 +665,6 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
                 }
               />
             )}
-            {/*{step === BindStepStringEnum.READY_BIND && userAccount && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<ConnectSuccessIcon />}*/}
-            {/*    title={''}*/}
-            {/*    addressBox={<RenderWalletAddressBox />}*/}
-            {/*    textContent={'Wallet connection successful'}*/}
-            {/*    showBtn={true}*/}
-            {/*    customBtn={*/}
-            {/*      <Button*/}
-            {/*        style={styles?.loginButton}*/}
-            {/*        className={ss.button}*/}
-            {/*        disabled={showLoading}*/}
-            {/*        type="primary"*/}
-            {/*        onClick={handleBindDid}*/}
-            {/*      >*/}
-            {/*        Bind wallet*/}
-            {/*      </Button>*/}
-            {/*    }*/}
-            {/*  />*/}
-            {/*)}*/}
-            {/*{step === BindStepStringEnum.CONNECT_LOADING && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<Loading />}*/}
-            {/*    title={'Waiting to connect'}*/}
-            {/*    textContent={'Confirm this connection in your wallet'}*/}
-            {/*  />*/}
-            {/*)}*/}
-            {/*{step === BindStepStringEnum.CONNECT_ERROR && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<ConnectErrorIcon />}*/}
-            {/*    title={'Error connecting'}*/}
-            {/*    textContent={*/}
-            {/*      'The connection attempt failed. Please click try again and follow the steps to connect in your wallet.'*/}
-            {/*    }*/}
-            {/*    showBtn={true}*/}
-            {/*    btnText={'Try Again'}*/}
-            {/*    handleBtnClick={() => {*/}
-            {/*      setStep(BindStepStringEnum.HOME);*/}
-            {/*      setCommonCenterStatusData(undefined);*/}
-            {/*    }}*/}
-            {/*  />*/}
-            {/*)}*/}
-            {/*{step === BindStepStringEnum.SIGN_LOADING && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<Loading />}*/}
-            {/*    title={'Waiting for signature'}*/}
-            {/*    textContent={'Confirm the signature in your wallet'}*/}
-            {/*  />*/}
-            {/*)}*/}
-            {/*{step === BindStepStringEnum.SIGN_ERROR && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<ConnectErrorIcon />}*/}
-            {/*    title={'signature error'}*/}
-            {/*    textContent={*/}
-            {/*      'The signature attempt failed. Click try again and follow the steps to connect to your wallet.'*/}
-            {/*    }*/}
-            {/*    showBtn={true}*/}
-            {/*    btnText={'Try Again'}*/}
-            {/*    handleBtnClick={() => {*/}
-            {/*      if (userAccount.current?.userExist) {*/}
-            {/*        setConnectLoadingStep(BindStepStringEnum.READY_BIND);*/}
-            {/*      } else {*/}
-            {/*        setStep(BindStepStringEnum.READY_SIGN_UP);*/}
-            {/*      }*/}
-            {/*    }}*/}
-            {/*  />*/}
-            {/*)}*/}
-            {/*{step === BindStepStringEnum.REJECT_CONNECT && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<ConnectErrorIcon />}*/}
-            {/*    title={'Error Reject'}*/}
-            {/*    textContent={'User rejected methods.'}*/}
-            {/*    showBtn={true}*/}
-            {/*    btnText={'Try Again'}*/}
-            {/*    handleBtnClick={() => {*/}
-            {/*      setStep(BindStepStringEnum.HOME);*/}
-            {/*    }}*/}
-            {/*  />*/}
-            {/*)}*/}
-            {/*{step === BindStepStringEnum.DID_BIND_SUCCESS && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<ConnectSuccessIcon />}*/}
-            {/*    title={'Bind successfully'}*/}
-            {/*    textContent={'The wallet has been successfully bound to Web3MQ Bot'}*/}
-            {/*    showBtn={true}*/}
-            {/*    btnText={'OK'}*/}
-            {/*    handleBtnClick={handleClose}*/}
-            {/*  />*/}
-            {/*)}*/}
-            {/*{step === BindStepStringEnum.DID_BIND_ERROR && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<ConnectErrorIcon />}*/}
-            {/*    title={'Bind failure'}*/}
-            {/*    textContent={'Wallet bind failed, please click back to re-sign'}*/}
-            {/*    showBtn={true}*/}
-            {/*    btnText={'Try Again'}*/}
-            {/*    handleBtnClick={() => {*/}
-            {/*      setStep(BindStepStringEnum.HOME);*/}
-            {/*    }}*/}
-            {/*  />*/}
-            {/*)}*/}
-            {/*{step === BindStepStringEnum.DID_BINDING && (*/}
-            {/*  <CommonCenterStatus*/}
-            {/*    styles={styles}*/}
-            {/*    icon={<Loading />}*/}
-            {/*    title={'Waiting for binding'}*/}
-            {/*    textContent={'Waiting for telegram to bind wallet'}*/}
-            {/*  />*/}
-            {/*)}*/}
           </div>
         </Modal>
       </div>
