@@ -146,32 +146,64 @@ export const BindDidModal: React.FC<IProps> = (props) => {
         },
       });
     } else if (currentStep === BindStepStringEnum.READY_BIND) {
-      let btnText = 'Bind wallet';
+      let title = '';
+      let textContent = 'Wallet connection successful';
+      let icon = <ConnectSuccessIcon />;
+      let addressBox = <RenderWalletAddressBox />;
+      let Btn = (
+        <Button
+          style={styles?.loginButton}
+          className={ss.button}
+          disabled={showLoading}
+          type="primary"
+          onClick={handleBindDid}
+        >
+          Bind wallet
+        </Button>
+      );
       if (operationMode === 'follow_user') {
         if (targetUserAccount.current?.is_my_following) {
-          btnText = ' - Unfollow';
+          addressBox = <></>;
+          title = 'Following User';
+          textContent = 'Already following user, whether to unfollow';
+          Btn = (
+            <Button
+              style={{
+                background: '#fff',
+                color: '#EF4343',
+                border: '1px solid #FEE1E1',
+                borderRadius: '6px',
+              }}
+              className={ss.button}
+              disabled={showLoading}
+              type="primary"
+              onClick={handleBindDid}
+            >
+              - Unfollow
+            </Button>
+          );
         } else {
-          btnText = '+ Follow';
+          Btn = (
+            <Button
+              style={styles?.loginButton}
+              className={ss.button}
+              disabled={showLoading}
+              type="primary"
+              onClick={handleBindDid}
+            >
+              + Follow
+            </Button>
+          );
         }
       }
       setCommonCenterStatusData({
         styles,
-        icon: <ConnectSuccessIcon />,
-        title: '',
-        textContent: 'Wallet connection successful',
-        addressBox: <RenderWalletAddressBox />,
+        icon,
+        title,
+        textContent,
+        addressBox,
         showBtn: true,
-        customBtn: (
-          <Button
-            style={styles?.loginButton}
-            className={ss.button}
-            disabled={showLoading}
-            type="primary"
-            onClick={handleBindDid}
-          >
-            {btnText}
-          </Button>
-        ),
+        customBtn: Btn,
       });
     } else if (currentStep === BindStepStringEnum.READY_SIGN_UP) {
       setCommonCenterStatusData(undefined);
@@ -593,7 +625,7 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
         <div onClick={handleModalShow}>
           {loginBtnNode || (
             <Button className={ss.iconBtn}>
-              {operationMode === 'follow_user' ? 'Follow User' : 'Bind Did'}
+              {operationMode === 'follow_user' ? 'Follow Modal' : 'Bind Did'}
             </Button>
           )}
         </div>
