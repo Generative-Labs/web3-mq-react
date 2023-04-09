@@ -31,6 +31,7 @@ const useBindDid = (
 ) => {
   const wcSession = useRef<SessionTypes.Struct | undefined>();
   const [signRes, setSignRes] = useState('');
+  const [didPubKey, setDidPubKey] = useState('');
   const sendSignByDappConnect = async (signContent: string, address: string) => {
     await dappConnectClient?.sendSign({
       address,
@@ -69,13 +70,10 @@ const useBindDid = (
     if (typeof _client === 'undefined') {
       throw new Error('WalletConnect is not initialized');
     }
-    // populates existing pairings to state
     const curPairing = _client.pairing.getAll({ active: true });
-    // setPairings(curPairing);
     console.log('RESTORED PAIRINGS: ', _client.pairing.getAll({ active: true }));
 
     if (typeof wcSession.current !== 'undefined') return;
-    // populates (the last) existing session to state
     if (_client.session.length) {
       const lastKeyIndex = _client.session.keys.length - 1;
       const _session = _client.session.get(_client.session.keys[lastKeyIndex]);
@@ -97,7 +95,6 @@ const useBindDid = (
       },
     });
     await _subscribeToEvents(walletConnectClient.current);
-    // await _checkPersistedState(walletConnectClient.current);
   };
 
   const connect = async () => {
@@ -152,6 +149,7 @@ const useBindDid = (
       },
     });
     setSignRes(signature as string);
+
   };
 
   const web3MqSignCallback = async (signature: string) => {
@@ -165,6 +163,7 @@ const useBindDid = (
       walletType,
     );
     setSignRes(did_signature);
+    setDidPubKey(did_pubkey);
   };
 
   return {
@@ -178,6 +177,7 @@ const useBindDid = (
     web3MqSignCallback,
     wcSession,
     signRes,
+    didPubKey
   };
 };
 

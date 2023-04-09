@@ -1,10 +1,6 @@
 import React, { Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react';
-import type { SessionTypes } from '@walletconnect/types';
 import type { WalletType } from '@web3mq/client';
-import type { DappConnect } from '@web3mq/dapp-connect';
 import type { WalletInfoType } from './LoginContext';
-import type { AppTypeEnum } from './ChatContext';
-import type { UserAccountType } from '../components/LoginModal/hooks/useLogin';
 
 export enum BindStepStringEnum {
   HOME = 'home',
@@ -15,11 +11,14 @@ export enum BindStepStringEnum {
   SIGN_LOADING = 'sign_loading',
   SIGN_ERROR = 'sign_error',
   REJECT_CONNECT = 'reject_connect',
-  READY_BIND = 'ready_bind',
   READY_SIGN_UP = 'ready_sign_up',
+
+
+  READY_BIND = 'ready_bind',
   DID_BINDING = 'did_binding',
   DID_BIND_SUCCESS = 'did_bind_success',
   DID_BIND_ERROR = 'did_bind_error',
+
 }
 
 export type BindDidContextValue = {
