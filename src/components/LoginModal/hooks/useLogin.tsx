@@ -205,7 +205,7 @@ const useLogin = (
       address,
       signContent,
       password: '',
-      needJump: appType !== AppTypeEnum.pc
+      needJump: appType !== AppTypeEnum.pc,
     });
     // await client.dappConnectClient.sendSign({
     //   signContent,
@@ -360,7 +360,7 @@ const useLogin = (
       setMainKeys({
         publicKey,
         privateKey: secretKey,
-        walletAddress: walletAddress.current,
+        walletAddress: walletAddress.current || userAccount?.address || '',
       });
     }
   };

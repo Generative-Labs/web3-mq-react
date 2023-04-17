@@ -1,0 +1,46 @@
+@import "../../../style/index.scss";
+
+.wallets {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+
+  .walletItem {
+    margin: 0 8px;
+    @include themeify {
+
+      width: 80px;
+      min-height: 90px;
+      border-radius: 8px;
+      background: themed(White_color);
+
+      &:hover {
+        cursor: pointer;
+        background: themed(Gray_100);
+      }
+
+      .walletIcon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 6px 16px 0;
+        height: 48px;
+        margin: 0 auto;
+      }
+
+      .walletName {
+        font-family: 'Inter', sans-serif;
+        padding: 0 10px;
+        margin-top: 6px;
+        text-align: center;
+        font-style: normal;
+        font-weight: themed(Medium_font-weight);
+        font-size: themed(Caption1_font-size);
+        line-height: themed(Headline_font-size);
+      }
+
+    }
+  }
+}
+

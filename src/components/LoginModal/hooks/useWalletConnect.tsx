@@ -7,13 +7,14 @@ import * as encoding from '@walletconnect/encoding';
 import type { LoginEventDataType, MainKeysType, UserAccountType } from './useLogin';
 
 type IProps = {
-  confirmPassword: React.MutableRefObject<string>,
-  client: any,
-  walletConnectClient: React.MutableRefObject<SignClient | undefined>,
-  mainKeys: MainKeysType | undefined,
-  userAccount: UserAccountType | undefined,
-  handleLoginEvent: (eventData: LoginEventDataType) => void
-}
+  confirmPassword: React.MutableRefObject<string>;
+  client: any;
+  walletConnectClient: React.MutableRefObject<SignClient | undefined>;
+  mainKeys: MainKeysType | undefined;
+  userAccount: UserAccountType | undefined;
+  handleLoginEvent: (eventData: LoginEventDataType) => void;
+  propWcSession?: SessionTypes.Struct;
+};
 
 const projectId = '1c5ee52c12a9145d5b184e06120462cc';
 const relay = 'wss://relay.walletconnect.com';
@@ -28,13 +29,14 @@ const web3Modal = new Web3Modal({
 const useWalletConnect = (props: IProps) => {
   const {
     confirmPassword,
-    client, 
-    walletConnectClient, 
+    client,
+    walletConnectClient,
     mainKeys,
     userAccount,
-    handleLoginEvent
+    handleLoginEvent,
+    propWcSession,
   } = props;
-  const [wcSession, setWcSession] = useState<SessionTypes.Struct>();
+  const [wcSession, setWcSession] = useState<SessionTypes.Struct | undefined>(propWcSession);
   const _subscribeToEvents = async (_client: SignClient) => {
     if (typeof _client === 'undefined') {
       throw new Error('WalletConnect is not initialized');
@@ -68,24 +70,20 @@ const useWalletConnect = (props: IProps) => {
     // populates existing pairings to state
     const curPairing = _client.pairing.getAll({ active: true });
     // setPairings(curPairing);
-    console.log(
-      'RESTORED PAIRINGS: ',
-      _client.pairing.getAll({ active: true })
-    );
+    console.log('RESTORED PAIRINGS: ', _client.pairing.getAll({ active: true }));
 
     if (typeof wcSession !== 'undefined') return;
     // populates (the last) existing session to state
     if (_client.session.length) {
       const lastKeyIndex = _client.session.keys.length - 1;
-      const _session = _client.session.get(
-        _client.session.keys[lastKeyIndex]
-      );
+      const _session = _client.session.get(_client.session.keys[lastKeyIndex]);
       console.log('RESTORED SESSION:', _session);
       onSessionConnected(_session);
     }
   };
 
   const create = async () => {
+    if (walletConnectClient.current) return;
     walletConnectClient.current = await SignClient.init({
       projectId,
       // optional parameters
@@ -108,13 +106,11 @@ const useWalletConnect = (props: IProps) => {
     const { uri, approval } = await walletConnectClient.current.connect({
       requiredNamespaces: {
         eip155: {
-          methods: [
-            'personal_sign',
-          ],
+          methods: ['personal_sign'],
           chains: ['eip155:1'],
           events: ['chainChanged', 'accountsChanged'],
         },
-      }
+      },
     });
 
     // Open QRCode modal if a URI was returned (i.e. we're not connecting an existing pairing).
@@ -138,10 +134,7 @@ const useWalletConnect = (props: IProps) => {
     setWcSession(_session);
   };
 
-  const sendSignByWalletConnect = async (
-    signContent: string,
-    address: string,
-  ) => {
+  const sendSignByWalletConnect = async (signContent: string, address: string) => {
     // encode message (hex)
     const hexMsg = encoding.utf8ToHex(signContent, true);
     // personal_sign params
@@ -156,18 +149,22 @@ const useWalletConnect = (props: IProps) => {
       },
     });
     return {
-      signature
+      signature,
     };
   };
 
-  const getMainKeypairByWalletConnect = async (options: {password: string, did_value: string, did_type: string}) => {
+  const getMainKeypairByWalletConnect = async (options: {
+    password: string;
+    did_value: string;
+    did_type: string;
+  }) => {
     const { password, did_value, did_type } = options;
     const { signContent } = await client.register.getMainKeypairSignContent({
       password: password,
       did_value,
       did_type,
     });
-    const { signature } =  await sendSignByWalletConnect(signContent, did_value.toLowerCase());
+    const { signature } = await sendSignByWalletConnect(signContent, did_value.toLowerCase());
     const { publicKey, secretKey } = await client.register.getMainKeypairBySignature(
       signature,
       confirmPassword.current,
@@ -175,7 +172,12 @@ const useWalletConnect = (props: IProps) => {
     return { publicKey, secretKey };
   };
 
-  const getRegisterSignContentByWalletConnect = async (options: { userid: string, mainPublicKey: string, didType: string, didValue: string }) => {
+  const getRegisterSignContentByWalletConnect = async (options: {
+    userid: string;
+    mainPublicKey: string;
+    didType: string;
+    didValue: string;
+  }) => {
     const { userid, mainPublicKey, didValue, didType } = options;
     const { signContent } = await client.register.getRegisterSignContent({
       userid,
@@ -183,7 +185,7 @@ const useWalletConnect = (props: IProps) => {
       didType,
       didValue,
     });
-    const { signature } =  await sendSignByWalletConnect(signContent, didValue.toLowerCase());
+    const { signature } = await sendSignByWalletConnect(signContent, didValue.toLowerCase());
     return {
       signature,
     };

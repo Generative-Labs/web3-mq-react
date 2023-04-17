@@ -3,10 +3,6 @@ import type { SessionTypes } from '@walletconnect/types';
 
 export type WalletConnectContextValue = {
   wcSession: SessionTypes.Struct | undefined,
-  create: () => Promise<void>,
-  connect: () => Promise<SessionTypes.Struct>,
-  closeModal: () => void,
-  onSessionConnected: (session: SessionTypes.Struct) => void,
   registerByWalletConnect: (nickname?: string) => Promise<void>,
   loginByWalletConnect: () => Promise<void>,
   walletConnectClient: any,
