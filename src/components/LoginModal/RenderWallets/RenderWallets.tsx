@@ -1,30 +1,26 @@
 import React from 'react';
 
-import { StepStringEnum, useLoginContext } from '../../../context';
 import { ArgentWalletIcon, ViewAllIcon, WalletMetaMaskIcon } from '../../../icons';
 import { Loading } from '../../Loading';
-
 import ss from './index.module.scss';
 
 type IProps = {
   showCount?: number;
+  styles: Record<string, any> | null;
+  showLoading: boolean;
+  handleWalletClick: (walletName: string, walletType: string) => Promise<void>;
+  handleViewAll: () => void;
 };
 
 export const RenderWallets: React.FC<IProps> = (props) => {
-  const { showCount = 0 } = props;
-  const { styles, showLoading, setWalletType, getAccount, setStep, setWalletInfo } = useLoginContext();
+  const { showCount = 0, styles, showLoading, handleWalletClick, handleViewAll } = props;
   const walletsConfig = [
     {
       type: 'eth',
       title: 'MetaMask',
       icon: <WalletMetaMaskIcon />,
       handleClick: async () => {
-        setWalletType('eth');
-        setWalletInfo({
-          name: 'MetaMask',
-          type: 'eth'
-        });
-        await getAccount('eth');
+        await handleWalletClick('MetaMask', 'eth');
       },
     },
     {
@@ -32,12 +28,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       title: 'Argent X',
       icon: <ArgentWalletIcon />,
       handleClick: async () => {
-        setWalletInfo({
-          name: 'Argent X',
-          type: 'starknet'
-        });
-        await getAccount('starknet');
-        setWalletType('starknet');
+        await handleWalletClick('Argent X', 'starknet');
       },
     },
   ];
@@ -78,13 +69,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
         }
       })}
       {walletsConfig.length > showCount + 1 && showCount !== 0 && (
-        <div
-          className={ss.walletItem}
-          onClick={() => {
-            setStep(StepStringEnum.VIEW_ALL);
-          }}
-          style={styles?.walletItem}
-        >
+        <div className={ss.walletItem} onClick={handleViewAll} style={styles?.walletItem}>
           <div className={ss.walletIcon}>
             <ViewAllIcon />
           </div>

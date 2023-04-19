@@ -1,96 +1,38 @@
 import React, { useMemo, useState } from 'react';
 
 import {
-  ArgentXIcon,
   CloseEyesIcon,
   LoginErrorIcon,
-  MetaMaskIcon,
   OpenEyesIcon,
-  Web3MqWalletIcon,
-  WalletConnectIcon,
 } from '../../../icons';
-import { StepStringEnum, useLoginContext, useWalletConnectContext } from '../../../context';
-import { getShortAddress } from '../../../utils';
 import { Button } from '../../Button';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
 
-export const Login: React.FC = () => {
-  const {
-    login,
-    styles,
-    showLoading,
-    setShowLoading,
-    walletType,
-    handleLoginEvent,
-    userAccount,
-    setStep,
-    walletInfo,
-    loginByQrCode,
-    confirmPassword,
-    dappConnectClient,
-  } = useLoginContext();
-  const { walletConnectClient, loginByWalletConnect } = useWalletConnectContext();
+type IProps = {
+  addressBox: React.ReactNode;
+  styles: Record<string, any> | null;
+  submitLogin: (password: string) => Promise<void>
+  errorInfo: string
+  showLoading: boolean
+};
+export const Login: React.FC<IProps> = (props) => {
+  const { addressBox, submitLogin, styles, errorInfo, showLoading } = props;
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errorInfo, setErrorInfo] = useState<string>();
 
   const handleSubmit = async () => {
-    setShowLoading(true);
-    setStep(StepStringEnum.LOGIN_SIGN_LOADING);
-    confirmPassword.current = password;
-    try {
-      if (dappConnectClient) {
-        // 说明是扫码登录
-        await loginByQrCode();
-      } else if (walletConnectClient.current) {
-        await loginByWalletConnect();
-      } else {
-        await login(walletType);
-      }
-      setShowLoading(false);
-    } catch (e: any) {
-      handleLoginEvent({
-        msg: e.message,
-        data: null,
-        type: 'error',
-      });
-      setErrorInfo(e.message);
-      setShowLoading(false);
-      setStep(StepStringEnum.LOGIN_SIGN_ERROR);
-    }
+    await submitLogin(password);
   };
 
   const isDisable = useMemo(() => {
     return showLoading || !password;
   }, [password, showLoading]);
-  if (!userAccount) {
-    setStep(StepStringEnum.HOME);
-    return null;
-  }
 
   return (
     <div className={cx(ss.container)} style={styles?.loginContainer}>
-      <div className={cx(ss.addressBox)} style={styles?.addressBox}>
-        {walletInfo?.type ? (
-          walletInfo.type === 'web3mq' ? (
-            <Web3MqWalletIcon />
-          ) : walletInfo.type === 'starknet' ? (
-            <ArgentXIcon />
-          ) : walletInfo.type === 'eth' ? (
-            <MetaMaskIcon />
-          ) : (
-            <WalletConnectIcon style={{height: '21px'}} />
-          )
-        ) : (
-          <MetaMaskIcon />
-        )}
-        <div className={ss.centerText}>
-          {walletInfo?.name || 'MetaMask'}
-        </div>
-        <div className={ss.addressText}>{getShortAddress(userAccount.address)}</div>
-      </div>
+      {addressBox}
       <div className={ss.textBox}>
         <div className={ss.title} style={styles?.textBoxTitle}>
           Enter password

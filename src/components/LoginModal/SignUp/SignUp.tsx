@@ -1,42 +1,24 @@
 import React, { useMemo, useState } from 'react';
 
-import {
-  ArgentXIcon,
-  CloseEyesIcon,
-  LoginErrorIcon,
-  MetaMaskIcon,
-  OpenEyesIcon,
-  Web3MqWalletIcon,
-  WalletConnectIcon,
-} from '../../../icons';
-import { getShortAddress } from '../../../utils';
+import { CloseEyesIcon, LoginErrorIcon, OpenEyesIcon } from '../../../icons';
 import { Button } from '../../Button';
-import { StepStringEnum, useLoginContext, useWalletConnectContext } from '../../../context';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
 
-export const SignUp: React.FC = () => {
-  const {
-    dappConnectClient,
-    register,
-    styles,
-    showLoading,
-    setShowLoading,
-    walletType,
-    handleLoginEvent,
-    userAccount,
-    setStep,
-    walletInfo,
-    registerByQrCode,
-    confirmPassword,
-  } = useLoginContext();
-  const { walletConnectClient, registerByWalletConnect } = useWalletConnectContext();
+type IProps = {
+  addressBox: React.ReactNode;
+  styles: Record<string, any> | null;
+  submitSignUp: (password: string) => Promise<void>
+  errorInfo: string
+  showLoading: boolean
+};
+export const SignUp: React.FC<IProps> = (props) => {
+  const { addressBox, styles, submitSignUp, errorInfo, showLoading } = props;
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
   const [twoPassword, setTwoPassword] = useState('');
-  const [errorInfo, setErrorInfo] = useState<string>();
 
   const isDisable = useMemo(() => {
     let res = !password || !twoPassword || showLoading;
@@ -47,64 +29,12 @@ export const SignUp: React.FC = () => {
   }, [password, twoPassword, showLoading]);
 
   const handleSubmit = async () => {
-    setShowLoading(true);
-    setStep(StepStringEnum.SIGN_UP_SIGN_LOADING);
-    try {
-      if (password !== twoPassword) {
-        setErrorInfo('Passwords don\'t match. Please check your password inputs.');
-      }
-      confirmPassword.current = password;
-      if (dappConnectClient) {
-        await registerByQrCode();
-      } else if (walletConnectClient.current) {
-        await registerByWalletConnect();
-      } else {
-        await register(walletType);
-      }
-
-      setShowLoading(false);
-    } catch (e: any) {
-      handleLoginEvent({
-        msg: e.message,
-        data: null,
-        type: 'error',
-      });
-      setErrorInfo(e.message);
-      // wallet Connect when rejected
-      if (e.code === -32000 && e.message === 'User rejected methods.') {
-        setStep(StepStringEnum.REJECT_CONNECT);
-      } else {
-        setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
-      }
-      setShowLoading(false);
-    }
+    await submitSignUp(password);
   };
-  if (!userAccount) {
-    setStep(StepStringEnum.HOME);
-    return null;
-  }
 
   return (
     <div className={cx(ss.container)} style={styles?.loginContainer}>
-      <div className={ss.addressBox} style={styles?.addressBox}>
-        {walletInfo?.type ? (
-          walletInfo.type === 'web3mq' ? (
-            <Web3MqWalletIcon />
-          ) : walletInfo.type === 'starknet' ? (
-            <ArgentXIcon />
-          ) : walletInfo.type === 'eth' ? (
-            <MetaMaskIcon />
-          ) : (
-            <WalletConnectIcon style={{height: '21px'}} />
-          )
-        ) : (
-          <MetaMaskIcon />
-        )}
-        <div className={ss.centerText}>
-          {walletInfo?.name || 'MetaMask'}
-        </div>
-        <div className={ss.addressText}>{getShortAddress(userAccount.address)}</div>
-      </div>
+      {addressBox}
       <div className={ss.textBox}>
         <div className={ss.title} style={styles?.textBoxTitle}>
           Create password

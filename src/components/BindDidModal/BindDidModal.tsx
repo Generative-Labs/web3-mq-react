@@ -11,22 +11,16 @@ import {
   WalletConnectIcon,
   Web3MqWalletIcon,
 } from '../../icons';
-import {
-  AppTypeEnum,
-  BindDidContextValue,
-  BindDidProvider,
-  BindStepStringEnum,
-  WalletInfoType,
-} from '../../context';
+import { AppTypeEnum } from '../../context';
 import { Button, Loading, LoginModal, Modal } from '../../components';
-import { Home } from './Home';
+import { Home } from '../LoginModal/Home';
 import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
 import type { FollowOperationApiParams, WalletType } from '@web3mq/client';
 import { Client, getUserPublicProfileRequest } from '@web3mq/client';
-import { RenderWallets } from './RenderWallets';
+import { RenderWallets } from '../LoginModal/RenderWallets';
 import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
 import { DappConnect, WalletMethodMap } from '@web3mq/dapp-connect';
 import { DappConnectModal } from '@web3mq/dapp-connect-react';
@@ -37,6 +31,7 @@ import type { bindDidV2Params } from '../../utils';
 import { getShortAddress, selfRequest } from '../../utils';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/loginLoading';
+import { BindStepStringEnum, WalletInfoType } from '../../types/enum';
 
 type IProps = {
   client?: any;
@@ -585,6 +580,13 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       setConnectLoadingStep(BindStepStringEnum.SIGN_ERROR);
     }
   };
+  const handleWalletClick = async (name: string, type: string) => {
+    setWalletInfo({
+      name: name,
+      type: type as 'eth' | 'starknet' | 'web3mq' | 'walletConnect',
+    });
+    await getAccount(type as WalletType);
+  };
 
   const RenderWalletAddressBox = useCallback(() => {
     return (
@@ -608,98 +610,105 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
     );
   }, [JSON.stringify(walletInfo), userAccount.current]);
 
-  const bindDidContextValue: BindDidContextValue = useMemo(
-    () => ({
-      styles,
-      showLoading,
-      getAccount,
-      setWalletInfo,
-      setConnectLoadingStep,
-    }),
-    [showLoading],
-  );
-
   return (
-    <BindDidProvider value={bindDidContextValue}>
-      <div className={cx(ss.container)}>
-        <div onClick={handleModalShow}>
-          {loginBtnNode || (
-            <Button className={ss.iconBtn}>
-              {operationMode === 'follow_user' ? 'Follow Modal' : 'Bind Did'}
-            </Button>
+    <div className={cx(ss.container)}>
+      <div onClick={handleModalShow}>
+        {loginBtnNode || (
+          <Button className={ss.iconBtn}>
+            {operationMode === 'follow_user' ? 'Follow Modal' : 'Bind Did'}
+          </Button>
+        )}
+      </div>
+      <Modal
+        dialogClassName={cx(modalClassName)}
+        containerId={containerId}
+        appType={appType}
+        visible={visible}
+        modalHeader={<ModalHead />}
+        closeModal={hide}
+      >
+        <div className={cx(ss.modalBody)} style={styles?.modalBody}>
+          {step === BindStepStringEnum.HOME && (
+            <Home
+              RenderWallets={
+                <RenderWallets
+                  handleViewAll={() => {
+                    setConnectLoadingStep(BindStepStringEnum.VIEW_ALL);
+                  }}
+                  styles={styles}
+                  showLoading={showLoading}
+                  showCount={3}
+                  handleWalletClick={handleWalletClick}
+                />
+              }
+              styles={styles}
+              handleWeb3MQClick={handleWeb3mqClick}
+              WalletConnectBtnNode={
+                <WalletConnectButton
+                  handleClientStep={() => {
+                    setConnectLoadingStep(BindStepStringEnum.CONNECT_LOADING);
+                  }}
+                  handleError={() => {
+                    setConnectLoadingStep(BindStepStringEnum.REJECT_CONNECT);
+                  }}
+                  handleConnectEvent={async (event) => {
+                    setWalletInfo({
+                      name: event.walletName,
+                      type: event.walletType,
+                    });
+                    await getAccount('eth', event.address);
+                  }}
+                  create={create}
+                  connect={connect}
+                  closeModal={closeModal}
+                  onSessionConnected={onSessionConnected}
+                />
+              }
+            />
+          )}
+          {dappConnectClient && (
+            <DappConnectModal
+              client={dappConnectClient as DappConnect}
+              handleSuccess={handleWeb3mqCallback}
+              appType={appType}
+            />
+          )}
+          {step === BindStepStringEnum.VIEW_ALL && (
+            <RenderWallets
+              handleViewAll={() => {
+                setConnectLoadingStep(BindStepStringEnum.VIEW_ALL);
+              }}
+              styles={styles}
+              showLoading={showLoading}
+              handleWalletClick={handleWalletClick}
+            />
+          )}
+          {commonCenterStatusData && <CommonCenterStatus {...commonCenterStatusData} />}
+          {step === BindStepStringEnum.READY_SIGN_UP && (
+            <CommonCenterStatus
+              styles={styles}
+              icon={<BindDidWarningIcon />}
+              title={'Wallet address not registered'}
+              textContent={'Your wallet address is not registered to the web3mq network'}
+              showBtn={true}
+              customBtn={
+                <LoginModal
+                  client={client}
+                  env={env}
+                  handleLoginEvent={handleLoginEvent}
+                  containerId={containerId}
+                  appType={appType}
+                  account={userAccount.current}
+                  loginBtnNode={<Button type={'primary'}>Sign Up</Button>}
+                  propWalletConnectClient={walletConnectClient.current}
+                  propWcSession={wcSession.current}
+                  propDappConnectClient={dappConnectClient}
+                />
+              }
+            />
           )}
         </div>
-        <Modal
-          dialogClassName={cx(modalClassName)}
-          containerId={containerId}
-          appType={appType}
-          visible={visible}
-          modalHeader={<ModalHead />}
-          closeModal={hide}
-        >
-          <div className={cx(ss.modalBody)} style={styles?.modalBody}>
-            {step === BindStepStringEnum.HOME && (
-              <Home
-                styles={styles}
-                handleWeb3MQClick={handleWeb3mqClick}
-                WalletConnectBtnNode={
-                  <WalletConnectButton
-                    handleClientStep={() => {
-                      setConnectLoadingStep(BindStepStringEnum.CONNECT_LOADING);
-                    }}
-                    handleError={() => {
-                      setConnectLoadingStep(BindStepStringEnum.REJECT_CONNECT);
-                    }}
-                    handleConnectEvent={async (event) => {
-                      setWalletInfo({
-                        name: event.walletName,
-                        type: event.walletType,
-                      });
-                      await getAccount('eth', event.address);
-                    }}
-                    create={create}
-                    connect={connect}
-                    closeModal={closeModal}
-                    onSessionConnected={onSessionConnected}
-                  />
-                }
-              />
-            )}
-            {dappConnectClient && (
-              <DappConnectModal
-                client={dappConnectClient as DappConnect}
-                handleSuccess={handleWeb3mqCallback}
-                appType={appType}
-              />
-            )}
-            {step === BindStepStringEnum.VIEW_ALL && <RenderWallets />}
-            {commonCenterStatusData && <CommonCenterStatus {...commonCenterStatusData} />}
-            {step === BindStepStringEnum.READY_SIGN_UP && (
-              <CommonCenterStatus
-                styles={styles}
-                icon={<BindDidWarningIcon />}
-                title={'Wallet address not registered'}
-                textContent={'Your wallet address is not registered to the web3mq network'}
-                showBtn={true}
-                customBtn={
-                  <LoginModal
-                    client={client}
-                    env={env}
-                    handleLoginEvent={handleLoginEvent}
-                    containerId={containerId}
-                    appType={appType}
-                    account={userAccount.current}
-                    loginBtnNode={<Button type={'primary'}>Sign Up</Button>}
-                    propWalletConnectClient={walletConnectClient.current}
-                    propWcSession={wcSession.current}
-                    propDappConnectClient={dappConnectClient}
-                  />
-                }
-              />
-            )}
-          </div>
-        </Modal>
-      </div>
-    </BindDidProvider>
+      </Modal>
+    </div>
   );
 };

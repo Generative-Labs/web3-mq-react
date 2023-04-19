@@ -1,36 +1,39 @@
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type SignClient from '@walletconnect/sign-client';
-import { CheveronLeft, CloseBtnIcon, ConnectErrorIcon } from '../../icons';
+import {
+  ArgentXIcon,
+  CheveronLeft,
+  CloseBtnIcon,
+  ConnectErrorIcon,
+  MetaMaskIcon,
+  WalletConnectIcon,
+  Web3MqWalletIcon,
+} from '../../icons';
 import {
   AppTypeEnum,
-  LoginContextValue,
-  LoginProvider,
-  StepStringEnum,
-  WalletInfoType,
-  WalletConnectContextValue,
-  WalletConnectProvider,
 } from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { Login } from './Login';
 import { SignUp } from './SignUp';
 import { Home } from './Home';
-import { CommonCenterStatus } from './loginLoading';
+import { CommonCenterStatus, CommonCenterStatusIProp } from './loginLoading';
 import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
 import type { WalletType } from '@web3mq/client';
+import { Client } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import useLogin, { LoginEventDataType, MainKeysType, UserAccountType } from './hooks/useLogin';
-import useWalletConnect from './hooks/useWalletConnect';
-import { Client } from '@web3mq/client';
-import type { DappConnect } from '@web3mq/dapp-connect';
-import { WalletMethodMap } from '@web3mq/dapp-connect';
+import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
+import { DappConnect, WalletMethodMap } from '@web3mq/dapp-connect';
 import { DappConnectModal } from '@web3mq/dapp-connect-react';
 import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { Loading } from '../Loading';
+import { getShortAddress } from '../../utils';
+import {StepStringEnum, WalletInfoType} from '../../types/enum';
 
 type IProps = {
   client?: any;
@@ -46,7 +49,7 @@ type IProps = {
   env?: 'dev' | 'test';
   propWalletConnectClient?: SignClient;
   propWcSession?: SessionTypes.Struct;
-  propDappConnectClient?: DappConnect;
+  propDappConnectClient?: DappConnectType;
 };
 
 export const LoginModal: React.FC<IProps> = (props) => {
@@ -66,7 +69,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
     propWalletConnectClient,
     propDappConnectClient,
   } = props;
-  const [dappConnectClient, setDappConnectClient] = useState<DappConnect | undefined>(
+
+  const [dappConnectClient, setDappConnectClient] = useState<DappConnectType | undefined>(
     propDappConnectClient,
   );
   const walletConnectClient = useRef<SignClient>();
@@ -87,23 +91,21 @@ export const LoginModal: React.FC<IProps> = (props) => {
     registerByQrCode,
     setUserAccount,
     confirmPassword,
-  } = useLogin(handleLoginEvent, client, dappConnectClient, keys, account, appType);
-  const {
-    wcSession,
     create,
     connect,
     closeModal,
     onSessionConnected,
-    registerByWalletConnect,
     loginByWalletConnect,
-  } = useWalletConnect({
-    confirmPassword,
+    registerByWalletConnect,
+  } = useLogin({
     client,
-    walletConnectClient: walletConnectClient,
-    mainKeys,
-    userAccount,
-    handleLoginEvent,
     propWcSession,
+    appType,
+    account,
+    keys,
+    handleLoginEvent,
+    walletConnectClient,
+    dappConnectClient,
   });
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
@@ -115,9 +117,147 @@ export const LoginModal: React.FC<IProps> = (props) => {
   );
   const [showLoading, setShowLoading] = useState(false);
   const [walletType, setWalletType] = useState<WalletType>(account?.walletType || 'eth');
-  const [qrCodeUrl, setQrCodeUrl] = useState('');
   const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
+  const [errorInfo, setErrorInfo] = useState<string>('');
+  const [commonCenterStatusData, setCommonCenterStatusData] = useState<
+    CommonCenterStatusIProp | undefined
+  >();
 
+  const setConnectLoadingStep = (currentStep: StepStringEnum) => {
+    setStep(currentStep);
+    if (currentStep === StepStringEnum.CONNECT_LOADING) {
+      setCommonCenterStatusData({
+        styles,
+        icon: <Loading />,
+        title: 'Waiting to connect',
+        textContent: 'Confirm this connection in your wallet',
+      });
+      return;
+    } else if (currentStep === StepStringEnum.CONNECT_ERROR) {
+      setCommonCenterStatusData({
+        styles,
+        icon: <ConnectErrorIcon />,
+        title: 'Error connecting',
+        textContent:
+          'The connection attempt failed. Please click try again and follow the steps to connect in your wallet.',
+        showBtn: true,
+        btnText: 'Try Again',
+        handleBtnClick: () => {
+          setErrorInfo('');
+          setConnectLoadingStep(StepStringEnum.HOME);
+        },
+      });
+    } else if (currentStep === StepStringEnum.VIEW_ALL) {
+      setCommonCenterStatusData(undefined);
+    } else if (currentStep === StepStringEnum.HOME) {
+      setCommonCenterStatusData(undefined);
+    } else if (currentStep === StepStringEnum.QR_CODE) {
+      setCommonCenterStatusData(undefined);
+    } else if (currentStep === StepStringEnum.LOGIN) {
+      setCommonCenterStatusData(undefined);
+    } else if (currentStep === StepStringEnum.SIGN_UP) {
+      setCommonCenterStatusData(undefined);
+    } else if (currentStep === StepStringEnum.REJECT_CONNECT) {
+      setCommonCenterStatusData({
+        styles,
+        icon: <ConnectErrorIcon />,
+        title: 'Error Reject',
+        textContent: 'User rejected methods.',
+        showBtn: true,
+        btnText: 'Try Again',
+        handleBtnClick: () => {
+          setErrorInfo('');
+          setConnectLoadingStep(StepStringEnum.HOME);
+        },
+      });
+    } else if (
+      [StepStringEnum.LOGIN_SIGN_LOADING, StepStringEnum.SIGN_UP_SIGN_LOADING].includes(currentStep)
+    ) {
+      setCommonCenterStatusData({
+        icon: <Loading />,
+        title: 'Waiting for signature',
+        textContent: 'Confirm the signature in your wallet',
+        styles,
+      });
+    } else if (
+      [StepStringEnum.LOGIN_SIGN_ERROR, StepStringEnum.SIGN_UP_SIGN_ERROR].includes(currentStep)
+    ) {
+      setCommonCenterStatusData({
+        styles,
+        icon: <ConnectErrorIcon />,
+        title: 'Signature error',
+        textContent:
+          'The signature attempt failed. Click try again and follow the steps to connect to your wallet.',
+        showBtn: true,
+        btnText: 'Try Again',
+        handleBtnClick: () => {
+          setErrorInfo('');
+          if (userAccount?.userExist) {
+            setConnectLoadingStep(StepStringEnum.LOGIN);
+          } else {
+            setConnectLoadingStep(StepStringEnum.SIGN_UP);
+          }
+        },
+      });
+    }
+  };
+
+  const submitLogin = async (password: string) => {
+    setShowLoading(true);
+    setConnectLoadingStep(StepStringEnum.LOGIN_SIGN_LOADING);
+    confirmPassword.current = password;
+    try {
+      if (dappConnectClient) {
+        // 说明是扫码登录
+        await loginByQrCode();
+      } else if (walletConnectClient.current) {
+        await loginByWalletConnect();
+      } else {
+        await login(walletType);
+      }
+      setShowLoading(false);
+    } catch (e: any) {
+      handleLoginEvent({
+        msg: e.message,
+        data: null,
+        type: 'error',
+      });
+      setErrorInfo(e.message);
+      setShowLoading(false);
+      setConnectLoadingStep(StepStringEnum.LOGIN_SIGN_ERROR);
+    }
+  };
+
+  const submitSignUp = async (password: string) => {
+    setShowLoading(true);
+    setConnectLoadingStep(StepStringEnum.SIGN_UP_SIGN_LOADING);
+    confirmPassword.current = password;
+    try {
+      if (dappConnectClient) {
+        await registerByQrCode();
+      } else if (walletConnectClient.current) {
+        await registerByWalletConnect();
+      } else {
+        await register(walletType);
+      }
+      setShowLoading(false);
+    } catch (e: any) {
+      console.log(e, 'e');
+      handleLoginEvent({
+        msg: e.message,
+        data: null,
+        type: 'error',
+      });
+      setErrorInfo(e.message);
+      // wallet Connect when rejected
+      if (e.code === -32000 || e.code === -501) {
+        setConnectLoadingStep(StepStringEnum.REJECT_CONNECT);
+      } else {
+        setConnectLoadingStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
+      }
+      setShowLoading(false);
+    }
+  };
   useEffect(() => {
     if (!mainKeys) {
       return;
@@ -133,26 +273,27 @@ export const LoginModal: React.FC<IProps> = (props) => {
           type: 'error',
         });
         setMainKeys(undefined);
-        setStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
+        setConnectLoadingStep(StepStringEnum.SIGN_UP_SIGN_ERROR);
         setShowLoading(false);
       });
   }, [JSON.stringify(mainKeys), registerSignRes]);
 
   const getAccount = async (didType?: WalletType, didValue?: string) => {
     setShowLoading(true);
-    setStep(StepStringEnum.CONNECT_LOADING);
+    setConnectLoadingStep(StepStringEnum.CONNECT_LOADING);
     const { address, userExist } = await getUserAccount(didType, didValue);
     if (address) {
       if (userExist) {
-        setStep(StepStringEnum.LOGIN);
+        setConnectLoadingStep(StepStringEnum.LOGIN);
       } else {
-        setStep(StepStringEnum.SIGN_UP);
+        setConnectLoadingStep(StepStringEnum.SIGN_UP);
       }
     } else {
-      setStep(StepStringEnum.CONNECT_ERROR);
+      setConnectLoadingStep(StepStringEnum.CONNECT_ERROR);
     }
     setShowLoading(false);
   };
+
   const handleWeb3mqCallback = async (eventData: any) => {
     const { method, result } = eventData;
     if (method === WalletMethodMap.providerAuthorization) {
@@ -167,34 +308,49 @@ export const LoginModal: React.FC<IProps> = (props) => {
       await web3MqSignCallback(result.signature);
     }
   };
+  const handleWeb3mqClick = () => {
+    new Promise((resolve) => {
+      setDappConnectClient(
+        new DappConnect({ dAppID: 'SwapChat:im', keepAlive: false, env }, () => {}),
+      );
+      resolve('success');
+    }).then(() => {
+      setConnectLoadingStep(StepStringEnum.QR_CODE);
+    });
+  };
+
+  const handleWalletClick = async (name: string, type: string) => {
+    setWalletType(walletType);
+    setWalletInfo({
+      name: name,
+      type: type as 'eth' | 'starknet' | 'web3mq' | 'walletConnect',
+    });
+    await getAccount(type as WalletType);
+  };
 
   const handleModalShow = async () => {
     show();
     if (userAccount) {
       if (userAccount.userExist) {
-        setStep(StepStringEnum.LOGIN);
+        setConnectLoadingStep(StepStringEnum.LOGIN);
       } else {
-        setStep(StepStringEnum.SIGN_UP);
+        setConnectLoadingStep(StepStringEnum.SIGN_UP);
       }
     } else {
-      setStep(StepStringEnum.HOME);
+      setConnectLoadingStep(StepStringEnum.HOME);
     }
   };
   const handleClose = () => {
     hide();
     setUserAccount(undefined);
-    setStep(StepStringEnum.HOME);
+    setConnectLoadingStep(StepStringEnum.HOME);
     setMainKeys(undefined);
-    setQrCodeUrl('');
     setDappConnectClient(undefined);
-    // dappConnectClient.current = undefined;
   };
   const handleBack = () => {
-    setStep(StepStringEnum.HOME);
     setUserAccount(undefined);
-    setStep(StepStringEnum.HOME);
+    setConnectLoadingStep(StepStringEnum.HOME);
     setMainKeys(undefined);
-    setQrCodeUrl('');
     setDappConnectClient(undefined);
     setShowLoading(false);
   };
@@ -227,190 +383,135 @@ export const LoginModal: React.FC<IProps> = (props) => {
       return 'Connect Dapp';
     }
   }, [step]);
-
-  const ModalHead = () => {
+  const RenderWalletAddressBox = useCallback(() => {
+    if (!userAccount) return <div></div>;
     return (
-      <div className={ss.loginModalHead}>
-        {!account && step !== StepStringEnum.HOME && (
-          <CheveronLeft onClick={handleBack} className={ss.backBtn} />
+      <div className={cx(ss.addressBox)} style={styles?.addressBox}>
+        {walletInfo?.type ? (
+          walletInfo.type === 'web3mq' ? (
+            <Web3MqWalletIcon />
+          ) : walletInfo.type === 'starknet' ? (
+            <ArgentXIcon />
+          ) : walletInfo.type === 'eth' ? (
+            <MetaMaskIcon />
+          ) : (
+            <WalletConnectIcon style={{ height: '21px' }} />
+          )
+        ) : (
+          <MetaMaskIcon />
         )}
-        <div className={ss.title}>{headerTitle}</div>
-        <CloseBtnIcon onClick={handleClose} className={ss.closeBtn} />
+        <div className={ss.centerText}>{walletInfo?.name || 'MetaMask'}</div>
+        <div className={ss.addressText}>{getShortAddress(userAccount.address || '')}</div>
       </div>
     );
-  };
+  }, [JSON.stringify(walletInfo), userAccount]);
 
-  const loginContextValue: LoginContextValue = useMemo(
-    () => ({
-      register,
-      getAccount,
-      login,
-      step,
-      setStep,
-      styles,
-      showLoading,
-      setShowLoading,
-      walletType,
-      setWalletType,
-      handleLoginEvent,
-      handleWeb3mqCallback,
-      qrCodeUrl,
-      userAccount,
-      setMainKeys,
-      loginByQrCode,
-      registerByQrCode,
-      confirmPassword,
-      client,
-      dappConnectClient,
-      env,
-      walletInfo,
-      setWalletInfo,
-      setDappConnectClient,
-    }),
-    [
-      step,
-      showLoading,
-      walletType,
-      qrCodeUrl,
-      JSON.stringify(userAccount),
-      confirmPassword.current,
-      env,
-    ],
-  );
-
-  const WalletConnectContextValue: WalletConnectContextValue = useMemo(
-    () => ({
-      walletConnectClient,
-      wcSession,
-      loginByWalletConnect,
-      registerByWalletConnect,
-    }),
-    [wcSession],
-  );
+  // const loginContextValue: LoginContextValue = useMemo(
+  //   () => ({
+  //     showLoading,
+  //   }),
+  //   [showLoading],
+  // );
 
   return (
-    <LoginProvider value={loginContextValue}>
-      <WalletConnectProvider value={WalletConnectContextValue}>
-        <div className={cx(ss.container)}>
-          <div onClick={handleModalShow}>
-            {loginBtnNode || <Button className={ss.iconBtn}>Login</Button>}
+    // <LoginProvider value={loginContextValue}>
+    <div className={cx(ss.container)}>
+      <div onClick={handleModalShow}>
+        {loginBtnNode || <Button className={ss.iconBtn}>Login</Button>}
+      </div>
+      <Modal
+        dialogClassName={cx(modalClassName)}
+        containerId={containerId}
+        appType={appType}
+        visible={visible}
+        modalHeader={
+          <div className={ss.loginModalHead}>
+            {!account && step !== StepStringEnum.HOME && (
+              <CheveronLeft onClick={handleBack} className={ss.backBtn} />
+            )}
+            <div className={ss.title}>{headerTitle}</div>
+            <CloseBtnIcon onClick={handleClose} className={ss.closeBtn} />
           </div>
-          <Modal
-            dialogClassName={cx(modalClassName)}
-            containerId={containerId}
-            appType={appType}
-            visible={visible}
-            modalHeader={<ModalHead />}
-            closeModal={hide}
-          >
-            <div className={cx(ss.modalBody)} style={styles?.modalBody}>
-              {step === StepStringEnum.HOME && (
-                <Home
-                  WalletConnectBtnNode={
-                    <WalletConnectButton
-                      handleClientStep={() => {
-                        setStep(StepStringEnum.CONNECT_LOADING);
-                      }}
-                      handleError={() => {
-                        setStep(StepStringEnum.REJECT_CONNECT);
-                      }}
-                      handleConnectEvent={async (event) => {
-                        setWalletInfo({
-                          name: event.walletName,
-                          type: event.walletType,
-                        });
-                        setWalletType('eth');
-                        await getAccount('eth', event.address);
-                      }}
-                      create={create}
-                      connect={connect}
-                      closeModal={closeModal}
-                      onSessionConnected={onSessionConnected}
-                    />
-                  }
-                />
-              )}
-              {step === StepStringEnum.VIEW_ALL && <RenderWallets />}
-              {step === StepStringEnum.LOGIN && <Login />}
-              {step === StepStringEnum.SIGN_UP && <SignUp />}
-              {step === StepStringEnum.CONNECT_LOADING && (
-                <CommonCenterStatus
-                  styles={styles}
-                  icon={<Loading />}
-                  title={'Waiting to connect'}
-                  textContent={'Confirm this connection in your wallet'}
-                />
-              )}
-              {step === StepStringEnum.CONNECT_ERROR && (
-                <CommonCenterStatus
-                  styles={styles}
-                  icon={<ConnectErrorIcon />}
-                  title={'Error connecting'}
-                  textContent={
-                    'The connection attempt failed. Please click try again and follow the steps to connect in your wallet.'
-                  }
-                  showBtn={true}
-                  btnText={'Try Again'}
-                  handleBtnClick={() => {
-                    setStep(StepStringEnum.HOME);
+        }
+        closeModal={hide}
+      >
+        <div className={cx(ss.modalBody)} style={styles?.modalBody}>
+          {step === StepStringEnum.HOME && (
+            <Home
+              RenderWallets={
+                <RenderWallets
+                  handleViewAll={() => {
+                    setConnectLoadingStep(StepStringEnum.VIEW_ALL);
                   }}
-                />
-              )}
-              {[StepStringEnum.LOGIN_SIGN_LOADING, StepStringEnum.SIGN_UP_SIGN_LOADING].includes(
-                step,
-              ) && (
-                <CommonCenterStatus
-                  icon={<Loading />}
-                  title={'Waiting for signature'}
-                  textContent={'Confirm the signature in your wallet'}
                   styles={styles}
+                  showLoading={showLoading}
+                  showCount={3}
+                  handleWalletClick={handleWalletClick}
                 />
-              )}
-              {[StepStringEnum.LOGIN_SIGN_ERROR, StepStringEnum.SIGN_UP_SIGN_ERROR].includes(
-                step,
-              ) && (
-                <CommonCenterStatus
-                  icon={<ConnectErrorIcon />}
-                  title={'signature error'}
-                  textContent={
-                    'The signature attempt failed. Click try again and follow the steps to connect to your wallet.'
-                  }
-                  styles={styles}
-                  btnText={'Try Again'}
-                  showBtn={true}
-                  handleBtnClick={() => {
-                    if (userAccount?.userExist) {
-                      setStep(StepStringEnum.LOGIN);
-                    } else {
-                      setStep(StepStringEnum.SIGN_UP);
-                    }
+              }
+              styles={styles}
+              handleWeb3MQClick={handleWeb3mqClick}
+              WalletConnectBtnNode={
+                <WalletConnectButton
+                  handleClientStep={() => {
+                    setConnectLoadingStep(StepStringEnum.CONNECT_LOADING);
                   }}
-                />
-              )}
-              {dappConnectClient && (
-                <DappConnectModal
-                  client={dappConnectClient as DappConnect}
-                  handleSuccess={handleWeb3mqCallback}
-                  appType={appType}
-                />
-              )}
-              {step === StepStringEnum.REJECT_CONNECT && (
-                <CommonCenterStatus
-                  styles={styles}
-                  icon={<ConnectErrorIcon />}
-                  title={'Error Reject'}
-                  textContent={'User rejected methods.'}
-                  showBtn={true}
-                  btnText={'Try Again'}
-                  handleBtnClick={() => {
-                    setStep(StepStringEnum.HOME);
+                  handleError={() => {
+                    setConnectLoadingStep(StepStringEnum.REJECT_CONNECT);
                   }}
+                  handleConnectEvent={async (event) => {
+                    setWalletInfo({
+                      name: event.walletName,
+                      type: event.walletType,
+                    });
+                    await getAccount('eth', event.address);
+                  }}
+                  create={create}
+                  connect={connect}
+                  closeModal={closeModal}
+                  onSessionConnected={onSessionConnected}
                 />
-              )}
-            </div>
-          </Modal>
+              }
+            />
+          )}
+          {step === StepStringEnum.VIEW_ALL && (
+            <RenderWallets
+              handleViewAll={() => {
+                setConnectLoadingStep(StepStringEnum.VIEW_ALL);
+              }}
+              showLoading={showLoading}
+              handleWalletClick={handleWalletClick}
+              styles={styles}
+            />
+          )}
+          {step === StepStringEnum.LOGIN && (
+            <Login
+              showLoading={showLoading}
+              errorInfo={errorInfo}
+              styles={styles}
+              submitLogin={submitLogin}
+              addressBox={<RenderWalletAddressBox />}
+            />
+          )}
+          {step === StepStringEnum.SIGN_UP && (
+            <SignUp
+              showLoading={showLoading}
+              errorInfo={errorInfo}
+              styles={styles}
+              submitSignUp={submitSignUp}
+              addressBox={<RenderWalletAddressBox />}
+            />
+          )}
+          {dappConnectClient && (
+            <DappConnectModal
+              client={dappConnectClient as DappConnect}
+              handleSuccess={handleWeb3mqCallback}
+              appType={appType}
+            />
+          )}
+          {commonCenterStatusData && <CommonCenterStatus {...commonCenterStatusData} />}
         </div>
-      </WalletConnectProvider>
-    </LoginProvider>
+      </Modal>
+    </div>
   );
 };
