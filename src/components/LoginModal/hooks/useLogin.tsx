@@ -53,6 +53,7 @@ type IProps = {
   account?: UserAccountType;
   appType?: AppTypeEnum;
   propWcSession?: SessionTypes.Struct;
+  isResetPassword?: boolean
 };
 
 const projectId = '1c5ee52c12a9145d5b184e06120462cc';
@@ -74,6 +75,7 @@ const useLogin = (props: IProps) => {
     account,
     appType,
     propWcSession,
+    isResetPassword = false,
   } = props;
   const [wcSession, setWcSession] = useState<SessionTypes.Struct | undefined>(propWcSession);
   const [userAccount, setUserAccount] = useState<UserAccountType | undefined>(account);
@@ -542,7 +544,7 @@ const useLogin = (props: IProps) => {
       didPubkey = '',
       nickname = '',
     } = options;
-    await client.register.register({
+    const params = {
       userid,
       didValue,
       mainPublicKey,
@@ -551,7 +553,13 @@ const useLogin = (props: IProps) => {
       nickname,
       avatar_url: `https://cdn.stamp.fyi/avatar/${didValue}?s=300`,
       signature,
-    });
+    };
+    if (isResetPassword) {
+      await client.register.resetPassword(params);  
+    } else  {
+      await client.register.register(params);  
+    }
+    
     handleLoginEvent({
       msg: '',
       type: 'register',

@@ -106,6 +106,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     handleLoginEvent,
     walletConnectClient,
     dappConnectClient,
+    isResetPassword,
   });
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
@@ -159,7 +160,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       setCommonCenterStatusData(undefined);
     } else if (currentStep === StepStringEnum.SIGN_UP) {
       setCommonCenterStatusData(undefined);
-    }  else if (currentStep === StepStringEnum.RESET_PASSWORD) {
+    } else if (currentStep === StepStringEnum.RESET_PASSWORD) {
       setCommonCenterStatusData(undefined);
     } else if (currentStep === StepStringEnum.REJECT_CONNECT) {
       setCommonCenterStatusData({
@@ -394,9 +395,13 @@ export const LoginModal: React.FC<IProps> = (props) => {
     } else if (
       step === StepStringEnum.SIGN_UP_SIGN_LOADING ||
       step === StepStringEnum.SIGN_UP_SIGN_ERROR ||
-      step === StepStringEnum.SIGN_UP
+      step === StepStringEnum.SIGN_UP ||
+      step === StepStringEnum.RESET_PASSWORD
     ) {
-      return 'Sign up';
+      if (isResetPassword) {
+        return 'Reset Password';
+      }
+      return 'Sign Up';
     } else if (step === StepStringEnum.VIEW_ALL) {
       return 'Choose Desktop wallets';
     } else {
@@ -527,7 +532,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
               showLoading={showLoading}
               errorInfo={errorInfo}
               styles={styles}
-              submitSignUp={submitResetPassword}
+              submitSignUp={submitSignUp}
               addressBox={<RenderWalletAddressBox />}
               isResetPassword={true}
             />
