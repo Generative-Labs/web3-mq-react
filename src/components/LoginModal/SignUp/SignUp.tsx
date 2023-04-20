@@ -12,9 +12,10 @@ type IProps = {
   submitSignUp: (password: string) => Promise<void>
   errorInfo: string
   showLoading: boolean
+  isResetPassword?: boolean
 };
 export const SignUp: React.FC<IProps> = (props) => {
-  const { addressBox, styles, submitSignUp, errorInfo, showLoading } = props;
+  const { addressBox, styles, submitSignUp, errorInfo, showLoading, isResetPassword = false } = props;
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
@@ -37,7 +38,7 @@ export const SignUp: React.FC<IProps> = (props) => {
       {addressBox}
       <div className={ss.textBox}>
         <div className={ss.title} style={styles?.textBoxTitle}>
-          Create password
+          { isResetPassword ? 'Reset password' : 'Create password' }
         </div>
         <div className={ss.subTitle} style={styles?.textBoxSubTitle}>
           This password will be used to generate encryption keys for communicating with Web3MQ.
@@ -130,7 +131,7 @@ export const SignUp: React.FC<IProps> = (props) => {
           type="primary"
           onClick={handleSubmit}
         >
-          Create new user
+          { isResetPassword ? 'Reset password' : 'Create new user' }
         </Button>
       </div>
     </div>

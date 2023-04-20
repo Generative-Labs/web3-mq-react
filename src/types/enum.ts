@@ -26,6 +26,7 @@ export enum StepStringEnum {
   LOGIN = 'login',
   QR_CODE = 'qr_code',
   SIGN_UP = 'sign_up',
+  RESET_PASSWORD = 'reset_password',
   CONNECT_LOADING = 'connect_loading',
   CONNECT_ERROR = 'connect_error',
   LOGIN_SIGN_LOADING = 'login_sign_loading',

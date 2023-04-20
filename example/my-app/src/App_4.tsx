@@ -4,7 +4,6 @@ import { ResetPasswordModal} from '@web3mq/react-components';
 import '@web3mq/react-components/dist/css/index.css';
 
 import useLogin from './hooks/useLogin';
-import {MetaMaskIcon} from "./icons";
 
 const App: React.FC = () => {
   const { init, fastestUrl } = useLogin();
@@ -27,7 +26,6 @@ const App: React.FC = () => {
 
   return (
     <div>
-
       <ResetPasswordModal
           env={'dev'}
           client={Client}

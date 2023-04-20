@@ -9,9 +9,7 @@ import {
   WalletConnectIcon,
   Web3MqWalletIcon,
 } from '../../icons';
-import {
-  AppTypeEnum,
-} from '../../context';
+import { AppTypeEnum } from '../../context';
 import { Button } from '../Button';
 import { Modal } from '../Modal';
 import { Login } from './Login';
@@ -33,11 +31,12 @@ import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { Loading } from '../Loading';
 import { getShortAddress } from '../../utils';
-import {StepStringEnum, WalletInfoType} from '../../types/enum';
+import { StepStringEnum, WalletInfoType } from '../../types/enum';
 
 type IProps = {
   client?: any;
   containerId: string;
+  isResetPassword?: boolean;
   isShow?: boolean;
   appType?: AppTypeEnum;
   loginBtnNode?: React.ReactNode;
@@ -68,6 +67,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     propWcSession,
     propWalletConnectClient,
     propDappConnectClient,
+    isResetPassword = false,
   } = props;
 
   const [dappConnectClient, setDappConnectClient] = useState<DappConnectType | undefined>(
@@ -111,7 +111,9 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const [step, setStep] = useState(
     userAccount
       ? userAccount.userExist
-        ? StepStringEnum.LOGIN
+        ? isResetPassword
+          ? StepStringEnum.RESET_PASSWORD
+          : StepStringEnum.LOGIN
         : StepStringEnum.SIGN_UP
       : StepStringEnum.HOME,
   );
@@ -157,6 +159,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
       setCommonCenterStatusData(undefined);
     } else if (currentStep === StepStringEnum.SIGN_UP) {
       setCommonCenterStatusData(undefined);
+    }  else if (currentStep === StepStringEnum.RESET_PASSWORD) {
+      setCommonCenterStatusData(undefined);
     } else if (currentStep === StepStringEnum.REJECT_CONNECT) {
       setCommonCenterStatusData({
         styles,
@@ -193,7 +197,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
         handleBtnClick: () => {
           setErrorInfo('');
           if (userAccount?.userExist) {
-            setConnectLoadingStep(StepStringEnum.LOGIN);
+            if (isResetPassword) {
+              setConnectLoadingStep(StepStringEnum.RESET_PASSWORD);
+            } else {
+              setConnectLoadingStep(StepStringEnum.LOGIN);
+            }
           } else {
             setConnectLoadingStep(StepStringEnum.SIGN_UP);
           }
@@ -258,6 +266,10 @@ export const LoginModal: React.FC<IProps> = (props) => {
       setShowLoading(false);
     }
   };
+
+  const submitResetPassword = async () => {
+    console.log('reset password');
+  };
   useEffect(() => {
     if (!mainKeys) {
       return;
@@ -284,7 +296,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
     const { address, userExist } = await getUserAccount(didType, didValue);
     if (address) {
       if (userExist) {
-        setConnectLoadingStep(StepStringEnum.LOGIN);
+        if (isResetPassword) {
+          setConnectLoadingStep(StepStringEnum.RESET_PASSWORD);
+        } else {
+          setConnectLoadingStep(StepStringEnum.LOGIN);
+        }
       } else {
         setConnectLoadingStep(StepStringEnum.SIGN_UP);
       }
@@ -332,7 +348,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
     show();
     if (userAccount) {
       if (userAccount.userExist) {
-        setConnectLoadingStep(StepStringEnum.LOGIN);
+        if (isResetPassword) {
+          setConnectLoadingStep(StepStringEnum.RESET_PASSWORD);
+        } else {
+          setConnectLoadingStep(StepStringEnum.LOGIN);
+        }
       } else {
         setConnectLoadingStep(StepStringEnum.SIGN_UP);
       }
@@ -500,6 +520,16 @@ export const LoginModal: React.FC<IProps> = (props) => {
               styles={styles}
               submitSignUp={submitSignUp}
               addressBox={<RenderWalletAddressBox />}
+            />
+          )}
+          {step === StepStringEnum.RESET_PASSWORD && (
+            <SignUp
+              showLoading={showLoading}
+              errorInfo={errorInfo}
+              styles={styles}
+              submitSignUp={submitResetPassword}
+              addressBox={<RenderWalletAddressBox />}
+              isResetPassword={true}
             />
           )}
           {dappConnectClient && (
