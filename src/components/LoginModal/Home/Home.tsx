@@ -1,17 +1,38 @@
-import React, {ReactNode} from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { DesktopIcon, MobileIcon, Web3MqIcon } from '../../../icons';
 import { Button } from '../../Button';
 import ss from './index.module.scss';
 import cx from 'classnames';
+import { useWallet } from '@suiet/wallet-kit';
+import type { WalletType } from '@web3mq/client';
 
 type IProps = {
   styles: Record<string, any> | null;
   WalletConnectBtnNode: ReactNode;
   handleWeb3MQClick: () => void;
-  RenderWallets: ReactNode
+  RenderWallets: ReactNode;
+  SuiConnectBtn?: ReactNode;
+  handleSuiConnect?: (type: any) => Promise<void>;
 };
 export const Home: React.FC<IProps> = (props) => {
-  const { WalletConnectBtnNode, handleWeb3MQClick, styles, RenderWallets } = props;
+  const {
+    WalletConnectBtnNode,
+    handleWeb3MQClick,
+    styles,
+    RenderWallets,
+    SuiConnectBtn = null,
+    handleSuiConnect,
+  } = props;
+  const wallet = useWallet();
+
+  useEffect(() => {
+    if (!wallet.connected) return;
+    if (wallet.account?.address) {
+      if (handleSuiConnect) {
+        handleSuiConnect(wallet).then();
+      }
+    }
+  }, [wallet.connected]);
 
   return (
     <div className={cx(ss.container)} style={styles?.homeContainer}>
@@ -23,7 +44,7 @@ export const Home: React.FC<IProps> = (props) => {
             </div>
             <div>Desktop</div>
           </div>
-          { RenderWallets }
+          {RenderWallets}
           {/*<RenderWallets showCount={3} />*/}
         </div>
         <div className={ss.contentBox} style={styles?.contentBox}>
@@ -41,6 +62,7 @@ export const Home: React.FC<IProps> = (props) => {
               Web3MQ
             </Button>
             {WalletConnectBtnNode}
+            {SuiConnectBtn}
           </div>
         </div>
       </div>

@@ -17,6 +17,8 @@ import { SignUp } from './SignUp';
 import { Home } from './Home';
 import { CommonCenterStatus, CommonCenterStatusIProp } from './loginLoading';
 import useToggle from '../../hooks/useToggle';
+import { WalletProvider, ConnectButton, useWallet } from '@suiet/wallet-kit';
+import '@suiet/wallet-kit/style.css';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
@@ -74,6 +76,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     propDappConnectClient,
   );
   const walletConnectClient = useRef<SignClient>();
+  const suiWallet = useRef<any>();
   if (propWalletConnectClient) {
     walletConnectClient.current = propWalletConnectClient;
   }
@@ -97,6 +100,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     onSessionConnected,
     loginByWalletConnect,
     registerByWalletConnect,
+    registerBySui,
   } = useLogin({
     client,
     propWcSession,
@@ -107,6 +111,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     walletConnectClient,
     dappConnectClient,
     isResetPassword,
+    suiWallet,
   });
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
@@ -125,6 +130,13 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const [commonCenterStatusData, setCommonCenterStatusData] = useState<
     CommonCenterStatusIProp | undefined
   >();
+
+  const handleSuiConnected = async (e: any) => {
+    if (e && e.account && e.account.address) {
+      suiWallet.current = e;
+      getAccount('sui' as WalletType, e.account?.address).then();
+    }
+  };
 
   const setConnectLoadingStep = (currentStep: StepStringEnum) => {
     setStep(currentStep);
@@ -246,6 +258,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
         await registerByQrCode();
       } else if (walletConnectClient.current) {
         await registerByWalletConnect();
+      } else if (suiWallet.current) {
+        await registerBySui();
       } else {
         await register(walletType);
       }
@@ -268,9 +282,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
     }
   };
 
-  const submitResetPassword = async () => {
-    console.log('reset password');
-  };
   useEffect(() => {
     if (!mainKeys) {
       return;
@@ -440,113 +451,117 @@ export const LoginModal: React.FC<IProps> = (props) => {
 
   return (
     // <LoginProvider value={loginContextValue}>
-    <div className={cx(ss.container)}>
-      <div onClick={handleModalShow}>
-        {loginBtnNode || <Button className={ss.iconBtn}>Login</Button>}
-      </div>
-      <Modal
-        dialogClassName={cx(modalClassName)}
-        containerId={containerId}
-        appType={appType}
-        visible={visible}
-        modalHeader={
-          <div className={ss.loginModalHead}>
-            {!account && step !== StepStringEnum.HOME && (
-              <CheveronLeft onClick={handleBack} className={ss.backBtn} />
-            )}
-            <div className={ss.title}>{headerTitle}</div>
-            <CloseBtnIcon onClick={handleClose} className={ss.closeBtn} />
-          </div>
-        }
-        closeModal={hide}
-      >
-        <div className={cx(ss.modalBody)} style={styles?.modalBody}>
-          {step === StepStringEnum.HOME && (
-            <Home
-              RenderWallets={
-                <RenderWallets
-                  handleViewAll={() => {
-                    setConnectLoadingStep(StepStringEnum.VIEW_ALL);
-                  }}
-                  styles={styles}
-                  showLoading={showLoading}
-                  showCount={3}
-                  handleWalletClick={handleWalletClick}
-                />
-              }
-              styles={styles}
-              handleWeb3MQClick={handleWeb3mqClick}
-              WalletConnectBtnNode={
-                <WalletConnectButton
-                  handleClientStep={() => {
-                    setConnectLoadingStep(StepStringEnum.CONNECT_LOADING);
-                  }}
-                  handleError={() => {
-                    setConnectLoadingStep(StepStringEnum.REJECT_CONNECT);
-                  }}
-                  handleConnectEvent={async (event) => {
-                    setWalletInfo({
-                      name: event.walletName,
-                      type: event.walletType,
-                    });
-                    await getAccount('eth', event.address);
-                  }}
-                  create={create}
-                  connect={connect}
-                  closeModal={closeModal}
-                  onSessionConnected={onSessionConnected}
-                />
-              }
-            />
-          )}
-          {step === StepStringEnum.VIEW_ALL && (
-            <RenderWallets
-              handleViewAll={() => {
-                setConnectLoadingStep(StepStringEnum.VIEW_ALL);
-              }}
-              showLoading={showLoading}
-              handleWalletClick={handleWalletClick}
-              styles={styles}
-            />
-          )}
-          {step === StepStringEnum.LOGIN && (
-            <Login
-              showLoading={showLoading}
-              errorInfo={errorInfo}
-              styles={styles}
-              submitLogin={submitLogin}
-              addressBox={<RenderWalletAddressBox />}
-            />
-          )}
-          {step === StepStringEnum.SIGN_UP && (
-            <SignUp
-              showLoading={showLoading}
-              errorInfo={errorInfo}
-              styles={styles}
-              submitSignUp={submitSignUp}
-              addressBox={<RenderWalletAddressBox />}
-            />
-          )}
-          {step === StepStringEnum.RESET_PASSWORD && (
-            <SignUp
-              showLoading={showLoading}
-              errorInfo={errorInfo}
-              styles={styles}
-              submitSignUp={submitSignUp}
-              addressBox={<RenderWalletAddressBox />}
-              isResetPassword={true}
-            />
-          )}
-          {dappConnectClient && (
-            <DappConnectModal
-              client={dappConnectClient as DappConnect}
-              handleSuccess={handleWeb3mqCallback}
-              appType={appType}
-            />
-          )}
-          {commonCenterStatusData && <CommonCenterStatus {...commonCenterStatusData} />}
+    <WalletProvider>
+      <div className={cx(ss.container)}>
+        <div onClick={handleModalShow}>
+          {loginBtnNode || <Button className={ss.iconBtn}>Login</Button>}
         </div>
-      </Modal>
-    </div>
+        <Modal
+          dialogClassName={cx(modalClassName)}
+          containerId={containerId}
+          appType={appType}
+          visible={visible}
+          modalHeader={
+            <div className={ss.loginModalHead}>
+              {!account && step !== StepStringEnum.HOME && (
+                <CheveronLeft onClick={handleBack} className={ss.backBtn} />
+              )}
+              <div className={ss.title}>{headerTitle}</div>
+              <CloseBtnIcon onClick={handleClose} className={ss.closeBtn} />
+            </div>
+          }
+          closeModal={hide}
+        >
+          <div className={cx(ss.modalBody)} style={styles?.modalBody}>
+            {step === StepStringEnum.HOME && (
+              <Home
+                SuiConnectBtn={<ConnectButton />}
+                handleSuiConnect={handleSuiConnected}
+                RenderWallets={
+                  <RenderWallets
+                    handleViewAll={() => {
+                      setConnectLoadingStep(StepStringEnum.VIEW_ALL);
+                    }}
+                    styles={styles}
+                    showLoading={showLoading}
+                    showCount={3}
+                    handleWalletClick={handleWalletClick}
+                  />
+                }
+                styles={styles}
+                handleWeb3MQClick={handleWeb3mqClick}
+                WalletConnectBtnNode={
+                  <WalletConnectButton
+                    handleClientStep={() => {
+                      setConnectLoadingStep(StepStringEnum.CONNECT_LOADING);
+                    }}
+                    handleError={() => {
+                      setConnectLoadingStep(StepStringEnum.REJECT_CONNECT);
+                    }}
+                    handleConnectEvent={async (event) => {
+                      setWalletInfo({
+                        name: event.walletName,
+                        type: event.walletType,
+                      });
+                      await getAccount('eth', event.address);
+                    }}
+                    create={create}
+                    connect={connect}
+                    closeModal={closeModal}
+                    onSessionConnected={onSessionConnected}
+                  />
+                }
+              />
+            )}
+            {step === StepStringEnum.VIEW_ALL && (
+              <RenderWallets
+                handleViewAll={() => {
+                  setConnectLoadingStep(StepStringEnum.VIEW_ALL);
+                }}
+                showLoading={showLoading}
+                handleWalletClick={handleWalletClick}
+                styles={styles}
+              />
+            )}
+            {step === StepStringEnum.LOGIN && (
+              <Login
+                showLoading={showLoading}
+                errorInfo={errorInfo}
+                styles={styles}
+                submitLogin={submitLogin}
+                addressBox={<RenderWalletAddressBox />}
+              />
+            )}
+            {step === StepStringEnum.SIGN_UP && (
+              <SignUp
+                showLoading={showLoading}
+                errorInfo={errorInfo}
+                styles={styles}
+                submitSignUp={submitSignUp}
+                addressBox={<RenderWalletAddressBox />}
+              />
+            )}
+            {step === StepStringEnum.RESET_PASSWORD && (
+              <SignUp
+                showLoading={showLoading}
+                errorInfo={errorInfo}
+                styles={styles}
+                submitSignUp={submitSignUp}
+                addressBox={<RenderWalletAddressBox />}
+                isResetPassword={true}
+              />
+            )}
+            {dappConnectClient && (
+              <DappConnectModal
+                client={dappConnectClient as DappConnect}
+                handleSuccess={handleWeb3mqCallback}
+                appType={appType}
+              />
+            )}
+            {commonCenterStatusData && <CommonCenterStatus {...commonCenterStatusData} />}
+          </div>
+        </Modal>
+      </div>
+    </WalletProvider>
   );
 };

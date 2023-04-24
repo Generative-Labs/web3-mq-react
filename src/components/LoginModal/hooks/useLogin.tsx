@@ -48,12 +48,13 @@ type IProps = {
   client: any;
   dappConnectClient?: DappConnect;
   walletConnectClient: React.MutableRefObject<SignClient | undefined>;
+  suiWallet: React.MutableRefObject<any>;
   handleLoginEvent: (eventData: LoginEventDataType) => void;
   keys?: MainKeysType;
   account?: UserAccountType;
   appType?: AppTypeEnum;
   propWcSession?: SessionTypes.Struct;
-  isResetPassword?: boolean
+  isResetPassword?: boolean;
 };
 
 const projectId = '1c5ee52c12a9145d5b184e06120462cc';
@@ -65,6 +66,28 @@ const web3Modal = new Web3Modal({
   // `standaloneChains` can also be specified when calling `web3Modal.openModal(...)` later on.
   standaloneChains: ['eip155:1'],
 });
+
+const ByteArrayToHexString = (byteArray: Uint8Array) => {
+  return Array.from(byteArray, function (byte) {
+    return ('0' + (byte & 0xff).toString(16)).slice(-2);
+  }).join('');
+};
+
+const Base64StringToUint8 = (base64: string) => {
+  var binary_string = window.atob(base64);
+  var len = binary_string.length;
+  var bytes = new Uint8Array(len);
+  for (var i = 0; i < len; i++) {
+    bytes[i] = binary_string.charCodeAt(i);
+  }
+  return bytes;
+};
+
+const Base64ToHex = (base64: string): string => {
+  const un8 = Base64StringToUint8(base64);
+  return ByteArrayToHexString(un8);
+};
+
 const useLogin = (props: IProps) => {
   const {
     client,
@@ -76,6 +99,7 @@ const useLogin = (props: IProps) => {
     appType,
     propWcSession,
     isResetPassword = false,
+    suiWallet,
   } = props;
   const [wcSession, setWcSession] = useState<SessionTypes.Struct | undefined>(propWcSession);
   const [userAccount, setUserAccount] = useState<UserAccountType | undefined>(account);
@@ -235,6 +259,52 @@ const useLogin = (props: IProps) => {
     };
   };
 
+  const registerBySui = async (nickname?: string): Promise<void> => {
+    if (!userAccount) {
+      return;
+    }
+    const { address, userid, walletType } = userAccount;
+
+    const { signContent } = await client.register.getMainKeypairSignContent({
+      password: confirmPassword.current,
+      did_value: address,
+      did_type: walletType,
+    });
+
+    if (suiWallet.current && suiWallet.current.signMessage) {
+      const { signature } = await suiWallet.current.signMessage({
+        message: new TextEncoder().encode(signContent),
+      });
+      console.log(signature, 'signature');
+      console.log(Base64ToHex(signature), 'Base64ToHex(signature)');
+
+      const { publicKey, secretKey } = await client.register.getMainKeypairBySignature(
+        Base64ToHex(signature),
+        confirmPassword.current,
+      );
+      const { signContent: registerSignContent } = await client.register.getRegisterSignContent({
+        userid,
+        mainPublicKey: publicKey,
+        didType: walletType,
+        didValue: address,
+      });
+
+      const { signature: registerSign } = await suiWallet.current.signMessage({
+        message: new TextEncoder().encode(registerSignContent),
+      });
+      console.log(registerSign, 'registerSign');
+      console.log(Base64ToHex(registerSign), 'Base64ToHex(registerSign)');
+      await commonRegister({
+        mainPublicKey: publicKey,
+        mainPrivateKey: secretKey,
+        userid,
+        didType: walletType,
+        didValue: address,
+        signature: Base64ToHex(registerSign),
+        nickname,
+      });
+    }
+  };
   const registerByWalletConnect = async (nickname?: string): Promise<void> => {
     if (!userAccount) {
       return;
@@ -555,11 +625,11 @@ const useLogin = (props: IProps) => {
       signature,
     };
     if (isResetPassword) {
-      await client.register.resetPassword(params);  
-    } else  {
-      await client.register.register(params);  
+      await client.register.resetPassword(params);
+    } else {
+      await client.register.register(params);
     }
-    
+
     handleLoginEvent({
       msg: '',
       type: 'register',
@@ -615,6 +685,7 @@ const useLogin = (props: IProps) => {
     onSessionConnected,
     loginByWalletConnect,
     registerByWalletConnect,
+    registerBySui,
   };
 };
 
