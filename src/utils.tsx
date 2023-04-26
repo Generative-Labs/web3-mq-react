@@ -488,7 +488,28 @@ export type bindDidV2Params = {
   bind_value: string;
 };
 
-export const selfRequest = async (url: string, payload: bindDidV2Params | FollowOperationApiParams) => {
+export type AuthToDappParams = {
+  userid: string;
+  dapp_id: string;
+  scopes: any;
+  signature_content: string;
+  timestamp: number;
+  did_signature: string;
+  did_value: string;
+  did_pubkey?: string;
+  auth_status: AuthToDappEnum;
+  did_type: WalletType;
+};
+
+export enum AuthToDappEnum {
+  OFF,
+  ON,
+}
+
+export type AuthStatusType = 'off' | 'on' | 'clear'
+
+
+export const selfRequest = async (url: string, payload: bindDidV2Params | FollowOperationApiParams | AuthToDappParams) => {
   return await fetch(url, {
     headers: {
       'content-type': 'application/json',

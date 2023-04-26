@@ -14,6 +14,7 @@ export type CommonCenterStatusIProp = {
   handleBtnClick?: () => void;
   showBtn?: boolean;
   addressBox?: React.ReactNode;
+  authToDappList?: React.ReactNode;
 };
 
 export const CommonCenterStatus: React.FC<CommonCenterStatusIProp> = (props) => {
@@ -31,6 +32,7 @@ export const CommonCenterStatus: React.FC<CommonCenterStatusIProp> = (props) => 
       </Button>
     ),
     addressBox,
+    authToDappList,
   } = props;
   return (
     <div className={cx(ss.signErrorContainer)} style={styles?.signErrorContainer}>
@@ -38,6 +40,7 @@ export const CommonCenterStatus: React.FC<CommonCenterStatusIProp> = (props) => 
       {addressBox}
       {title && <div className={ss.title}>{title}</div>}
       <div className={ss.textContent}>{textContent}</div>
+      {authToDappList}
       {showBtn && <div className={ss.buttonBox}>{customBtn}</div>}
     </div>
   );

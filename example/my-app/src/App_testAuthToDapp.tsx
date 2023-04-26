@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Client } from '@web3mq/client';
-import { BindDidModal } from '@web3mq/react-components';
+import { AuthToReceiveModal } from '@web3mq/react-components';
 import '@web3mq/react-components/dist/css/index.css';
 
 import useLogin from './hooks/useLogin';
@@ -28,16 +28,15 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <BindDidModal
-        url={'https://dev-dapp-server.web3mq.com/api/bots/bind_did/'}
-        didType={'telegram'}
-        didValue={'5818490985'}
+      <AuthToReceiveModal
         client={Client}
+        url={`${fastestUrl}/api/dapp/user_auth/`}
         appType={appType}
         containerId={''}
         isShow={true}
-        handleBindDidEvent={handleBindDidEvent}
         env={'dev'}
+        handleOperationEvent={handleBindDidEvent}
+        dappId={'web3mq:push-server-v1'}
       />
     </div>
   );
