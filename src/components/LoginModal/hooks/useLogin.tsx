@@ -275,8 +275,6 @@ const useLogin = (props: IProps) => {
       const { signature } = await suiWallet.current.signMessage({
         message: new TextEncoder().encode(signContent),
       });
-      console.log(signature, 'signature');
-      console.log(Base64ToHex(signature), 'Base64ToHex(signature)');
 
       const { publicKey, secretKey } = await client.register.getMainKeypairBySignature(
         Base64ToHex(signature),
@@ -292,8 +290,6 @@ const useLogin = (props: IProps) => {
       const { signature: registerSign } = await suiWallet.current.signMessage({
         message: new TextEncoder().encode(registerSignContent),
       });
-      console.log(registerSign, 'registerSign');
-      console.log(Base64ToHex(registerSign), 'Base64ToHex(registerSign)');
       await commonRegister({
         mainPublicKey: publicKey,
         mainPrivateKey: secretKey,
