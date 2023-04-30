@@ -611,8 +611,8 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
   }, [JSON.stringify(walletInfo), userAccount.current]);
 
   return (
-    <div className={cx(ss.container)}>
-      <div onClick={handleModalShow}>
+    <div className={cx(ss.container)} style={styles?.modalContainer}>
+      <div onClick={handleModalShow} style={styles?.btnBox}>
         {loginBtnNode || (
           <Button className={ss.iconBtn}>
             {operationMode === 'follow_user' ? 'Follow Modal' : 'Bind Did'}
