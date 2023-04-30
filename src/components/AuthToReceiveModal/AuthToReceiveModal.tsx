@@ -4,6 +4,7 @@ import {
   BindDidWarningIcon,
   CheveronLeft,
   CloseBtnIcon,
+  ConnectDappSuccessIcon,
   ConnectErrorIcon,
   ConnectSuccessIcon,
 } from '../../icons';
@@ -24,7 +25,7 @@ import useBindDid, { UserAccountType } from '../BindDidModal/hooks/useBindDid';
 import moment from 'moment';
 import { sha3_224 } from 'js-sha3';
 import type { AuthStatusType, AuthToDappParams } from '../../utils';
-import { AuthToDappEnum, getShortAddress, selfRequest } from '../../utils';
+import { AuthToDappEnum, selfRequest } from '../../utils';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/loginLoading';
 import { StepStringEnum, WalletInfoType } from '../../types/enum';
@@ -33,6 +34,7 @@ import type { SessionTypes } from '@walletconnect/types';
 type IProps = {
   client?: any;
   url: string;
+  fastestUrl: string;
   containerId: string;
   isShow?: boolean;
   appType?: AppTypeEnum;
@@ -45,14 +47,13 @@ type IProps = {
   authScopesType?: string;
   authScopesStatus?: AuthStatusType;
   authAudit?: AuthToDappEnum;
+  propsUserAccount?: UserAccountType;
   propWalletConnectClient?: SignClient;
   propWcSession?: SessionTypes.Struct;
   propDappConnectClient?: DappConnectType;
 };
 
 export const AuthToReceiveModal: React.FC<IProps> = (props) => {
-  const [dappConnectClient, setDappConnectClient] = useState<DappConnectType>();
-  const walletConnectClient = useRef<SignClient>();
   const {
     isShow,
     client = Client as any,
@@ -68,7 +69,19 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
     authAudit = AuthToDappEnum.ON,
     authScopesStatus = 'on',
     authScopesType = 'Web3MQ/user.message:receive',
+    fastestUrl,
+    propsUserAccount,
+    propWalletConnectClient,
+    propDappConnectClient,
+    propWcSession,
   } = props;
+  const [dappConnectClient, setDappConnectClient] = useState<DappConnectType | undefined>(
+    propDappConnectClient,
+  );
+  const walletConnectClient = useRef<SignClient>();
+  if (propWalletConnectClient) {
+    walletConnectClient.current = propWalletConnectClient;
+  }
   const {
     wcSession,
     normalSign,
@@ -81,17 +94,20 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
     sendSignByWalletConnect,
     signRes,
     didPubKey,
-  } = useBindDid(client, walletConnectClient, dappConnectClient, appType);
+  } = useBindDid(client, walletConnectClient, dappConnectClient, appType, propWcSession);
   const authScopes = {
     [authScopesType]: authScopesStatus,
   };
   const { visible, show, hide } = useToggle(isShow);
-  const [step, setStep] = useState(StepStringEnum.HOME);
+  const userAccount = useRef<UserAccountType | undefined>(propsUserAccount);
+  const [step, setStep] = useState(
+    propsUserAccount ? StepStringEnum.READY_AUTH_TO_DAPP : StepStringEnum.HOME,
+  );
   const [showLoading, setShowLoading] = useState(false);
   const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
   const [signTime, setSignTime] = useState<number>();
   const [signContent, setSignContent] = useState<string>();
-  const userAccount = useRef<UserAccountType | undefined>();
+
   const [commonCenterStatusData, setCommonCenterStatusData] = useState<
     CommonCenterStatusIProp | undefined
   >();
@@ -168,7 +184,7 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
       });
     } else if (currentStep === StepStringEnum.AUTH_DAPP_SUCCESS) {
       let title = 'Authorization successful';
-      let textContent = 'DApp want to access your Web3MQ account successful';
+      let textContent = 'You have successfully authorized dapp';
       setCommonCenterStatusData({
         styles,
         icon: <ConnectSuccessIcon />,
@@ -253,8 +269,15 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
   };
   const handleModalShow = async () => {
     show();
-    setConnectLoadingStep(StepStringEnum.HOME);
-    setCommonCenterStatusData(undefined);
+    if (userAccount.current) {
+      if (userAccount.current?.userExist) {
+        setConnectLoadingStep(StepStringEnum.READY_AUTH_TO_DAPP);
+      } else {
+        setConnectLoadingStep(StepStringEnum.READY_SIGN_UP);
+      }
+    } else {
+      setConnectLoadingStep(StepStringEnum.HOME);
+    }
   };
   const handleClose = () => {
     hide();
@@ -317,6 +340,15 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
       return 'Wallet Connect';
     } else if (step === StepStringEnum.VIEW_ALL) {
       return 'Choose Desktop wallets';
+    } else if (
+      [
+        StepStringEnum.READY_AUTH_TO_DAPP,
+        StepStringEnum.AUTH_DAPP_SUCCESS,
+        StepStringEnum.AUTH_DAPP_ERROR,
+        StepStringEnum.AUTHING,
+      ].includes(step)
+    ) {
+      return 'Authorize Dapp';
     } else {
       return 'Connect Dapp';
     }
@@ -344,15 +376,6 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
     } else {
       NonceContent = sha3_224(userid + dappId + authAudit + JSON.stringify(authScopes) + timestamp);
     }
-    // if (auth_status == 0) {
-    //   // 取消授权 清空scopes
-    //   let nonce = sha3_224(userid + dappId + auth_status + timestamp); // hex format
-    //
-    //   // 如果 scopes 有数据 比如只取消一部分 或者 把 on 改成 off
-    //   let nonce = sha3_224_hash(userid + dappid + auth_status + json_dumps(scopes) + timestamp); // hex format
-    // } else {
-    //   let nonce = sha3_224_hash(userid + dappid + auth_status + json_dumps(scopes) + timestamp); // hex format
-    // }
 
     const content = `DApp want to access your Web3MQ account ${userid}
 		Auth Scopes: 
@@ -438,8 +461,8 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
   };
 
   return (
-    <div className={cx(ss.container)}>
-      <div onClick={handleModalShow}>
+    <div className={cx(ss.container)} style={styles?.modalContainer}>
+      <div onClick={handleModalShow} style={styles?.btnBox}>
         {customBtn || <Button className={ss.iconBtn}>Auth to dapp</Button>}
       </div>
       <Modal
@@ -523,6 +546,17 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
                 >
                   Authorize
                 </Button>
+              }
+              authToDappList={
+                <div className={ss.authToDappList}>
+                  <ConnectDappSuccessIcon style={{ marginRight: '15px' }} />
+                  <div className={ss.authToDappRight}>
+                    <div className={ss.title}>Receive: message、notification</div>
+                    <div className={ss.subTitle}>
+                      Receive message notifications on your behalf and forward them to telegram
+                    </div>
+                  </div>
+                </div>
               }
             />
           )}

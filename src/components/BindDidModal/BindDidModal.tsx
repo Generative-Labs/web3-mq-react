@@ -12,7 +12,7 @@ import {
   Web3MqWalletIcon,
 } from '../../icons';
 import { AppTypeEnum } from '../../context';
-import { Button, Loading, LoginModal, Modal } from '../../components';
+import { AuthToReceiveModal, Button, Loading, LoginModal, Modal } from '../../components';
 import { Home } from '../LoginModal/Home';
 import useToggle from '../../hooks/useToggle';
 
@@ -36,6 +36,7 @@ import { StepStringEnum, WalletInfoType } from '../../types/enum';
 type IProps = {
   client?: any;
   url: string;
+  fastestUrl: string;
   containerId: string;
   isShow?: boolean;
   appType?: AppTypeEnum;
@@ -90,6 +91,7 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     operationType,
     operationMode = 'bind_did',
     url,
+    fastestUrl,
   } = props;
   const {
     wcSession,
@@ -126,6 +128,18 @@ export const BindDidModal: React.FC<IProps> = (props) => {
         textContent: 'Confirm this connection in your wallet',
       });
       return;
+    } else if (currentStep === StepStringEnum.AUTH_DAPP_SUCCESS) {
+      let title = 'Authorization successful';
+      let textContent = 'You have successfully authorized dapp';
+      setCommonCenterStatusData({
+        styles,
+        icon: <ConnectSuccessIcon />,
+        title,
+        textContent,
+        showBtn: true,
+        btnText: 'OK',
+        handleBtnClick: handleClose,
+      });
     } else if (currentStep === StepStringEnum.CONNECT_ERROR) {
       setCommonCenterStatusData({
         styles,
@@ -290,6 +304,43 @@ export const BindDidModal: React.FC<IProps> = (props) => {
         showBtn: true,
         btnText: 'OK',
         handleBtnClick: handleClose,
+        customBtn: (
+          <div className={ss.successBtns}>
+            <Button className={ss.okBtn} onClick={handleClose}>
+              OK
+            </Button>
+            <AuthToReceiveModal
+              client={client}
+              env={env}
+              handleOperationEvent={() => {
+                console.log('success');
+                setConnectLoadingStep(StepStringEnum.AUTH_DAPP_SUCCESS);
+              }}
+              url={`${fastestUrl}/api/dapp/user_auth/`}
+              fastestUrl={fastestUrl}
+              propsUserAccount={userAccount.current}
+              dappId={'web3mq:push-server-v1'}
+              containerId={containerId}
+              appType={appType}
+              customBtn={
+                <Button className={ss.authBtn} type={'primary'}>
+                  To authorize
+                </Button>
+              }
+              propWalletConnectClient={walletConnectClient.current}
+              propWcSession={wcSession.current}
+              propDappConnectClient={dappConnectClient}
+              styles={{
+                btnBox: {
+                  width: '100%',
+                },
+                modalContainer: {
+                  width: '100%',
+                },
+              }}
+            />
+          </div>
+        ),
       });
     } else if (currentStep === StepStringEnum.REJECT_CONNECT) {
       setCommonCenterStatusData({

@@ -55,17 +55,8 @@ const App: React.FC = () => {
         isShow={false}
         handleOperationEvent={handleBindDidEvent}
         env={'dev'}
-        loginBtnNode={
-          <Button
-            style={{
-              width: '100%',
-            }}
-            type={'primary'}
-          >
-            - Unfollow
-          </Button>
-        }
         styles={styles}
+        fastestUrl={fastestUrl}
       />
       <Button
         style={{

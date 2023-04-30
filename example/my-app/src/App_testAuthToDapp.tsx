@@ -31,6 +31,7 @@ const App: React.FC = () => {
       <AuthToReceiveModal
         client={Client}
         url={`${fastestUrl}/api/dapp/user_auth/`}
+        fastestUrl={fastestUrl}
         appType={appType}
         containerId={''}
         isShow={true}
