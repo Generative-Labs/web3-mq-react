@@ -3,8 +3,7 @@ import { DesktopIcon, MobileIcon, Web3MqIcon } from '../../../icons';
 import { Button } from '../../Button';
 import ss from './index.module.scss';
 import cx from 'classnames';
-import { useWallet } from '@suiet/wallet-kit';
-import type { WalletType } from '@web3mq/client';
+// import { useWallet } from '@suiet/wallet-kit';
 
 type IProps = {
   styles: Record<string, any> | null;
@@ -21,18 +20,18 @@ export const Home: React.FC<IProps> = (props) => {
     styles,
     RenderWallets,
     SuiConnectBtn = null,
-    handleSuiConnect,
+    // handleSuiConnect,
   } = props;
-  const wallet = useWallet();
+  // const wallet = useWallet();
 
-  useEffect(() => {
-    if (!wallet.connected) return;
-    if (wallet.account?.address) {
-      if (handleSuiConnect) {
-        handleSuiConnect(wallet).then();
-      }
-    }
-  }, [wallet.connected]);
+  // useEffect(() => {
+  //   if (!wallet.connected) return;
+  //   if (wallet.account?.address) {
+  //     if (handleSuiConnect) {
+  //       handleSuiConnect(wallet).then();
+  //     }
+  //   }
+  // }, [wallet.connected]);
 
   return (
     <div className={cx(ss.container)} style={styles?.homeContainer}>

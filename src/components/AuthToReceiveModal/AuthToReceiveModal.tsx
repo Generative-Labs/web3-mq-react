@@ -25,7 +25,7 @@ import useBindDid, { UserAccountType } from '../BindDidModal/hooks/useBindDid';
 import moment from 'moment';
 import { sha3_224 } from 'js-sha3';
 import type { AuthStatusType, AuthToDappParams } from '../../utils';
-import { AuthToDappEnum, selfRequest } from '../../utils';
+import {AuthToDappEnum, getShortAddress, selfRequest} from '../../utils';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/loginLoading';
 import { StepStringEnum, WalletInfoType } from '../../types/enum';
@@ -377,14 +377,16 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
       NonceContent = sha3_224(userid + dappId + authAudit + JSON.stringify(authScopes) + timestamp);
     }
 
-    const content = `DApp want to access your Web3MQ account ${userid}
-		Auth Scopes: 
-		Receive your Web3MQ message
+    const content = `
+    DApp want to access your 
+    Web3MQ account : ${getShortAddress(userid, 6, 6)}
+    
+    Auth Scopes: 
+    Receive your Web3MQ message
 		
-        URI: ${url}
-	    Nonce: ${NonceContent}
-        Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}\`
-	`;
+    URI: ${url}
+    Nonce: ${NonceContent}
+    Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
     setSignContent(content);
     setSignTime(timestamp);
     if (dappConnectClient) {
@@ -551,7 +553,7 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
                 <div className={ss.authToDappList}>
                   <ConnectDappSuccessIcon style={{ marginRight: '15px' }} />
                   <div className={ss.authToDappRight}>
-                    <div className={ss.title}>Receive: message、notification</div>
+                    <div className={ss.title}>Receive: message</div>
                     <div className={ss.subTitle}>
                       Receive message notifications on your behalf and forward them to telegram
                     </div>

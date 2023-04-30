@@ -17,8 +17,6 @@ import { SignUp } from './SignUp';
 import { Home } from './Home';
 import { CommonCenterStatus, CommonCenterStatusIProp } from './loginLoading';
 import useToggle from '../../hooks/useToggle';
-import { WalletProvider, ConnectButton, useWallet } from '@suiet/wallet-kit';
-import '@suiet/wallet-kit/style.css';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
@@ -76,7 +74,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
     propDappConnectClient,
   );
   const walletConnectClient = useRef<SignClient>();
-  const suiWallet = useRef<any>();
   if (propWalletConnectClient) {
     walletConnectClient.current = propWalletConnectClient;
   }
@@ -100,7 +97,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
     onSessionConnected,
     loginByWalletConnect,
     registerByWalletConnect,
-    registerBySui,
   } = useLogin({
     client,
     propWcSession,
@@ -111,7 +107,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
     walletConnectClient,
     dappConnectClient,
     isResetPassword,
-    suiWallet,
   });
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(
@@ -131,12 +126,12 @@ export const LoginModal: React.FC<IProps> = (props) => {
     CommonCenterStatusIProp | undefined
   >();
 
-  const handleSuiConnected = async (e: any) => {
-    if (e && e.account && e.account.address) {
-      suiWallet.current = e;
-      getAccount('sui' as WalletType, e.account?.address).then();
-    }
-  };
+  // const handleSuiConnected = async (e: any) => {
+  //   if (e && e.account && e.account.address) {
+  //     suiWallet.current = e;
+  //     getAccount('sui' as WalletType, e.account?.address).then();
+  //   }
+  // };
 
   const setConnectLoadingStep = (currentStep: StepStringEnum) => {
     setStep(currentStep);
@@ -258,8 +253,6 @@ export const LoginModal: React.FC<IProps> = (props) => {
         await registerByQrCode();
       } else if (walletConnectClient.current) {
         await registerByWalletConnect();
-      } else if (suiWallet.current) {
-        await registerBySui();
       } else {
         await register(walletType);
       }
@@ -469,7 +462,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
           {step === StepStringEnum.HOME && (
             <Home
               // SuiConnectBtn={<ConnectButton />}
-              handleSuiConnect={handleSuiConnected}
+              // handleSuiConnect={handleSuiConnected}
               RenderWallets={
                 <RenderWallets
                   handleViewAll={() => {

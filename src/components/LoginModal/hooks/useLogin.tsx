@@ -48,7 +48,7 @@ type IProps = {
   client: any;
   dappConnectClient?: DappConnect;
   walletConnectClient: React.MutableRefObject<SignClient | undefined>;
-  suiWallet: React.MutableRefObject<any>;
+  // suiWallet: React.MutableRefObject<any>;
   handleLoginEvent: (eventData: LoginEventDataType) => void;
   keys?: MainKeysType;
   account?: UserAccountType;
@@ -99,7 +99,6 @@ const useLogin = (props: IProps) => {
     appType,
     propWcSession,
     isResetPassword = false,
-    suiWallet,
   } = props;
   const [wcSession, setWcSession] = useState<SessionTypes.Struct | undefined>(propWcSession);
   const [userAccount, setUserAccount] = useState<UserAccountType | undefined>(account);
@@ -259,48 +258,48 @@ const useLogin = (props: IProps) => {
     };
   };
 
-  const registerBySui = async (nickname?: string): Promise<void> => {
-    if (!userAccount) {
-      return;
-    }
-    const { address, userid, walletType } = userAccount;
-
-    const { signContent } = await client.register.getMainKeypairSignContent({
-      password: confirmPassword.current,
-      did_value: address,
-      did_type: walletType,
-    });
-
-    if (suiWallet.current && suiWallet.current.signMessage) {
-      const { signature } = await suiWallet.current.signMessage({
-        message: new TextEncoder().encode(signContent),
-      });
-
-      const { publicKey, secretKey } = await client.register.getMainKeypairBySignature(
-        Base64ToHex(signature),
-        confirmPassword.current,
-      );
-      const { signContent: registerSignContent } = await client.register.getRegisterSignContent({
-        userid,
-        mainPublicKey: publicKey,
-        didType: walletType,
-        didValue: address,
-      });
-
-      const { signature: registerSign } = await suiWallet.current.signMessage({
-        message: new TextEncoder().encode(registerSignContent),
-      });
-      await commonRegister({
-        mainPublicKey: publicKey,
-        mainPrivateKey: secretKey,
-        userid,
-        didType: walletType,
-        didValue: address,
-        signature: Base64ToHex(registerSign),
-        nickname,
-      });
-    }
-  };
+  // const registerBySui = async (nickname?: string): Promise<void> => {
+  //   if (!userAccount) {
+  //     return;
+  //   }
+  //   const { address, userid, walletType } = userAccount;
+  //
+  //   const { signContent } = await client.register.getMainKeypairSignContent({
+  //     password: confirmPassword.current,
+  //     did_value: address,
+  //     did_type: walletType,
+  //   });
+  //
+  //   if (suiWallet.current && suiWallet.current.signMessage) {
+  //     const { signature } = await suiWallet.current.signMessage({
+  //       message: new TextEncoder().encode(signContent),
+  //     });
+  //
+  //     const { publicKey, secretKey } = await client.register.getMainKeypairBySignature(
+  //       Base64ToHex(signature),
+  //       confirmPassword.current,
+  //     );
+  //     const { signContent: registerSignContent } = await client.register.getRegisterSignContent({
+  //       userid,
+  //       mainPublicKey: publicKey,
+  //       didType: walletType,
+  //       didValue: address,
+  //     });
+  //
+  //     const { signature: registerSign } = await suiWallet.current.signMessage({
+  //       message: new TextEncoder().encode(registerSignContent),
+  //     });
+  //     await commonRegister({
+  //       mainPublicKey: publicKey,
+  //       mainPrivateKey: secretKey,
+  //       userid,
+  //       didType: walletType,
+  //       didValue: address,
+  //       signature: Base64ToHex(registerSign),
+  //       nickname,
+  //     });
+  //   }
+  // };
   const registerByWalletConnect = async (nickname?: string): Promise<void> => {
     if (!userAccount) {
       return;
@@ -681,7 +680,6 @@ const useLogin = (props: IProps) => {
     onSessionConnected,
     loginByWalletConnect,
     registerByWalletConnect,
-    registerBySui,
   };
 };
 
