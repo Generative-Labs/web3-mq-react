@@ -28,8 +28,9 @@ const useBindDid = (
   walletConnectClient: React.MutableRefObject<SignClient | undefined>,
   dappConnectClient?: DappConnect,
   appType?: AppTypeEnum,
+  propsWcSession?: SessionTypes.Struct
 ) => {
-  const wcSession = useRef<SessionTypes.Struct | undefined>();
+  const wcSession = useRef<SessionTypes.Struct | undefined>(propsWcSession);
   const [signRes, setSignRes] = useState('');
   const [didPubKey, setDidPubKey] = useState('');
   const sendSignByDappConnect = async (signContent: string, address: string) => {

@@ -4,37 +4,6 @@
   padding-top: 16px;;
 }
 
-.addressBox {
-  display: flex;
-  width: 280px;
-  height: 40px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 48px;
-  margin: 0 auto;
-  padding: 0 10px;
-  @include themeify {
-    border: 1px solid themed(Gray_200);
-    color: themed(Gray_700);
-    .centerText {
-      margin-left: 4px;
-      margin-right: 6px;
-      font-style: normal;
-      font-weight: themed(Bold_font-weight);
-      font-size: themed(Headline_font-size);
-    }
-    .addressText {
-      font-weight: themed(Bold_font-weight);
-      font-size: themed(Headline_font-size);
-      line-height: 20px;
-    }
-  }
-
-  div:first-child {
-    height: 30px;
-  }
-}
-
 .ArgentWalletIcon {
   svg {
     width: 30px;

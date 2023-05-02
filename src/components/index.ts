@@ -33,3 +33,6 @@ export * from './RadioGroup';
 export * from './Button';
 export * from './BindDidModal';
 export * from './LoginModal';
+export * from './ResetPasswordModal';
+export * from './AuthToReceiveModal';
+

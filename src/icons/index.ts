@@ -48,3 +48,4 @@ export * from './ConnectErrorIcon';
 export * from './Web3MqWalletIcon';
 export * from './BindDidWarningIcon';
 export * from './ConnectSuccessIcon';
+export * from './ConnectDappSuccessIcon';
