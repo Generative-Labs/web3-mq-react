@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Client, getUserPublicProfileRequest } from '@web3mq/client';
-import { BindDidModal, Button } from '@web3mq/react-components';
+import { Client, WalletType } from '@web3mq/client';
+import { BindDidModal } from '@web3mq/react-components';
 import '@web3mq/react-components/dist/css/index.css';
 
 import useLogin from './hooks/useLogin';
@@ -33,9 +33,8 @@ const App: React.FC = () => {
   const [appType, setAppType] = useState(window.innerWidth <= 600 ? 'h5' : 'pc');
   const address = '0x7236b0F4F1409AFdC7C9fC446943A7b84b6513a1';
 
-
   useEffect(() => {
-    init()
+    init();
     document.body.setAttribute('data-theme', 'light');
     window.addEventListener('resize', () => {
       setAppType(window.innerWidth <= 600 ? 'h5' : 'pc');
@@ -53,16 +52,23 @@ const App: React.FC = () => {
   return (
     <div>
       <BindDidModal
-          url={`${fastestUrl}/api/following/`}
-          client={Client}
-          appType={appType}
-          containerId={''}
-          isShow={true}
-          env={'dev'}
-          handleOperationEvent={handleBindDidEvent}
-          operationType={'eth'}
-          operationValue={address}
-          operationMode={'follow_user'}
+        url={`${fastestUrl}/api/following/`}
+        client={Client}
+        appType={appType}
+        containerId={''}
+        isShow={true}
+        env={'dev'}
+        handleOperationEvent={handleBindDidEvent}
+        operationType={'eth'}
+        operationValue={address}
+        operationMode={'follow_user'}
+        propsUserAccount={{
+          userid: 'user:e24ea2e025c6a890147ba2f0070be4c1b311419e69c9d7b04513e488',
+          address: '0x074565a74d5913787f342aa8f4db02074d651c79',
+          walletType: 'eth',
+          userExist: true,
+        }}
+        props
       />
     </div>
   );

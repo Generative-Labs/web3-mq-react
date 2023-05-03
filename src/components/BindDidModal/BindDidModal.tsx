@@ -32,6 +32,7 @@ import { getShortAddress, selfRequest } from '../../utils';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/loginLoading';
 import { StepStringEnum, WalletInfoType } from '../../types/enum';
+import type { SessionTypes } from '@walletconnect/types';
 
 type IProps = {
   client?: any;
@@ -48,6 +49,10 @@ type IProps = {
   operationType: string;
   operationValue: string;
   operationMode?: 'bind_did' | 'follow_user';
+  propsUserAccount?: UserAccountType;
+  propWalletConnectClient?: SignClient;
+  propWcSession?: SessionTypes.Struct;
+  propDappConnectClient?: DappConnectType;
 };
 
 export type didItemType = {
@@ -75,8 +80,6 @@ export type userPublicProfileType = {
 };
 
 export const BindDidModal: React.FC<IProps> = (props) => {
-  const [dappConnectClient, setDappConnectClient] = useState<DappConnectType>();
-  const walletConnectClient = useRef<SignClient>();
   const {
     isShow,
     client = Client as any,
@@ -92,7 +95,19 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     operationMode = 'bind_did',
     url,
     fastestUrl,
+    propsUserAccount,
+    propWalletConnectClient,
+    propDappConnectClient,
+    propWcSession,
   } = props;
+  const [dappConnectClient, setDappConnectClient] = useState<DappConnectType | undefined>(
+    propDappConnectClient,
+  );
+  const walletConnectClient = useRef<SignClient>();
+  if (propWalletConnectClient) {
+    walletConnectClient.current = propWalletConnectClient;
+  }
+
   const {
     wcSession,
     normalSign,
@@ -105,18 +120,25 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     sendSignByWalletConnect,
     signRes,
     didPubKey,
-  } = useBindDid(client, walletConnectClient, dappConnectClient, appType);
+  } = useBindDid(client, walletConnectClient, dappConnectClient, appType, propWcSession);
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(StepStringEnum.HOME);
   const [showLoading, setShowLoading] = useState(false);
   const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
   const [signTime, setSignTime] = useState<number>();
   const [signContent, setSignContent] = useState<string>();
-  const userAccount = useRef<UserAccountType | undefined>();
+  const userAccount = useRef<UserAccountType | undefined>(propsUserAccount);
   const targetUserAccount = useRef<userPublicProfileType | undefined>();
   const [commonCenterStatusData, setCommonCenterStatusData] = useState<
     CommonCenterStatusIProp | undefined
   >();
+
+  useEffect(() => {
+    if (propsUserAccount) {
+      getAccount(propsUserAccount.walletType, propsUserAccount.address).then();
+    }
+  }, []);
+
 
   const setConnectLoadingStep = (currentStep: StepStringEnum) => {
     setStep(currentStep);
@@ -417,8 +439,12 @@ export const BindDidModal: React.FC<IProps> = (props) => {
   };
   const handleModalShow = async () => {
     show();
-    setConnectLoadingStep(StepStringEnum.HOME);
-    setCommonCenterStatusData(undefined);
+    console.log(propsUserAccount, 'propsUserAccount');
+    if (propsUserAccount && propsUserAccount.address) {
+      await getAccount('eth', propsUserAccount.address);
+    } else {
+      setConnectLoadingStep(StepStringEnum.HOME);
+    }
   };
   const handleClose = () => {
     hide();
