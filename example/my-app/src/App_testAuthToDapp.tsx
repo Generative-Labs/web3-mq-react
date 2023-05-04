@@ -38,6 +38,10 @@ const App: React.FC = () => {
         env={'dev'}
         handleOperationEvent={handleBindDidEvent}
         dappId={'web3mq:push-server-v1'}
+        propsAuthScopes={{
+          'Web3MQ/user.message:receive': 'on',
+          'Web3MQ/user.notification:receive': 'on'
+        }}
       />
     </div>
   );

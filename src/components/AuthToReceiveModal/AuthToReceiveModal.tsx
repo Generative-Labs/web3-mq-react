@@ -31,6 +31,8 @@ import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/login
 import { StepStringEnum, WalletInfoType } from '../../types/enum';
 import type { SessionTypes } from '@walletconnect/types';
 
+type authScopeItem = Record<string, 'on' | 'off'>
+
 type IProps = {
   client?: any;
   url: string;
@@ -51,6 +53,7 @@ type IProps = {
   propWalletConnectClient?: SignClient;
   propWcSession?: SessionTypes.Struct;
   propDappConnectClient?: DappConnectType;
+  propsAuthScopes?: authScopeItem
 };
 
 export const AuthToReceiveModal: React.FC<IProps> = (props) => {
@@ -74,6 +77,7 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
     propWalletConnectClient,
     propDappConnectClient,
     propWcSession,
+    propsAuthScopes
   } = props;
   const [dappConnectClient, setDappConnectClient] = useState<DappConnectType | undefined>(
     propDappConnectClient,
@@ -95,9 +99,13 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
     signRes,
     didPubKey,
   } = useBindDid(client, walletConnectClient, dappConnectClient, appType, propWcSession);
-  const authScopes = {
+  let authScopes = {
     [authScopesType]: authScopesStatus,
   };
+  if (propsAuthScopes) {
+    authScopes = propsAuthScopes;
+  }
+
   const { visible, show, hide } = useToggle(isShow);
   const userAccount = useRef<UserAccountType | undefined>(propsUserAccount);
   const [step, setStep] = useState(
@@ -378,15 +386,13 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
     }
 
     const content = `
-    DApp want to access your 
-    Web3MQ account : ${getShortAddress(userid, 6, 6)}
+DApp want to access your 
+       Web3MQ account : ${getShortAddress(userid, 6, 6)}
     
-    Auth Scopes: 
-    Receive your Web3MQ message
-		
-    URI: ${url}
-    Nonce: ${NonceContent}
-    Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
+Auth Scopes: Receive your Web3MQ notification 
+URI: ${url}
+Nonce: ${NonceContent}
+Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
     setSignContent(content);
     setSignTime(timestamp);
     if (dappConnectClient) {
