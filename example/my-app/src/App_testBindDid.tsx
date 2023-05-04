@@ -32,9 +32,9 @@ const App: React.FC = () => {
     //   marginRight: '16px',
     // },
     modalContainer: {
-      width: "50%",
-      minWidth: "50%",
-      marginRight: "16px",
+      width: '50%',
+      minWidth: '50%',
+      marginRight: '16px',
     },
   };
 

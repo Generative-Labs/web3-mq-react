@@ -501,7 +501,6 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
         };
         selfRequest(url, bindParams)
           .then((res) => {
-            console.log(res, 'res');
             if (res) {
               setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
               res.address = userAccount.current?.address || '';
