@@ -27,12 +27,14 @@ const App: React.FC = () => {
     return null;
   }
   const styles = {
-    btnBox: {
-      width: '100%',
-      marginRight: '16px',
-    },
+    // btnBox: {
+    //   width: '100%',
+    //   marginRight: '16px',
+    // },
     modalContainer: {
-      width: '100%',
+      width: '50%',
+      minWidth: '50%',
+      marginRight: '16px',
     },
   };
 
@@ -47,8 +49,8 @@ const App: React.FC = () => {
     >
       <BindDidModal
         url={'https://dev-dapp-server.web3mq.com/api/bots/bind_did/'}
-        operationType={'telegram'}
-        operationValue={'5818490985'}
+        didType={'telegram'}
+        didValue={'5818490985'}
         client={Client}
         appType={appType}
         containerId={''}
@@ -57,10 +59,13 @@ const App: React.FC = () => {
         env={'dev'}
         styles={styles}
         fastestUrl={fastestUrl}
+        customBtnNode={<Button style={{
+          width: '100%'
+        }}>Bind Did </Button>}
       />
       <Button
         style={{
-          width: '50%',
+          width: '100%',
         }}
       >
         aaa

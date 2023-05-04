@@ -32,24 +32,12 @@ import { WalletConnectButton } from '../WalletConnectButton';
 import { Loading } from '../Loading';
 import { getShortAddress } from '../../utils';
 import { StepStringEnum, WalletInfoType } from '../../types/enum';
+import type { CommonIProps } from '../CommonOperationModal';
 
-type IProps = {
-  client?: any;
-  containerId: string;
+interface IProps extends CommonIProps {
   isResetPassword?: boolean;
-  isShow?: boolean;
-  appType?: AppTypeEnum;
-  loginBtnNode?: React.ReactNode;
-  account?: UserAccountType;
-  styles?: Record<string, any>;
-  modalClassName?: string;
-  handleLoginEvent: (eventData: LoginEventDataType) => void;
   keys?: MainKeysType;
-  env?: 'dev' | 'test';
-  propWalletConnectClient?: SignClient;
-  propWcSession?: SessionTypes.Struct;
-  propDappConnectClient?: DappConnectType;
-};
+}
 
 export const LoginModal: React.FC<IProps> = (props) => {
   const {
@@ -57,11 +45,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
     client = Client as any,
     appType = window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc'],
     containerId,
-    loginBtnNode = null,
-    account = undefined,
+    customBtnNode = null,
+    propsUserAccount = undefined,
     styles = null,
     modalClassName = '',
-    handleLoginEvent,
+    handleOperationEvent,
     keys = undefined,
     env = 'test',
     propWcSession,
@@ -101,9 +89,9 @@ export const LoginModal: React.FC<IProps> = (props) => {
     client,
     propWcSession,
     appType,
-    account,
+    account: propsUserAccount,
     keys,
-    handleLoginEvent,
+    handleLoginEvent: handleOperationEvent,
     walletConnectClient,
     dappConnectClient,
     isResetPassword,
@@ -119,7 +107,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       : StepStringEnum.HOME,
   );
   const [showLoading, setShowLoading] = useState(false);
-  const [walletType, setWalletType] = useState<WalletType>(account?.walletType || 'eth');
+  const [walletType, setWalletType] = useState<WalletType>(propsUserAccount?.walletType || 'eth');
   const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
   const [errorInfo, setErrorInfo] = useState<string>('');
   const [commonCenterStatusData, setCommonCenterStatusData] = useState<
@@ -233,7 +221,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       }
       setShowLoading(false);
     } catch (e: any) {
-      handleLoginEvent({
+      handleOperationEvent({
         msg: e.message,
         data: null,
         type: 'error',
@@ -259,7 +247,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
       setShowLoading(false);
     } catch (e: any) {
       console.log(e, 'e');
-      handleLoginEvent({
+      handleOperationEvent({
         msg: e.message,
         data: null,
         type: 'error',
@@ -284,7 +272,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
         setShowLoading(false);
       })
       .catch((e) => {
-        handleLoginEvent({
+        handleOperationEvent({
           msg: e.message,
           data: null,
           type: 'error',
@@ -435,12 +423,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
     );
   }, [JSON.stringify(walletInfo), userAccount]);
 
-
   return (
     // <WalletProvider>
     <div className={cx(ss.container)}>
       <div onClick={handleModalShow}>
-        {loginBtnNode || <Button className={ss.iconBtn}>Login</Button>}
+        {customBtnNode || <Button className={ss.iconBtn}>Login</Button>}
       </div>
       <Modal
         dialogClassName={cx(modalClassName)}
@@ -449,7 +436,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
         visible={visible}
         modalHeader={
           <div className={ss.loginModalHead}>
-            {!account && step !== StepStringEnum.HOME && (
+            {!propsUserAccount && step !== StepStringEnum.HOME && (
               <CheveronLeft onClick={handleBack} className={ss.backBtn} />
             )}
             <div className={ss.title}>{headerTitle}</div>

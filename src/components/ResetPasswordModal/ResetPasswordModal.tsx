@@ -51,13 +51,13 @@ export const ResetPasswordModal: React.FC<IProps> = (props) => {
         containerId={containerId}
         client={client}
         isShow={isShow}
-        handleLoginEvent={handleEvent}
+        handleOperationEvent={handleEvent}
         appType={appType}
-        loginBtnNode={customBtnNode || <Button className="sign_btn">Reset Password</Button>}
+        customBtnNode={customBtnNode || <Button className="sign_btn">Reset Password</Button>}
         propDappConnectClient={propDappConnectClient}
         propWalletConnectClient={propWalletConnectClient}
         propWcSession={propWcSession}
-        account={account}
+        propsUserAccount={account}
         isResetPassword={true}
       />
     </div>
