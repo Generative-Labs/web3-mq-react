@@ -32,6 +32,7 @@ export * from './NotificationList';
 export * from './RadioGroup';
 export * from './Button';
 export * from './BindDidModal';
+export * from './FollowUserModal';
 export * from './LoginModal';
 export * from './ResetPasswordModal';
 export * from './AuthToReceiveModal';

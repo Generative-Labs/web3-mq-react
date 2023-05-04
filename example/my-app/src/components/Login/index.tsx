@@ -83,9 +83,9 @@ const Login: React.FC<IProps> = (props) => {
         <LoginModal
           env={'dev'}
           keys={mainKeys}
-          handleLoginEvent={handleLoginEvent}
+          handleOperationEvent={handleLoginEvent}
           appType={appType}
-          loginBtnNode={
+          customBtnNode={
             <button className="sign_btn">
               <MetaMaskIcon />
               MetaMask

@@ -7,11 +7,11 @@ import { CommonIProps, CommonOperationModal } from '../CommonOperationModal';
 interface IProps extends CommonIProps {
   url: string;
   fastestUrl: string;
-  didType: string;
-  didValue: string;
+  targetWalletType: string;
+  targetWalletAddress: string;
 }
 
-export const BindDidModal: React.FC<IProps> = (props) => {
+export const FollowUserModal: React.FC<IProps> = (props) => {
   const {
     isShow,
     client = Client as any,
@@ -28,8 +28,8 @@ export const BindDidModal: React.FC<IProps> = (props) => {
     propsUserAccount,
     url,
     fastestUrl,
-    didType,
-    didValue,
+    targetWalletType,
+    targetWalletAddress,
   } = props;
 
   return (
@@ -42,16 +42,16 @@ export const BindDidModal: React.FC<IProps> = (props) => {
       isShow={isShow}
       handleOperationEvent={handleOperationEvent}
       appType={appType}
-      customBtnNode={customBtnNode || <Button className="sign_btn">Bind Did</Button>}
+      customBtnNode={customBtnNode || <Button className="sign_btn">Follow </Button>}
       propDappConnectClient={propDappConnectClient}
       propWalletConnectClient={propWalletConnectClient}
       propWcSession={propWcSession}
       propsUserAccount={propsUserAccount}
       fastestUrl={fastestUrl}
       url={url}
-      operationMode={'bind_did'}
-      operationValue={didValue}
-      operationType={didType}
+      operationMode={'follow_user'}
+      operationValue={targetWalletAddress}
+      operationType={targetWalletType}
     />
   );
 };

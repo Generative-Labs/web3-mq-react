@@ -103,13 +103,5 @@
 }
 .successBtns {
   display: flex;
-  .okBtn {
-    width: calc(50% - 5px);
-    min-width: calc(50% - 5px);
-    margin-right: 10px;
-  }
-  .authBtn {
-    width: 100%;
-  }
 }
 

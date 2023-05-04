@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Client, getUserPublicProfileRequest } from '@web3mq/client';
-import { BindDidModal, Button } from '@web3mq/react-components';
+import { FollowUserModal  } from '@web3mq/react-components';
 import '@web3mq/react-components/dist/css/index.css';
 
 import useLogin from './hooks/useLogin';
@@ -52,7 +52,7 @@ const App: React.FC = () => {
 
   return (
     <div>
-      <BindDidModal
+      <FollowUserModal
           url={`${fastestUrl}/api/following/`}
           client={Client}
           appType={appType}
@@ -60,9 +60,8 @@ const App: React.FC = () => {
           isShow={true}
           env={'dev'}
           handleOperationEvent={handleBindDidEvent}
-          operationType={'eth'}
-          operationValue={address}
-          operationMode={'follow_user'}
+          targetWalletType={'eth'}
+          targetWalletAddress={address}
       />
     </div>
   );

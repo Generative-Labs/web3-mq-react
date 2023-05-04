@@ -4,6 +4,7 @@ import './index.css';
 // import App from './App';
 import App from './App_testAuthToDapp';
 // import App from './App_testBindDid';
+// import App from './App_testFollowUser';
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
