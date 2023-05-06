@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import cx from 'classnames';
 import type { NotifyResponse } from '@web3mq/client';
 
@@ -7,26 +7,42 @@ import { Empty } from '../Empty';
 import { NotificationPreview } from '../NotificationPreview';
 import { useChatContext } from '../../context/ChatContext';
 import { NotificationIcon } from '../../icons';
+import { Paginator as defaultPaginator, PaginatorProps } from '../Paginator';
 
 import ss from './index.scss';
+import { NotificationListMessenger } from './NotificationListMessenger';
 
 export type NotificationShowType = 'list' | 'modal';
 export type NotificationListProps = {
+  List?: React.ComponentType<NotificationListProps>;
   EmptyContaniner?: React.ReactNode;
   className?: string;
   Notification?: React.ComponentType<any>;
+  Paginator?: React.ComponentType<PaginatorProps>;
   style?: React.CSSProperties;
-}
+};
 
 export const NotificationList: React.FC<NotificationListProps> = (props) => {
-  const { className, EmptyContaniner, Notification, style } = props;
+  const {
+    className,
+    EmptyContaniner = (
+      <Empty
+        description="No notification message"
+        icon={<NotificationIcon className={ss.notificationIcon} />}
+      />
+    ),
+    Notification,
+    style,
+    List = NotificationListMessenger,
+    Paginator = defaultPaginator,
+  } = props;
   const { client, loginUserInfo, setActiveNotification } = useChatContext();
-  const { notifications, handleEvent, setNotifications } =
+  const { notifications, handleEvent, setNotifications, status, loadNextPage, refreshing } =
     usePaginatedNotifications(client);
   const Preview = Notification || NotificationPreview;
+  const listRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    setNotifications(client.notify.notificationList || []);
     client.on('notification.messageNew', handleEvent);
     client.on('notification.getList', handleEvent);
     return () => {
@@ -47,16 +63,21 @@ export const NotificationList: React.FC<NotificationListProps> = (props) => {
   };
 
   return (
-    <div className={cx(ss.notificationContainer, className)} style={style}>
+    <List loading={status.loading} error={status.error} listRef={listRef}>
       {notifications?.length === 0 ? (
         <>
-          {EmptyContaniner || <Empty description='No notification message' icon={<NotificationIcon className={ss.notificationIcon} />} />}
+          {EmptyContaniner || (
+            <Empty
+              description="No notification message"
+              icon={<NotificationIcon className={ss.notificationIcon} />}
+            />
+          )}
         </>
       ) : (
-        <>
+        <Paginator element={listRef} showLoading={refreshing} loadNextPage={loadNextPage}>
           {notifications?.map(renderContact)}
-        </>
+        </Paginator>
       )}
-    </div>
+    </List>
   );
 };

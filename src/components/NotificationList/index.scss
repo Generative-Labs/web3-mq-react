@@ -2,6 +2,7 @@
 
 .notificationContainer {
   height: 100%;
+  min-width: 300px;
   overflow-y: auto;
   @include themeify{
     background-color: themed(White_color);
