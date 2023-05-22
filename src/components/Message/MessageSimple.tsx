@@ -13,17 +13,19 @@ import { ActionBtns } from '../Message/ActionBtns';
 import { uselongPressEvents } from '../../hooks/uselongPressEvents';
 
 import ss from './index.scss';
+import { SystemNotify } from './SystemNotify';
 
 export const MessageSimple = () => {
   const { isThread, message } = useMessageContext('MessageSimple');
   const { client, appType } = useChatContext('MessageSimple');
   const [isShow, setIsShow] = useState<boolean>(false);
-  const { 
-    date, 
-    timestamp,  
+  const {
+    date,
+    timestamp,
     belong_to_thread_id,
-    senderInfo = {}, 
-    msgLoading = SendMsgLoadingMap['success']
+    senderInfo = {},
+    msgLoading = SendMsgLoadingMap['success'],
+    content = '',
   } = message;
   const { defaultUserAvatar, defaultUserName } = senderInfo || {};
   const messageRef = useRef<HTMLDivElement | null>(null);
@@ -39,13 +41,23 @@ export const MessageSimple = () => {
     return null;
   }
 
+
+  let messageObj = undefined;
+  try {
+    messageObj = JSON.parse(content);
+  } catch (e) {}
+
+  if (messageObj && messageObj.messageType === 'werewolf_notify' && messageObj.content) {
+    return <SystemNotify content={messageObj.content} />;
+  }
+
   const MessageInner = useCallback(() => {
     return <Text />;
     // if (msg_type === MsgTypeEnum.text) {
     //   if (is_opensea_item_thread && isThread) {
     //     return <NftItemCard />;
     //   }
-    //   return <Text />;
+    //   return <SystemNotify />;
     // }
     // if (msg_type === MsgTypeEnum.sudoSwapCard) {
     //   return <SudoSwapCard />;
@@ -67,22 +79,12 @@ export const MessageSimple = () => {
         <Profile
           userInfo={senderInfo}
           isSelf={client.keys.userid === message.senderId}
-          AvatarNode={
-            <Avatar
-              name="user"
-              image={defaultUserAvatar}
-              size={40}
-            />
-          }
+          AvatarNode={<Avatar name="user" image={defaultUserAvatar} size={40} />}
         />
-      ): (
-        <Avatar
-          name="user"
-          image={defaultUserAvatar}
-          size={30} 
-        />
+      ) : (
+        <Avatar name="user" image={defaultUserAvatar} size={30} />
       )}
-     
+
       <div
         className={cx(ss.message, {
           [ss.hideMessageMargin]: isThread,
@@ -93,14 +95,16 @@ export const MessageSimple = () => {
             <span className={ss.name}>{activeMember[from_uid]?.user_name || ''}</span>
           )} */}
           <span className={ss.name}>{defaultUserName}</span>
-          <span>{date}&nbsp;{timestamp}</span>
+          <span>
+            {date}&nbsp;{timestamp}
+          </span>
         </div>
-        <div style={{display: 'flex', alignItems: 'center'}}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <MessageInner />
           {msgLoading === SendMsgLoadingMap['loading'] && <Loading className={ss.msgLoad} />}
         </div>
       </div>
-      {!isThread && <ActionBtns className={ss.actionBtns} />}
+      {/*{!isThread && <ActionBtns className={ss.actionBtns} />}*/}
     </div>
   );
 };
