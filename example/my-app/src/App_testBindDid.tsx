@@ -20,7 +20,7 @@ const App: React.FC = () => {
   }, []);
 
   const handleBindDidEvent = (event: any) => {
-    console.log(event, 'event');
+    console.log(event, 'event = handleBindDidEvent');
   };
 
   if (!fastestUrl) {
