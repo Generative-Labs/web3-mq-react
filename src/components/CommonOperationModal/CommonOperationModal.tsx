@@ -127,12 +127,13 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
   const [signTime, setSignTime] = useState<number>();
   const [signContent, setSignContent] = useState<string>();
   const userAccount = useRef<UserAccountType | undefined>();
+  const loginStatus = useRef<any>();
   const targetUserAccount = useRef<userPublicProfileType | undefined>();
   const [commonCenterStatusData, setCommonCenterStatusData] = useState<
     CommonCenterStatusIProp | undefined
   >();
 
-  const setConnectLoadingStep = (currentStep: StepStringEnum) => {
+  const setConnectLoadingStep = (currentStep: StepStringEnum, errorMsg?: string) => {
     setStep(currentStep);
     if (currentStep === StepStringEnum.CONNECT_LOADING) {
       setCommonCenterStatusData({
@@ -255,13 +256,13 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
       });
     } else if (currentStep === StepStringEnum.DID_BIND_ERROR) {
       let title = 'Bind failure';
-      let textContent = 'Wallet bind failed, please click back to re-sign';
+      let textContent = errorMsg || 'Wallet bind failed, please click back to re-sign';
       if (operationMode === 'follow_user') {
         title = 'Follow failure';
-        textContent = 'Follow user failed, please click back to re-sign';
+        textContent = errorMsg ||  'Follow user failed, please click back to re-sign';
         if (targetUserAccount.current?.is_my_following) {
           title = 'Unfollow failure';
-          textContent = 'Unfollow user failed, please click back to re-sign';
+          textContent = errorMsg ||  'Unfollow user failed, please click back to re-sign';
         }
       }
       setCommonCenterStatusData({
@@ -316,7 +317,9 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
           <AuthToReceiveModal
             client={client}
             env={env}
-            handleOperationEvent={() => {
+            handleOperationEvent={(event: any) => {
+              console.log(event, 'AuthToReceiveModal - event');
+              handleOperationEvent(event);
               setConnectLoadingStep(StepStringEnum.AUTH_DAPP_SUCCESS);
             }}
             url={`${fastestUrl}/api/dapp/user_auth/`}
@@ -478,9 +481,13 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
             if (res) {
               setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
               res.address = userAccount.current?.address || '';
-              handleOperationEvent(res);
+              handleOperationEvent({
+                ...res,
+                operation_type: 'follow_user',
+                loginStatus: loginStatus.current,
+              });
             } else {
-              setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
+              setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR, res.msg);
             }
           })
           .catch((e) => {
@@ -500,13 +507,19 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
           bind_value: operationValue,
         };
         selfRequest(url, bindParams)
-          .then((res) => {
-            if (res) {
+          .then(async (res) => {
+            console.log(res, 'res');
+            console.log(loginStatus.current, 'loginStatus.current');
+            if (res && res.code === 0) {
               setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
               res.address = userAccount.current?.address || '';
-              handleOperationEvent(res);
+              handleOperationEvent({
+                ...res,
+                operation_type: 'bind_did',
+                loginStatus: loginStatus.current,
+              });
             } else {
-              setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
+              setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR, res.msg);
             }
           })
           .catch((e) => {
@@ -606,12 +619,14 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
     if (eventData.data) {
       if (eventData.type === 'login') {
         const { userid, address } = eventData.data;
+        console.log(eventData, 'eventData');
         userAccount.current = {
           userid,
           address,
           walletType: 'eth',
           userExist: true,
         };
+        loginStatus.current = eventData.data;
         setConnectLoadingStep(StepStringEnum.READY_BIND);
       }
       if (eventData.type === 'register') {

@@ -95,6 +95,7 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
 
   const { visible, show, hide } = useToggle(isShow);
   const userAccount = useRef<UserAccountType | undefined>(propsUserAccount);
+  const loginStatus = useRef<any>();
   const [step, setStep] = useState(
     propsUserAccount ? StepStringEnum.READY_AUTH_TO_DAPP : StepStringEnum.HOME,
   );
@@ -303,7 +304,11 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
           if (res) {
             setConnectLoadingStep(StepStringEnum.AUTH_DAPP_SUCCESS);
             res.address = userAccount.current?.address || '';
-            handleOperationEvent(res);
+            handleOperationEvent({
+              ...res,
+              operation_type: 'auth_to_dapp',
+              loginStatus: loginStatus.current,
+            });
           } else {
             setConnectLoadingStep(StepStringEnum.AUTH_DAPP_ERROR);
           }
@@ -401,6 +406,7 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
           walletType: 'eth',
           userExist: true,
         };
+        loginStatus.current = eventData.data;
         setConnectLoadingStep(StepStringEnum.READY_AUTH_TO_DAPP);
       }
       if (eventData.type === 'register') {
