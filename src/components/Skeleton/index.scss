@@ -1,9 +1,13 @@
+@import "../../style/index.scss";
 .loadingContainer {
   padding: 20px;
-  background: #fafafa;
+  @include themeify{
+    background: themed(White_color);
+  }
   .loadingChannelMeta {
     flex: 1; }
   .loadingChannelAvatar, .loadingChannelUsername, .loadingChannelStatus {
+
     background: linear-gradient(90deg,rgba(190,190,190,.2) 25%,rgba(129,129,129,.24) 37%,rgba(190,190,190,.2) 63%);
     background-size: 400px 100%;
     animation: placeHolderShimmer 2s linear infinite;

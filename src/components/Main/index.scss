@@ -1,3 +1,5 @@
+@import "../../style/index.scss";
+
 .mainContainer {
   height: 100vh;
   display: flex;
@@ -11,6 +13,31 @@
   height: 100%;
   overflow-y: auto;
 }
+
+
+.listItem::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+.listItem::-webkit-scrollbar-track{
+  @include themeify{
+    background: themed(White_color);
+  }
+  border-radius:2px;
+}
+.listItem::-webkit-scrollbar-thumb{
+  @include themeify{
+    background: themed(Gray_500);
+  }
+  border-radius:10px;
+}
+.listItem::-webkit-scrollbar-thumb:hover{
+
+  @include themeify{
+    background: themed(Gray_900);
+  }
+}
+
 .hide {
   display: none;
 }

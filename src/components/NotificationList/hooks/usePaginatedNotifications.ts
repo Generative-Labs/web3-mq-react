@@ -38,7 +38,10 @@ export const usePaginatedNotifications = (client: Client) => {
   };
   const queryChannels = async () => {
     setRefreshing(true);
-    await client.notify.queryNotifications(PAGE);
+    await client.notify.queryNotifications({
+      ...PAGE,
+      notice_type: 'system.friend_request'
+    });
     setRefreshing(false);
   };
 

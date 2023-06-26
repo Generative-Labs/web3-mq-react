@@ -58,10 +58,10 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
       </div>
       <div className={ss.operationBar}>
         {chat_type === 'group' && <AddPeople />}
-        <div className={ss.icon} onClick={handleOpenAllThread}>
-          <ThreadIcon />
-          {appType === AppTypeEnum['pc'] && <div>All Thread</div>}
-        </div>
+        {/*<div className={ss.icon} onClick={handleOpenAllThread}>*/}
+        {/*  <ThreadIcon />*/}
+        {/*  {appType === AppTypeEnum['pc'] && <div>All Thread</div>}*/}
+        {/*</div>*/}
       </div>
     </div>
   );

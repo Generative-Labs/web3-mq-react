@@ -10,7 +10,7 @@
   z-index: 1;
   @include themeify{
     background: themed(White_color);
-    border-color: themed(Gray_100);
+    border-color: themed(Gray_50);
   }
 }
 .userAvatar {
@@ -32,6 +32,9 @@
   cursor: pointer;
   @include themeify{
     color: themed(Gray_900);
+    .icon svg path {
+      fill:  themed(Gray_900);
+    }
     &:hover {
       .icon svg path {
         fill:  themed(Violet_500);

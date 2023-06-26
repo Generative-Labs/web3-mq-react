@@ -1,6 +1,7 @@
 @import "../../style/index.scss";
 .channelHeadContainer {
   box-sizing: content-box;
+  height: 80px;
   &.mobileStyle {
     .header {
       padding: 16px 24px 24px;
@@ -15,18 +16,22 @@
   align-items: center;
   padding: 21px 16px;
   min-width: 360px;
+  height: 80px;
   border-bottom: 1px solid;
   border-right: 1px solid;
+  font-family: Inter, sans-serif;
   @include themeify{
     border-color: themed(Gray_100);
+    background: themed(White_color);
+  }
+  .title {
+    @include themeify {
+      font-family: Inter, sans-serif;
+      font-size: themed(title2_font-size);
+      font-weight: themed(Bold_font-weight);
+      background-color: themed(White_color);
+      color: themed(Gray_900);
+    }
   }
 }
-.title {
-  @include themeify {
-    font-family: Inter, sans-serif;
-    font-size: themed(title2_font-size);
-    font-weight: themed(Bold_font-weight);
-    background-color: themed(White_color);
-    color: themed(Gray_900);
-  }
-}
+

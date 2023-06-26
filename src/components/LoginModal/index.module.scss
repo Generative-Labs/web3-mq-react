@@ -48,6 +48,7 @@
     @include themeify {
       font-size: themed(title3_font-size);
       font-weight: themed(Medium_font-weight);
+      color: themed(Gray_900);
     }
   }
 
@@ -64,8 +65,14 @@
     align-items: center;
     @include themeify {
       font-size: themed(Headline_font-size);
+      svg path {
+        fill: themed(Gray_900);
+      }
       &:hover {
         color: themed(Gray_500);
+        svg path {
+          fill: themed(Gray_500);
+        }
       }
     }
   }
@@ -84,9 +91,15 @@
     align-items: center;
     @include themeify {
       font-size: themed(Headline_font-size);
+      svg path {
+        fill: themed(Gray_900);
+      }
 
       &:hover {
         color: themed(Gray_500);
+        svg path {
+          fill: themed(Gray_500);
+        }
       }
     }
 
@@ -99,7 +112,32 @@
   height: calc(100% - 65px);
   overflow-x: hidden;
   overflow-y: auto;
-  background-color: #fff;
+  @include themeify{
+    background-color: themed(White_color);
+  }
   padding: 0 16px;
+}
+
+.modalBody::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+.modalBody::-webkit-scrollbar-track{
+  @include themeify{
+    background: themed(White_color);
+  }
+  border-radius:2px;
+}
+.modalBody::-webkit-scrollbar-thumb{
+  @include themeify{
+    background: themed(Gray_500);
+  }
+  border-radius:10px;
+}
+.modalBody::-webkit-scrollbar-thumb:hover{
+
+  @include themeify{
+    background: themed(Gray_900);
+  }
 }
 

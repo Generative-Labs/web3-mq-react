@@ -5,6 +5,29 @@
   overflow-x: hidden;
   overflow-y: auto;
 }
+
+.messageListcontainer::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+.messageListcontainer::-webkit-scrollbar-track{
+  @include themeify{
+    background: themed(White_color);
+  }
+  border-radius:2px;
+}
+.messageListcontainer::-webkit-scrollbar-thumb{
+  @include themeify{
+    background: themed(Gray_500);
+  }
+  border-radius:10px;
+}
+.messageListcontainer::-webkit-scrollbar-thumb:hover{
+
+  @include themeify{
+    background: themed(Gray_900);
+  }
+}
 .chatUl {
   list-style-type: none;
   padding: 0;

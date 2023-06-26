@@ -42,12 +42,7 @@
   @include themeify{
     font-size: themed(Body_font-size);
     font-weight: themed(Bold_font-weight);
-    &.dark {
-      color: themed(White_color);
-    }
-    &.light {
-      color: themed(Gray_900);
-    }
+    color: themed(Gray_900);
   }
 }
 

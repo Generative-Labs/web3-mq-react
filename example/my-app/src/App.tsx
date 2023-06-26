@@ -21,7 +21,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     init();
-    document.body.setAttribute('data-theme', 'light');
+    document.body.setAttribute('data-theme', 'dark');
     window.addEventListener('resize', () => {
       setAppType(window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc']);
     });

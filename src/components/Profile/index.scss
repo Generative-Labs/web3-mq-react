@@ -20,9 +20,9 @@
   box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.1);
   z-index: 2;
   @include themeify{
-    background-color: #fff;
+    background-color: themed(White_color);
     border-radius: 12px;
-    color: #000;
+    color: themed(Primary_color);
   }
   .avatar {
     margin-right: 0;
@@ -59,6 +59,14 @@
       left: 30px;
       top: 0;
       color: rgb(101, 156, 18);
+    }
+    @include themeify{
+      //background-color: themed(White_color);
+      //border-radius: 12px;
+      //color: themed(Primary_color);
+      svg path {
+        fill: themed(Primary_color);
+      }
     }
   }
   .copied {

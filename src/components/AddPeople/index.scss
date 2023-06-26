@@ -5,9 +5,13 @@
   margin-left: 24px;
   display: flex;
   align-items: center;
-
   div:first-child {
     margin-right: 8px;
+    @include themeify{
+      svg path {
+        fill: themed(Primary_color);
+      }
+    }
   }
 }
 
@@ -15,6 +19,9 @@
   @include themeify {
     color: themed(Violet_500);
     font-size: themed(title3_font-size);
+    svg path {
+      fill: themed(Primary_color);
+    }
     &:hover {
       color: themed(Violet_600);
     }

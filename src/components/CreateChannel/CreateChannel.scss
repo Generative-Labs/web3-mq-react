@@ -44,6 +44,7 @@
     letter-spacing: 0em;
     text-align: center;
     @include themeify {
+      color: themed(Primary_color);
       font-size: themed(title3_font-size);
       font-weight: themed(Medium_font-weight);
     }
@@ -69,8 +70,14 @@
     font-size: 16px;
     height: 16px;
     @include themeify {
+      svg path {
+        fill: themed(Primary_color);
+      }
       &:hover {
         color: themed(Gray_500);
+        svg path {
+          fill: themed(Gray_500);
+        }
       }
     }
   }
@@ -316,6 +323,30 @@
       font-size: themed(Headline_font-size);
     }
   }
+
+
+  .inputElement::-webkit-scrollbar{
+    width:10px;
+    height:10px;
+  }
+  .inputElement::-webkit-scrollbar-track{
+    @include themeify{
+      background: themed(White_color);
+    }
+    border-radius:2px;
+  }
+  .inputElement::-webkit-scrollbar-thumb{
+    @include themeify{
+      background: themed(Gray_500);
+    }
+    border-radius:10px;
+  }
+  .inputElement::-webkit-scrollbar-thumb:hover{
+
+    @include themeify{
+      background: themed(Gray_900);
+    }
+  }
 }
 
 .searchContactItem {
@@ -365,6 +396,10 @@
     border-radius: 22px;
     padding: 12px;
     margin: 0px 16px 16px 16px;
+
+    @include themeify{
+      background: themed(White_color);
+    }
 
     .fileBox, .imgBox {
       border-radius: 12px;

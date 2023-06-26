@@ -12,6 +12,7 @@
     border-radius: 100%;
 
     animation: circle infinite 0.75s linear;
+
     &::after {
       display: block;
       content: '';
@@ -21,13 +22,17 @@
       height: 100%;
       border: 6px solid transparent;
       border-radius: 100%;
-      background-color: #fff;
+      @include themeify {
+        background-color: themed(White_color);
+      }
     }
+
     @include themeify {
       background-color: themed(Violet_500);
       background: conic-gradient(from 13.39deg at 50% 50%, themed(Violet_500) 0deg, rgba(97, 94, 240, 0) 65.78deg, themed(Violet_500) 360deg);
     }
   }
+
   @keyframes circle {
     0% {
       transform: rotate(0);
