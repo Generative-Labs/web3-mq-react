@@ -217,12 +217,34 @@
   top: 1px;
   width: 100%;
   max-height: 192px;
-  overflow-y: scroll;
+  overflow-y: auto;
   z-index: 12;
   border-radius: 0 0 3px 3px;
   @include themeify {
     background: themed(White_color);
     border: 1px solid themed(Gray_100);
+  }
+}
+.showList::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+.showList::-webkit-scrollbar-track{
+  @include themeify{
+    background: themed(White_color);
+  }
+  border-radius:2px;
+}
+.showList::-webkit-scrollbar-thumb{
+  @include themeify{
+    background: themed(Gray_500);
+  }
+  border-radius:10px;
+}
+.showList::-webkit-scrollbar-thumb:hover{
+
+  @include themeify{
+    background: themed(Gray_900);
   }
 }
 

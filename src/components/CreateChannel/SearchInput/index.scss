@@ -10,10 +10,11 @@
     border: 1px solid themed(Gray_100);
     > input {
       font-size: themed(Headline_font-size);
+      color: themed(Gray_900);
       font-weight: themed(Regular_font-weight);
       background-color: themed(Gray_100);
     }
-  }
+
   > input {
     width: 100%;
     margin-left: 16px;
@@ -24,7 +25,9 @@
     letter-spacing: 0em;
     text-align: left;
     transition: all .1s;
+    color: themed(Gray_900);
   }
+}
 }
 .searchInputFoucs {
   @include themeify {
@@ -32,6 +35,7 @@
     border: 2px solid themed(Violet_400);
     > input {
       background-color:themed(White_color);
+      color: themed(Gray_900);
     }
   }
 }
