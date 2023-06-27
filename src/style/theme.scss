@@ -67,16 +67,16 @@ $light: (
         Cyan_800: #075783,
         Cyan_900: #0c4a6e,
   // Violet
-        Violet_50: #f4f4fe,
-        Violet_100: #e3e3fc,
-        Violet_200: #d2d1f9,
-        Violet_300: #b8b7ff,
-        Violet_400: #8885fd,
-        Violet_500: #615ef0,
-        Violet_600: #5754d6,
-        Violet_700: #3d3abb,
-        Violet_800: #2c2a98,
-        Violet_900: #292986,
+        Violet_50: #F5F0FF,
+        Violet_100: #E4D8FE,
+        Violet_200: #C8B1FD,
+        Violet_300: #A989F9,
+        Violet_400: #8F6BF4,
+        Violet_500: #663CEE,
+        Violet_600: #4D2BCC,
+        Violet_700: #381EAB,
+        Violet_800: #26138A,
+        Violet_900: #190B72,
         Primary_color: #000000,
         White_color: #ffffff,
   // font
@@ -91,9 +91,33 @@ $light: (
         Tips_font-size: 13px,
         Caption1_font-size: 12px,
         Caption2_font-size: 10px,
+        // button
+        Primary_button_text_color: #ffffff,
+        Primary_button_disable_text_color: #8885fd,
+        // default
+        Default_button_text_color: #3f3f46,
+        Default_button_disable_text_color: #a1a1aa,
+        //ghost
+        Ghost_button_text_color: #663CEE,
+        Ghost_button_disable_text_color: #8F6BF4,
+        //danger
+        Danger_button_text_color: #ffffff,
+        Danger_button_disable_text_color: #F64D4D,
 );
 
 $dark: (
+  // button
+        Primary_button_text_color: #ffffff,
+        Primary_button_disable_text_color: #8885fd,
+  // default
+        Default_button_text_color: #a1a1aa,
+        Default_button_disable_text_color: #a1a1aa,
+  //ghost
+        Ghost_button_text_color: #663CEE,
+        Ghost_button_disable_text_color: #8F6BF4,
+  //danger
+        Danger_button_text_color: #F64D4D,
+        Danger_button_disable_text_color: #ffffff,
         Primary_color: #ffffff,
         White_color: #000000,
   // Gray
