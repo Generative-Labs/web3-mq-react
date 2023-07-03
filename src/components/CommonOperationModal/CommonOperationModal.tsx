@@ -18,7 +18,12 @@ import useToggle from '../../hooks/useToggle';
 
 import ss from './index.module.scss';
 import cx from 'classnames';
-import type { FollowOperationApiParams, WalletType } from '@web3mq/client';
+import type {
+  FollowOperationApiParams,
+  KeyPairsType,
+  UserBindDidParams,
+  WalletType,
+} from '@web3mq/client';
 import { Client, getUserPublicProfileRequest } from '@web3mq/client';
 import { RenderWallets } from '../LoginModal/RenderWallets';
 import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
@@ -42,6 +47,7 @@ export type EventDataTye = {
 
 export type CommonIProps = {
   env?: 'dev' | 'test';
+  propsKeys?: KeyPairsType;
   client?: any;
   styles?: Record<string, any>;
   appType?: AppTypeEnum;
@@ -259,10 +265,10 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
       let textContent = errorMsg || 'Wallet bind failed, please click back to re-sign';
       if (operationMode === 'follow_user') {
         title = 'Follow failure';
-        textContent = errorMsg ||  'Follow user failed, please click back to re-sign';
+        textContent = errorMsg || 'Follow user failed, please click back to re-sign';
         if (targetUserAccount.current?.is_my_following) {
           title = 'Unfollow failure';
-          textContent = errorMsg ||  'Unfollow user failed, please click back to re-sign';
+          textContent = errorMsg || 'Unfollow user failed, please click back to re-sign';
         }
       }
       setCommonCenterStatusData({
@@ -464,8 +470,9 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
     if (signRes && userAccount.current && signTime && signContent) {
       setConnectLoadingStep(StepStringEnum.DID_BINDING);
       const { userid, address, walletType } = userAccount.current;
+      let params: FollowOperationApiParams | bindDidV2Params | undefined = undefined;
       if (operationMode === 'follow_user' && targetUserAccount.current) {
-        const params: FollowOperationApiParams = {
+        params = {
           did_pubkey: didPubKey,
           did_signature: signRes,
           sign_content: signContent,
@@ -476,26 +483,8 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
           did_type: walletType,
           target_userid: targetUserAccount.current.userid,
         };
-        selfRequest(url, params)
-          .then((res) => {
-            if (res) {
-              setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
-              res.address = userAccount.current?.address || '';
-              handleOperationEvent({
-                ...res,
-                operation_type: 'follow_user',
-                loginStatus: loginStatus.current,
-              });
-            } else {
-              setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR, res.msg);
-            }
-          })
-          .catch((e) => {
-            console.log(e, 'e');
-            setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
-          });
       } else {
-        const bindParams: bindDidV2Params = {
+        params = {
           userid,
           did_signature: signRes,
           did_type: walletType,
@@ -506,16 +495,16 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
           bind_action: 'bind',
           bind_value: operationValue,
         };
-        selfRequest(url, bindParams)
-          .then(async (res) => {
-            console.log(res, 'res');
-            console.log(loginStatus.current, 'loginStatus.current');
-            if (res && res.code === 0) {
+      }
+      if (params) {
+        selfRequest(url, params)
+          .then((res) => {
+            if (res) {
               setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
               res.address = userAccount.current?.address || '';
               handleOperationEvent({
                 ...res,
-                operation_type: 'bind_did',
+                operation_type: operationMode,
                 loginStatus: loginStatus.current,
               });
             } else {
@@ -527,6 +516,70 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
             setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
           });
       }
+
+      // if (operationMode === 'follow_user' && targetUserAccount.current) {
+      //   const params: FollowOperationApiParams = {
+      //     did_pubkey: didPubKey,
+      //     did_signature: signRes,
+      //     sign_content: signContent,
+      //     userid,
+      //     timestamp: signTime,
+      //     address,
+      //     action: targetUserAccount.current.is_my_following ? 'cancel' : 'follow',
+      //     did_type: walletType,
+      //     target_userid: targetUserAccount.current.userid,
+      //   };
+      //   selfRequest(url, params)
+      //     .then((res) => {
+      //       if (res) {
+      //         setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
+      //         res.address = userAccount.current?.address || '';
+      //         handleOperationEvent({
+      //           ...res,
+      //           operation_type: 'follow_user',
+      //           loginStatus: loginStatus.current,
+      //         });
+      //       } else {
+      //         setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR, res.msg);
+      //       }
+      //     })
+      //     .catch((e) => {
+      //       console.log(e, 'e');
+      //       setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
+      //     });
+      // } else {
+      //   const bindParams: bindDidV2Params = {
+      //     userid,
+      //     did_signature: signRes,
+      //     did_type: walletType,
+      //     did_value: address,
+      //     timestamp: signTime,
+      //     sign_content: signContent,
+      //     bind_type: operationType,
+      //     bind_action: 'bind',
+      //     bind_value: operationValue,
+      //   };
+      //   selfRequest(url, bindParams)
+      //     .then(async (res) => {
+      //       console.log(res, 'res');
+      //       console.log(loginStatus.current, 'loginStatus.current');
+      //       if (res && res.code === 0) {
+      //         setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
+      //         res.address = userAccount.current?.address || '';
+      //         handleOperationEvent({
+      //           ...res,
+      //           operation_type: 'bind_did',
+      //           loginStatus: loginStatus.current,
+      //         });
+      //       } else {
+      //         setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR, res.msg);
+      //       }
+      //     })
+      //     .catch((e) => {
+      //       console.log(e, 'e');
+      //       setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
+      //     });
+      // }
     }
   }, [signRes]);
 

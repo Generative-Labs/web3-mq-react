@@ -20,13 +20,22 @@
   cursor: pointer;
   @include themeify {
     color: themed(Gray_900);
+    .icon svg path {
+      fill:  themed(Gray_900);
+    }
     &:hover {
       background-color: themed(Gray_100);
       color: themed(Violet_500);
+      .icon svg path {
+        fill:  themed(Violet_500);
+      }
     }
     &.selected {
       background-color: themed(Gray_100);
       color: themed(Violet_500);
+      .icon svg path {
+        fill:  themed(Violet_500);
+      }
     }
   }
 

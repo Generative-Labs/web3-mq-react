@@ -1,3 +1,4 @@
+@import "../../style/index.scss";
 html,
 body {
   overflow: hidden;
@@ -8,6 +9,9 @@ div {
 .chatContainer {
   display: flex;
   height: 100%;
+  @include themeify{
+    background-color: themed(White_color);
+  }
 }
 .mobileStyle {
   flex-direction: column-reverse;

@@ -18,10 +18,10 @@
     margin-top: 16px;
     font-family: 'Inter', sans-serif;
     font-style: normal;
-    font-weight: 600;
-    font-size: 18px;
     text-align: center;
-    color: #18181B;
+    color: themed(Gray_900);
+    font-weight: themed(Bold_font-weight);
+    font-size: themed(title3_font-size);
   }
 }
 
@@ -29,10 +29,12 @@
   margin-top: 8px;
   font-family: 'Inter', sans-serif;
   font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
   text-align: center;
-  color: #71717A;
+  @include themeify{
+    font-weight: themed(Regular_font-weight);
+    font-size: themed(Body_font-size);
+    color: themed(Gray_500);
+  }
 }
 
 .buttonBox {

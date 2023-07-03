@@ -25,7 +25,7 @@ const Main = () => {
         <Window>
           <MessageHeader avatarSize={40} />
           <MessageList />
-          {/* <MessageInput Input={MsgInput} /> */}
+           {/*<MessageInput Input={MsgInput} /> */}
           <MessageConsole Input={<MessageInput Input={MsgInput} />} />
         </Window>
       </Channel>

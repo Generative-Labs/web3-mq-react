@@ -9,6 +9,31 @@
     border-right: 1px solid themed(Gray_100);
   }
 }
+
+.notificationContainer::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+.notificationContainer::-webkit-scrollbar-track{
+  @include themeify{
+    background: themed(White_color);
+  }
+  border-radius:2px;
+}
+.notificationContainer::-webkit-scrollbar-thumb{
+  @include themeify{
+    background: themed(Gray_500);
+  }
+  border-radius:10px;
+}
+.notificationContainer::-webkit-scrollbar-thumb:hover{
+
+  @include themeify{
+    background: themed(Gray_900);
+  }
+}
+
+
 .notificationIcon {
   height: 42px;
   svg {

@@ -101,6 +101,28 @@
   background-color: #fff;
   padding: 0 16px;
 }
+.modalBody::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+.modalBody::-webkit-scrollbar-track{
+  @include themeify{
+    background: themed(White_color);
+  }
+  border-radius:2px;
+}
+.modalBody::-webkit-scrollbar-thumb{
+  @include themeify{
+    background: themed(Gray_500);
+  }
+  border-radius:10px;
+}
+.modalBody::-webkit-scrollbar-thumb:hover{
+
+  @include themeify{
+    background: themed(Gray_900);
+  }
+}
 .successBtns {
   display: flex;
 }
