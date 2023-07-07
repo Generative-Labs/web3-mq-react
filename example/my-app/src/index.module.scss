@@ -2,3 +2,33 @@
   background: #000 !important;
   color: #A1A1AA;
 }
+.auditBtnsBoxTwo {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+//
+  div:first-child {
+    margin-right: 8px;
+    width: calc(50% - 8px);
+    div {
+      width: 100%;
+    }
+  }
+  .shareLinkBtn {
+    width: calc(50% - 8px);
+    margin-left: 8px;
+  }
+}
+
+.auditBtnsBox {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  .shareLinkBtn {
+    width: 100%;
+  }
+}

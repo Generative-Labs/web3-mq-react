@@ -516,70 +516,6 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
             setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
           });
       }
-
-      // if (operationMode === 'follow_user' && targetUserAccount.current) {
-      //   const params: FollowOperationApiParams = {
-      //     did_pubkey: didPubKey,
-      //     did_signature: signRes,
-      //     sign_content: signContent,
-      //     userid,
-      //     timestamp: signTime,
-      //     address,
-      //     action: targetUserAccount.current.is_my_following ? 'cancel' : 'follow',
-      //     did_type: walletType,
-      //     target_userid: targetUserAccount.current.userid,
-      //   };
-      //   selfRequest(url, params)
-      //     .then((res) => {
-      //       if (res) {
-      //         setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
-      //         res.address = userAccount.current?.address || '';
-      //         handleOperationEvent({
-      //           ...res,
-      //           operation_type: 'follow_user',
-      //           loginStatus: loginStatus.current,
-      //         });
-      //       } else {
-      //         setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR, res.msg);
-      //       }
-      //     })
-      //     .catch((e) => {
-      //       console.log(e, 'e');
-      //       setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
-      //     });
-      // } else {
-      //   const bindParams: bindDidV2Params = {
-      //     userid,
-      //     did_signature: signRes,
-      //     did_type: walletType,
-      //     did_value: address,
-      //     timestamp: signTime,
-      //     sign_content: signContent,
-      //     bind_type: operationType,
-      //     bind_action: 'bind',
-      //     bind_value: operationValue,
-      //   };
-      //   selfRequest(url, bindParams)
-      //     .then(async (res) => {
-      //       console.log(res, 'res');
-      //       console.log(loginStatus.current, 'loginStatus.current');
-      //       if (res && res.code === 0) {
-      //         setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
-      //         res.address = userAccount.current?.address || '';
-      //         handleOperationEvent({
-      //           ...res,
-      //           operation_type: 'bind_did',
-      //           loginStatus: loginStatus.current,
-      //         });
-      //       } else {
-      //         setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR, res.msg);
-      //       }
-      //     })
-      //     .catch((e) => {
-      //       console.log(e, 'e');
-      //       setConnectLoadingStep(StepStringEnum.DID_BIND_ERROR);
-      //     });
-      // }
     }
   }, [signRes]);
 
@@ -646,16 +582,15 @@ Version: 1
 Nonce: ${NonceContent}
 Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
 
+
     if (operationMode === 'follow_user') {
+      let targetUser = targetUserAccount ? targetUserAccount.current?.nickname ? targetUserAccount.current?.nickname : getShortAddress(targetUserAccount.current?.wallet_address) : '';
       let nonce = sha3_224(userid + operationType + operationValue + timestamp);
       content = `
-    Web3MQ wants you to sign in with your ${wallet_type_name} account:
-    ${address}
-    For follow signature
-    URI: ${url}
+      Hi! Signing this message will create a cryptographic signature proving your intent to ${ targetUserAccount.current?.is_my_following ? 'unfollow' : 'follow'} the user ${targetUser}, this is not a transaction, and will not cost you any ETH or any other cryptocurrency.
     
-    Nonce: ${nonce}
-    Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
+      Nonce: ${nonce}
+      `;
     }
     setSignContent(content);
     setSignTime(timestamp);
