@@ -42,7 +42,6 @@ export const FollowUserModal: React.FC<IProps> = (props) => {
       my_userid: propsKeys?.userid || '',
       timestamp: Date.now(),
     });
-    console.log(userPublicProfileRes, 'userPublicProfileRes');
     if (userPublicProfileRes && userPublicProfileRes.data) {
       setTargetUserInfo(userPublicProfileRes.data);
     }
