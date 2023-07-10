@@ -2,8 +2,12 @@
 @import '@web3mq/dapp-connect-react/dist/css/index.css';
 
 
+
 .followBtn {
   width: 100%;
+  .mq-btn-icon {
+    width: 20px;
+  }
 }
 
 //

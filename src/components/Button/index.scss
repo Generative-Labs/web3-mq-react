@@ -1,12 +1,15 @@
 @import "../../style/index.scss";
 .mq-btn {
   position: relative;
-  display: inline-block;
-  height: 33px;
+  //display: inline-block;
+  height: 32px;
   line-height: 1.42857143;
   padding: 6px 16px;
   font-family: 'Inter', sans-serif;
   font-style: normal;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   @include themeify {
     font-size: themed(Body_font-size);
     font-weight: themed(Medium_font-weight);
@@ -107,7 +110,7 @@
 
 // size small
 .mq-btn-sm {
-  height: 28px;
+  height: 26px;
   padding: 3px 8px;
 }
 // size large
@@ -115,9 +118,8 @@
   @include themeify {
     font-size: themed(Headline_font-size);
   }
-  height: 42px;
+  height: 40px;
   padding: 10px 20px;
-  line-height: 1.25;
   border-radius: 8px;
 }
 

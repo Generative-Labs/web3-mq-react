@@ -12,7 +12,14 @@ import {
   Web3MqWalletIcon,
 } from '../../icons';
 import { AppTypeEnum } from '../../context';
-import { AuthToReceiveModal, Button, Loading, LoginModal, Modal } from '../../components';
+import {
+  AuthToReceiveModal,
+  Button,
+  ButtonSize,
+  Loading,
+  LoginModal,
+  Modal,
+} from '../../components';
 import { Home } from '../LoginModal/Home';
 import useToggle from '../../hooks/useToggle';
 
@@ -38,6 +45,7 @@ import { WalletConnectButton } from '../WalletConnectButton';
 import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/loginLoading';
 import { StepStringEnum, WalletInfoType } from '../../types/enum';
 import type { SessionTypes } from '@walletconnect/types';
+import { PlusIcon } from '../../icons/PlusIcon';
 
 export type EventDataTye = {
   msg: string;
@@ -60,6 +68,7 @@ export type CommonIProps = {
   propWcSession?: SessionTypes.Struct;
   propDappConnectClient?: DappConnectType;
   propsUserAccount?: UserAccountType;
+  auditBtnSize?: ButtonSize;
 };
 
 interface IProps extends CommonIProps {
@@ -209,7 +218,7 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
               type="primary"
               onClick={handleBindDid}
             >
-              - Unfollow
+              Unfollow
             </Button>
           );
         } else {
@@ -220,8 +229,9 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
               disabled={showLoading}
               type="primary"
               onClick={handleBindDid}
+              icon={<PlusIcon style={{ width: '21px', height: '20px', margin: '0' }} />}
             >
-              + Follow
+              Follow
             </Button>
           );
         }
@@ -582,12 +592,17 @@ Version: 1
 Nonce: ${NonceContent}
 Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
 
-
     if (operationMode === 'follow_user') {
-      let targetUser = targetUserAccount ? targetUserAccount.current?.nickname ? targetUserAccount.current?.nickname : getShortAddress(targetUserAccount.current?.wallet_address) : '';
+      let targetUser = targetUserAccount
+        ? targetUserAccount.current?.nickname
+          ? targetUserAccount.current?.nickname
+          : getShortAddress(targetUserAccount.current?.wallet_address)
+        : '';
       let nonce = sha3_224(userid + operationType + operationValue + timestamp);
       content = `
-      Hi! Signing this message will create a cryptographic signature proving your intent to ${ targetUserAccount.current?.is_my_following ? 'unfollow' : 'follow'} the user ${targetUser}, this is not a transaction, and will not cost you any ETH or any other cryptocurrency.
+      Hi! Signing this message will create a cryptographic signature proving your intent to ${
+  targetUserAccount.current?.is_my_following ? 'unfollow' : 'follow'
+} the user ${targetUser}, this is not a transaction, and will not cost you any ETH or any other cryptocurrency.
     
       Nonce: ${nonce}
       `;

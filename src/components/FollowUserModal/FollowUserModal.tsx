@@ -4,6 +4,7 @@ import { AppTypeEnum } from '../../context';
 import { Button } from '../Button';
 import { CommonIProps, CommonOperationModal, userPublicProfileType } from '../CommonOperationModal';
 import ss from './index.module.scss';
+import { PlusIcon } from '../../icons/PlusIcon';
 
 interface IProps extends CommonIProps {
   url: string;
@@ -32,6 +33,7 @@ export const FollowUserModal: React.FC<IProps> = (props) => {
     targetWalletType,
     targetWalletAddress,
     propsKeys,
+    auditBtnSize = 'large',
   } = props;
   const [targetUserInfo, setTargetUserInfo] = useState<userPublicProfileType | undefined>();
 
@@ -59,14 +61,23 @@ export const FollowUserModal: React.FC<IProps> = (props) => {
   };
   const CustomButton = useCallback(() => {
     if (!propsKeys) {
-      return <Button className={ss.loginBtn}>Login to Follow </Button>;
+      return (
+        <Button size={auditBtnSize} className={ss.loginBtn}>
+          Login to Follow{' '}
+        </Button>
+      );
     }
     if (targetUserInfo?.is_my_following) {
-      return <Button className={ss.unFollowBtn}></Button>;
+      return <Button size={auditBtnSize} className={ss.unFollowBtn}></Button>;
     } else {
       return (
-        <Button className={ss.followBtn} type="primary">
-          + UnFollow
+        <Button
+          size={auditBtnSize}
+          className={ss.followBtn}
+          type="primary"
+          icon={<PlusIcon style={{ width: '21px', height: '20px', margin: '0' }} />}
+        >
+          Follow
         </Button>
       );
     }
