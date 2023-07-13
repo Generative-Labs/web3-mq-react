@@ -1,8 +1,10 @@
-import React, { useCallback, useState } from 'react';
-import {Client, getUserPublicProfileRequest} from '@web3mq/client';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Client, getUserPublicProfileRequest, KeyPairsType } from '@web3mq/client';
 import { AppTypeEnum } from '../../context';
 import { Button } from '../Button';
 import { CommonIProps, CommonOperationModal, userPublicProfileType } from '../CommonOperationModal';
+import ss from './index.module.scss';
+import { PlusIcon } from '../../icons/PlusIcon';
 
 interface IProps extends CommonIProps {
   url: string;
@@ -31,31 +33,55 @@ export const FollowUserModal: React.FC<IProps> = (props) => {
     targetWalletType,
     targetWalletAddress,
     propsKeys,
+    auditBtnSize = 'large',
   } = props;
   const [targetUserInfo, setTargetUserInfo] = useState<userPublicProfileType | undefined>();
 
-  // const getTargetUserInfo = async () => {
-  //   const userPublicProfileRes = await getUserPublicProfileRequest({
-  //     did_type: operationType,
-  //     did_value: operationValue,
-  //     my_userid: userid,
-  //     timestamp: Date.now(),
-  //   });
-  // };
-
-  const customButton = useCallback(() => {
-    if (customBtnNode) {
-      return customBtnNode;
+  const getTargetUserInfo = async () => {
+    const userPublicProfileRes = await getUserPublicProfileRequest({
+      did_type: targetWalletType,
+      did_value: targetWalletAddress,
+      my_userid: propsKeys?.userid || '',
+      timestamp: Date.now(),
+    });
+    if (userPublicProfileRes && userPublicProfileRes.data) {
+      setTargetUserInfo(userPublicProfileRes.data);
     }
+  };
+
+  useEffect(() => {
+    if (propsKeys) {
+      getTargetUserInfo().then();
+    }
+  }, []);
+
+  const handleEvent = async (eventData: any) => {
+    await handleOperationEvent(eventData);
+    await getTargetUserInfo();
+  };
+  const CustomButton = useCallback(() => {
     if (!propsKeys) {
-      return <Button className="sign_btn">Login to Follow </Button>;
+      return (
+        <Button size={auditBtnSize} className={ss.loginBtn}>
+          Login to Follow{' '}
+        </Button>
+      );
     }
     if (targetUserInfo?.is_my_following) {
-      return <Button className="sign_btn"> - UnFollow</Button>;
+      return <Button size={auditBtnSize} className={ss.unFollowBtn}></Button>;
     } else {
-      return <Button className="sign_btn"> + UnFollow</Button>;
+      return (
+        <Button
+          size={auditBtnSize}
+          className={ss.followBtn}
+          type="primary"
+          icon={<PlusIcon style={{ width: '21px', height: '20px', margin: '0' }} />}
+        >
+          Follow
+        </Button>
+      );
     }
-  }, [targetUserInfo, customBtnNode]);
+  }, [targetUserInfo, customBtnNode, JSON.stringify(targetUserInfo)]);
 
   return (
     <CommonOperationModal
@@ -65,9 +91,9 @@ export const FollowUserModal: React.FC<IProps> = (props) => {
       containerId={containerId}
       client={client}
       isShow={isShow}
-      handleOperationEvent={handleOperationEvent}
+      handleOperationEvent={handleEvent}
       appType={appType}
-      customBtnNode={customBtnNode || <Button className="sign_btn">Login to Follow </Button>}
+      customBtnNode={customBtnNode || <CustomButton />}
       propDappConnectClient={propDappConnectClient}
       propWalletConnectClient={propWalletConnectClient}
       propWcSession={propWcSession}

@@ -116,10 +116,9 @@ export const SignUp: React.FC<IProps> = (props) => {
           </div>
         )}
         <div className={ss.tipsText} style={styles?.tipsText}>
-          <div>The Web3MQ network does not save your password.</div>
+          <div>The Web3MQ network doesn't store your password. </div>
           <div>
-            Please save it securely. If you lose your password, you will need to reset it, and you
-            will be unable to decrypt previous messages.
+            Be sure to save it securely. If you lose your password, you'll need to reset it and won't be able to decrypt previous messages.
           </div>
         </div>
       </div>

@@ -83,6 +83,7 @@ const Login: React.FC<IProps> = (props) => {
         <LoginModal
           env={'dev'}
           keys={mainKeys}
+          showWeb3MQBtn={true}
           handleOperationEvent={handleLoginEvent}
           appType={appType}
           customBtnNode={

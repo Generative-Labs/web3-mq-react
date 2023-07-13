@@ -12,6 +12,7 @@ type IProps = {
   RenderWallets: ReactNode;
   SuiConnectBtn?: ReactNode;
   handleSuiConnect?: (type: any) => Promise<void>;
+  showWeb3MQBtn?: boolean;
 };
 export const Home: React.FC<IProps> = (props) => {
   const {
@@ -20,6 +21,7 @@ export const Home: React.FC<IProps> = (props) => {
     styles,
     RenderWallets,
     SuiConnectBtn = null,
+    showWeb3MQBtn = false,
     // handleSuiConnect,
   } = props;
   // const wallet = useWallet();
@@ -54,12 +56,15 @@ export const Home: React.FC<IProps> = (props) => {
             <div className={ss.title}>Mobile</div>
           </div>
           <div className={ss.btnsBox}>
-            <Button className={ss.btn} style={styles?.homeButton} onClick={handleWeb3MQClick}>
-              <div className={ss.icon}>
-                <Web3MqIcon />
-              </div>
-              Web3MQ
-            </Button>
+            {showWeb3MQBtn && (
+              <Button className={ss.btn} style={styles?.homeButton} onClick={handleWeb3MQClick}>
+                <div className={ss.icon}>
+                  <Web3MqIcon />
+                </div>
+                Web3MQ
+              </Button>
+            )}
+
             {WalletConnectBtnNode}
             {SuiConnectBtn}
           </div>

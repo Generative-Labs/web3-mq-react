@@ -23,11 +23,10 @@ import cx from 'classnames';
 import type { WalletType } from '@web3mq/client';
 import { Client } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
-import useLogin, { LoginEventDataType, MainKeysType, UserAccountType } from './hooks/useLogin';
+import useLogin, { MainKeysType } from './hooks/useLogin';
 import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
 import { DappConnect, WalletMethodMap } from '@web3mq/dapp-connect';
 import { DappConnectModal } from '@web3mq/dapp-connect-react';
-import type { SessionTypes } from '@walletconnect/types';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { Loading } from '../Loading';
 import { getShortAddress } from '../../utils';
@@ -36,6 +35,7 @@ import type { CommonIProps } from '../CommonOperationModal';
 
 interface IProps extends CommonIProps {
   isResetPassword?: boolean;
+  showWeb3MQBtn?: boolean;
   keys?: MainKeysType;
 }
 
@@ -56,6 +56,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
     propWalletConnectClient,
     propDappConnectClient,
     isResetPassword = false,
+    showWeb3MQBtn = false,
   } = props;
 
   const [dappConnectClient, setDappConnectClient] = useState<DappConnectType | undefined>(
@@ -355,6 +356,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
   };
   const handleClose = () => {
     hide();
+    setShowLoading(false);
     setUserAccount(undefined);
     setConnectLoadingStep(StepStringEnum.HOME);
     setMainKeys(undefined);
@@ -443,13 +445,14 @@ export const LoginModal: React.FC<IProps> = (props) => {
             <CloseBtnIcon onClick={handleClose} className={ss.closeBtn} />
           </div>
         }
-        closeModal={hide}
+        closeModal={handleClose}
       >
         <div className={cx(ss.modalBody)} style={styles?.modalBody}>
           {step === StepStringEnum.HOME && (
             <Home
               // SuiConnectBtn={<ConnectButton />}
               // handleSuiConnect={handleSuiConnected}
+              showWeb3MQBtn={showWeb3MQBtn}
               RenderWallets={
                 <RenderWallets
                   handleViewAll={() => {
@@ -524,11 +527,14 @@ export const LoginModal: React.FC<IProps> = (props) => {
               isResetPassword={true}
             />
           )}
-          {dappConnectClient && (
+          {dappConnectClient && step === StepStringEnum.QR_CODE && (
             <DappConnectModal
               client={dappConnectClient as DappConnect}
               handleSuccess={handleWeb3mqCallback}
               appType={appType}
+              handleModalClose={() => {
+                setConnectLoadingStep(StepStringEnum.HOME);
+              }}
             />
           )}
           {commonCenterStatusData && <CommonCenterStatus {...commonCenterStatusData} />}

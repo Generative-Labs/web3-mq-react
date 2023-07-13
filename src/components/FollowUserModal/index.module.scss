@@ -1,0 +1,34 @@
+@import "../../style/index.scss";
+@import '@web3mq/dapp-connect-react/dist/css/index.css';
+
+
+
+.followBtn {
+  width: 100%;
+  .mq-btn-icon {
+    width: 20px;
+  }
+}
+
+//
+.unFollowBtn {
+  width: 100%;
+  &:before{
+    content: 'Following';
+  }
+
+  &:hover {
+    &:before{
+      content: 'Unfollow';
+    }
+    @include themeify {
+      color: themed(Red_500);
+      border: 1px solid themed(Red_200);
+      background: #fff;
+      //&:disabled {
+      //  color: themed(Danger_button_disable_text_color);
+      //  background-color: themed(Red_50);
+      //}
+    }
+  }
+}

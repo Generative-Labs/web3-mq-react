@@ -21,7 +21,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     init();
-    document.body.setAttribute('data-theme', 'dark');
+    document.body.setAttribute('data-theme', 'light');
     window.addEventListener('resize', () => {
       setAppType(window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc']);
     });
@@ -36,7 +36,7 @@ const App: React.FC = () => {
       mainKeys = {
         publicKey: mainPublicKey,
         privateKey: mainPrivateKey,
-        walletAddress: address,
+        walletAddress: address,     
       };
     }
     return <Login appType={appType} handleLoginEvent={handleLoginEvent} mainKeys={mainKeys} />;
