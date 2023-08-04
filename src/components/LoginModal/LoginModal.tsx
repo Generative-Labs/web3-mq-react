@@ -330,7 +330,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
   };
 
   const handleWalletClick = async (name: string, type: string) => {
-    setWalletType(walletType);
+    setWalletType(type as WalletType );
     setWalletInfo({
       name: name,
       type: type as 'eth' | 'starknet' | 'web3mq' | 'walletConnect',
