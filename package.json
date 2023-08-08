@@ -84,6 +84,7 @@
     "@web3mq/dapp-connect-react": "^1.0.8",
     "ethers": "5.4",
     "js-sha3": "^0.8.0",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "react-select": "^5.7.4"
   }
 }

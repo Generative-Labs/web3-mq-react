@@ -30,6 +30,7 @@ const externalDependencies = [
   'react-dom',
   '@babel/runtime/helpers/extends',
   'js-sha3',
+  'react-select',
 ];
 
 const baseConfig = {
