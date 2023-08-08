@@ -1,4 +1,5 @@
 @import "../../style/index.scss";
+
 .btn {
   border: 0;
   display: flex;
@@ -12,6 +13,7 @@
     background: themed(White_color)
   }
 }
+
 .btn:focus {
   border: none;
   outline: none;
@@ -23,6 +25,7 @@
   height: 480px;
   font-family: 'Inter', sans-serif;
   overflow: hidden;
+
   &.mobileStyle {
     width: 100%;
     height: 100%;
@@ -49,6 +52,7 @@
       font-weight: themed(Medium_font-weight);
     }
   }
+
   .backBtn {
     position: absolute;
     left: 30px;
@@ -62,6 +66,7 @@
 
       &:hover {
         color: themed(Gray_500);
+
         svg path {
           fill: themed(Gray_500);
         }
@@ -82,6 +87,7 @@
       }
       &:hover {
         color: themed(Gray_500);
+
         svg path {
           fill: themed(Gray_500);
         }
@@ -108,25 +114,28 @@
   overflow-y: auto;
 }
 
-.mainContainer::-webkit-scrollbar{
-  width:10px;
-  height:10px;
+.mainContainer::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
-.mainContainer::-webkit-scrollbar-track{
-  @include themeify{
+
+.mainContainer::-webkit-scrollbar-track {
+  @include themeify {
     background: themed(White_color);
   }
-  border-radius:2px;
+  border-radius: 2px;
 }
-.mainContainer::-webkit-scrollbar-thumb{
-  @include themeify{
+
+.mainContainer::-webkit-scrollbar-thumb {
+  @include themeify {
     background: themed(Gray_500);
   }
-  border-radius:10px;
+  border-radius: 10px;
 }
-.mainContainer::-webkit-scrollbar-thumb:hover{
 
-  @include themeify{
+.mainContainer::-webkit-scrollbar-thumb:hover {
+
+  @include themeify {
     background: themed(Gray_900);
   }
 }
@@ -135,12 +144,15 @@
   display: flex;
   padding: 16px 16px;
   font-family: "Inter", sans-serif;
+
   &.hide {
     display: none;
   }
+
   button:first-of-type {
     margin-right: 16px;
   }
+
   .addFriends, .createRoom {
     width: 20px;
     height: 20px;
@@ -154,6 +166,7 @@
 .contactsContainer {
   overflow: hidden;
   height: 100%;
+
   > .friendTitle {
     width: 100%;
     height: 20px;
@@ -175,29 +188,31 @@
   cursor: pointer;
 }
 
-.contactList::-webkit-scrollbar{
-  width:10px;
-  height:10px;
+.contactList::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
-.contactList::-webkit-scrollbar-track{
-  @include themeify{
+
+.contactList::-webkit-scrollbar-track {
+  @include themeify {
     background: themed(White_color);
   }
-  border-radius:2px;
+  border-radius: 2px;
 }
-.contactList::-webkit-scrollbar-thumb{
-  @include themeify{
+
+.contactList::-webkit-scrollbar-thumb {
+  @include themeify {
     background: themed(Gray_500);
   }
-  border-radius:10px;
+  border-radius: 10px;
 }
-.contactList::-webkit-scrollbar-thumb:hover{
 
-  @include themeify{
+.contactList::-webkit-scrollbar-thumb:hover {
+
+  @include themeify {
     background: themed(Gray_900);
   }
 }
-
 
 
 .contactItem, .searchFollowerItem, .searchContactItem {
@@ -231,6 +246,7 @@
       color: themed(Gray_400);
     }
   }
+
   .searchFollowersBtn {
     display: flex;
     align-self: center;
@@ -246,9 +262,11 @@
   font-family: 'Inter', sans-serif;
   letter-spacing: 0em;
   text-align: left;
+
   &.hide {
     display: none;
   }
+
   @include themeify {
     font-size: themed(Body_font-size);
     font-weight: themed(Regular_font-weight);
@@ -257,49 +275,48 @@
 }
 
 .addFriendContainer {
-  .optionItem {
-    border-radius: 8px;
-    /*border: 1px solid #E4E4E7;*/
-    width: 100%;
-    height: 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 16px;
-    box-sizing: border-box;
-    cursor: pointer;
-
-    .leftBox {
+  @include themeify{
+    .optionItem {
+      border-radius: 8px;
+      width: 100%;
+      height: 40px;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
+      padding: 10px 16px;
+      box-sizing: border-box;
+      cursor: pointer;
 
-      .text {
-        color: #18181B;
-        font-family: Inter, sans-serif;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        text-align: left;
+      .leftBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .text {
+          color: #18181B;
+          font-family: Inter, sans-serif;
+          font-size: themed(Headline_font-size);
+          font-style: normal;
+          font-weight: themed(Regular_font-weight);
+          text-align: left;
+        }
+
+        .left {
+          margin-right: 10px;
+          width: 20px;
+          height: 20px;
+
+        }
       }
 
-      .left {
-        margin-right: 10px;
+      .left, .right {
         width: 20px;
         height: 20px;
-
       }
     }
-
-    .left, .right {
-      width: 20px;
-      height: 20px;
-    }
   }
-
-
-
 }
+
 .btnContaner {
   position: absolute;
   left: 0;
@@ -307,6 +324,7 @@
   width: 100%;
   padding: 16px;
 }
+
 .commonInput, .commonTextarea {
   box-sizing: border-box;
   width: 100%;
@@ -315,9 +333,11 @@
   padding: 10px 16px;
   outline: none;
   border-radius: 8px;
+
   &:disabled {
     cursor: no-drop;
   }
+
   @include themeify {
     font-size: themed(Headline_font-size);
     border: 1px solid themed(Gray_200);
@@ -328,21 +348,26 @@
     }
   }
 }
+
 .commonTextarea {
   resize: vertical
 }
 
 .addFriendContainer {
   padding: 0 16px;
+
   > .label {
     @include themeify {
       color: themed(Gray_900);
     }
     margin-bottom: 8px;
+    margin-top: 16px;
   }
+
   .label:nth-child(4) {
     margin-top: 16px;
   }
+
   > .warnning {
     box-sizing: border-box;
     display: flex;
@@ -350,9 +375,11 @@
     padding: 12px;
     margin-top: 8px;
     border-radius: 12px;
+
     &.hide {
       display: none;
     }
+
     @include themeify {
       font-size: themed(Caption1_font-size);
       font-weight: themed(Medium_font-weight);
@@ -361,6 +388,7 @@
       background-color: themed(Red_50);
     }
   }
+
   .warnIcon {
     display: flex;
     align-items: center;
@@ -378,6 +406,7 @@
     font-weight: themed(Bold_font-weight);
   }
 }
+
 .inputContainer {
   box-sizing: border-box;
   display: flex;
@@ -389,6 +418,7 @@
     border: 2px solid #8885FD;
   }
 }
+
 .contactSelector {
   display: flex;
   flex-direction: row;
@@ -396,6 +426,7 @@
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+
   .selectedBox {
     height: 23px;
     line-height: 20px;
@@ -427,25 +458,28 @@
   }
 
 
-  .inputElement::-webkit-scrollbar{
-    width:10px;
-    height:10px;
+  .inputElement::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
   }
-  .inputElement::-webkit-scrollbar-track{
-    @include themeify{
+
+  .inputElement::-webkit-scrollbar-track {
+    @include themeify {
       background: themed(White_color);
     }
-    border-radius:2px;
+    border-radius: 2px;
   }
-  .inputElement::-webkit-scrollbar-thumb{
-    @include themeify{
+
+  .inputElement::-webkit-scrollbar-thumb {
+    @include themeify {
       background: themed(Gray_500);
     }
-    border-radius:10px;
+    border-radius: 10px;
   }
-  .inputElement::-webkit-scrollbar-thumb:hover{
 
-    @include themeify{
+  .inputElement::-webkit-scrollbar-thumb:hover {
+
+    @include themeify {
       background: themed(Gray_900);
     }
   }
@@ -461,9 +495,11 @@
     margin-right: 12px;
     border-radius: 6px;
     cursor: pointer;
+
     &:checked {
       position: relative;
       border-radius: 6px;
+
       &::after {
         box-sizing: border-box;
         position: absolute;
@@ -472,15 +508,17 @@
         display: table;
         width: 7.14282142px;
         height: 11.285714px;
-        transform: rotate(45deg) translate(-50%,-50%);
+        transform: rotate(45deg) translate(-50%, -50%);
         content: "";
-      } 
+      }
     }
+
     @include themeify {
       border: 1.875px solid themed(Gray_300);
       &:checked {
         border: none;
         background-color: themed(Violet_500);
+
         &::after {
           border: 2px solid themed(White_color);
           border-top: 0;
@@ -499,7 +537,7 @@
     padding: 12px;
     margin: 0px 16px 16px 16px;
 
-    @include themeify{
+    @include themeify {
       background: themed(White_color);
     }
 
@@ -507,6 +545,7 @@
       border-radius: 12px;
       cursor: pointer;
     }
+
     .imgBox {
       width: 64px;
       height: 64px;
@@ -516,9 +555,11 @@
     .fileBox {
       margin-right: 12px;
       padding: 14px;
+
       &.nopadding {
         padding: 0;
       }
+
       .cameraIcon {
         width: 36px;
         height: 36px;
@@ -526,10 +567,12 @@
         color: #FDFDFD;
       }
     }
+
     @include themeify {
       background: themed(Violet_50);
       .fileBox {
         background: themed(Violet_400);
+
         .cameraIcon {
           color: themed(Gray_50);
         }
@@ -540,81 +583,82 @@
 
 
 :global {
-  .selectContainer {
+  @include themeify {
 
+    .selectContainer {
 
-    .react-select__control--is-focused {
-      //border: ;
+      .react-select__control {
+        border-radius: 8px;
+        border: 1px solid themed(Gray_200);
+        width: 100%;
+        height: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+        cursor: pointer;
 
-    }
-
-    .react-select__control {
-      border-radius: 8px;
-      border: 1px solid #E4E4E7;
-      width: 100%;
-      height: 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-sizing: border-box;
-      cursor: pointer;
-
-      .react-select__value-container {
-        padding: 0;
-
-        .react-select__input-container {
-          .react-select__input {
-            caret-color: rgba(0, 0, 0, 0)
-          }
-        }
-      }
-
-      .react-select__indicators {
-        .react-select__indicator-separator {
-          display: none;
-        }
-      }
-
-    }
-
-    .react-select__menu {
-      .react-select__menu-list {
-        padding: 6px;
-
-        .react-select__option {
-          border-radius: 4px;
-          width: 100%;
-          height: 40px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+        .react-select__value-container {
           padding: 0;
-          box-sizing: border-box;
-          cursor: pointer;
+
+          .react-select__input {
+            input {
+              caret-color: transparent;
+            }
+          }
         }
 
-        .react-select__option--is-selected {
+        .react-select__indicators {
+          .react-select__indicator-separator {
+            display: none;
+          }
+        }
 
-          &:after {
-            content: '\2713';
-            color: #663CEE;
-            font-weight: 600;
-            font-size: 16px;
-            margin-right: 16px;
+      }
+
+      .react-select__control--is-focused {
+        border: 2px solid themed(Violet_400);
+        box-shadow: none;
+      }
+
+      .react-select__menu {
+        .react-select__menu-list {
+          padding: 6px;
+
+          .react-select__option {
+            border-radius: 4px;
+            width: 100%;
+            height: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: pointer;
           }
 
-        }
+          .react-select__option--is-selected {
 
-        .react-select__option--is-selected, .react-select__option--is-focused {
-          background: #fff;
+            &:after {
+              content: '\2713';
+              color: themed(Violet_500);
+              font-weight: themed(Bold_font-weight);
+              font-size: themed(Headline_font-size);
+              margin-right: 16px;
+            }
 
-          &:hover {
-            background: #F4F4F5;
+          }
+
+          .react-select__option--is-selected, .react-select__option--is-focused {
+            background: themed(White_color);
+
+            &:hover {
+              background: themed(Gray_100);
+            }
           }
         }
       }
-    }
 
+    }
   }
 }
-

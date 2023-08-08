@@ -1,13 +1,13 @@
 import React, { useDebugValue, useState } from 'react';
 import cx from 'classnames';
-import type { Client } from '@web3mq/client';
+import type { Client, WalletType } from '@web3mq/client';
 
 import { Button } from '../../components';
 import { ExclamationCircleIcon, EthNetworkIcon, StarkNetworkIcon } from '../../icons';
+// @ts-ignore
 import Select from 'react-select';
 
 import ss from './CreateChannel.scss';
-import * as events from 'events';
 
 type AddFriendsProps = {
   className?: string;
@@ -22,6 +22,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const [content, setContent] = useState<string>('');
   const [isWarn, setIsWarn] = useState<boolean>(false);
   const [load, setLoad] = useState<boolean>(false);
+  const [selectNetwork, setSelectNetwork] = useState<WalletType>('eth');
 
   const options = [
     {
@@ -62,7 +63,11 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const handleSubmit = async () => {
     try {
       setLoad(true);
-      await client.contact.sendFriend(value, content);
+      let str = value;
+      if (value.startsWith('0x') && selectNetwork === 'starknet' && value.indexOf('0x00') !== -1) {
+        str = str.replace('0x00', '0x');
+      }
+      await client.contact.sendFriend(str.toLowerCase(), content, selectNetwork);
       setLoad(false);
       onSubmit && onSubmit();
     } catch (error) {
@@ -71,7 +76,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
     }
   };
   const handleTypeChange = (item: any) => {
-    console.log(item, 'item');
+    setSelectNetwork(item.value);
   };
 
   return (
@@ -81,7 +86,6 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
         <Select
           className={'selectContainer'}
           classNamePrefix="react-select"
-          defaultMenuIsOpen={true}
           options={options}
           onChange={handleTypeChange}
           defaultValue={options[0]}

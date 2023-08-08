@@ -1,6 +1,6 @@
 {
   "name": "@web3mq/react-components",
-  "version": "1.0.56",
+  "version": "1.0.57",
   "description": "web3mq-react-components",
   "main": "dist/index.js",
   "repository": "git@github.com:Generative-Labs/web3-mq-react.git",
@@ -49,7 +49,7 @@
     "@types/react": "^17.0.39",
     "@types/react-dom": "^17.0.11",
     "@typescript-eslint/parser": "^5.13.0",
-    "@web3mq/client": "^1.0.14",
+    "@web3mq/client": "^1.0.15",
     "classnames": "^2.3.1",
     "eslint": "^7.11.0",
     "husky": "3.0.9",
@@ -59,6 +59,7 @@
     "qrcode": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-select": "4.3.1",
     "rollup": "^2.68.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-copy": "^3.4.0",
@@ -84,7 +85,6 @@
     "@web3mq/dapp-connect-react": "^1.0.8",
     "ethers": "5.4",
     "js-sha3": "^0.8.0",
-    "moment": "^2.29.4",
-    "react-select": "^5.7.4"
+    "moment": "^2.29.4"
   }
 }
