@@ -51,8 +51,8 @@ export const StarkNetworkIcon = (props: any) => {
             y2="19.5643"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#EC796B" />
-            <stop offset="1" stop-color="#D672EF" />
+            <stop stopColor="#EC796B" />
+            <stop offset="1" stopColor="#D672EF" />
           </linearGradient>
           <clipPath id="clip0_6186_3735">
             <rect width="20" height="20" fill="white" />

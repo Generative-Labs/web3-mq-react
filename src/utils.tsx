@@ -16,18 +16,11 @@ export const getEnsNameByAddress = async (address: string) => {
   return name;
 };
 
-export function getShortAddress(
-  address: string = '',
-  num: number = 5,
-  endNum = 4
-) {
+export function getShortAddress(address: string = '', num: number = 5, endNum = 4) {
   let strLength = address.length;
-  return (
-    address.substring(0, num) +
-    '...' +
-    address.substring(strLength - endNum, strLength)
-  );
+  return address.substring(0, num) + '...' + address.substring(strLength - endNum, strLength);
 }
+
 // export const getShortAddress = (address: string = '') => {
 //   let strLength = address.length;
 //   return address.substring(0, 5) + '...' + address.substring(strLength - 4, strLength);
@@ -167,7 +160,7 @@ export const formatMessageData = (channel: any) => {
 
 /**
  * File格式转换
-*/
+ */
 export const fileParse = (file: File, type = 'base64'): Promise<any> => {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -226,10 +219,7 @@ export const toDate = (date: number | Date) => {
   const dateStr = Object.prototype.toString.call(date);
 
   // Clone the date
-  if (
-    date instanceof Date ||
-    (typeof date === 'object' && dateStr === '[object Date]')
-  ) {
+  if (date instanceof Date || (typeof date === 'object' && dateStr === '[object Date]')) {
     return new Date(date.getTime());
     // return new Date(argument.getTime())
   } else if (typeof date === 'number' || dateStr === '[object Number]') {
@@ -240,16 +230,13 @@ export const toDate = (date: number | Date) => {
 };
 
 /** 比较两个日期，如果第一个日期晚于第二个日期，则返回 1；如果第一个日期早于第二个日期，则返回 -1；如果日期相等，则返回 0。
- * 
- * @param dirtyDateLeft 
- * @param dirtyDateRight 
- * @returns 
- * 
+ *
+ * @param dirtyDateLeft
+ * @param dirtyDateRight
+ * @returns
+ *
  */
-export const compareAsc = (
-  dirtyDateLeft: Date | number,
-  dirtyDateRight: Date | number
-) => {
+export const compareAsc = (dirtyDateLeft: Date | number, dirtyDateRight: Date | number) => {
   const dateLeft = toDate(dirtyDateLeft);
   const dateRight = toDate(dirtyDateRight);
 
@@ -290,14 +277,17 @@ export const getTimezoneOffsetInMilliseconds = (date: Date): number => {
       date.getHours(),
       date.getMinutes(),
       date.getSeconds(),
-      date.getMilliseconds()
-    )
+      date.getMilliseconds(),
+    ),
   );
   utcDate.setUTCFullYear(date.getFullYear());
   return date.getTime() - utcDate.getTime();
 };
 // 获取给定日期之间的日历月数
-export const differenceInCalendarMonths = (dirtyDateLeft: Date | number,  dirtyDateRight: Date | number): number => {
+export const differenceInCalendarMonths = (
+  dirtyDateLeft: Date | number,
+  dirtyDateRight: Date | number,
+): number => {
   const dateLeft = toDate(dirtyDateLeft);
   const dateRight = toDate(dirtyDateRight);
 
@@ -307,16 +297,22 @@ export const differenceInCalendarMonths = (dirtyDateLeft: Date | number,  dirtyD
   return yearDiff * 12 + monthDiff;
 };
 // 获取给定日期之间的毫秒数
-export const differenceInMilliseconds = (dateLeft: Date | number, dateRight: Date | number): number => {
+export const differenceInMilliseconds = (
+  dateLeft: Date | number,
+  dateRight: Date | number,
+): number => {
   return toDate(dateLeft).getTime() - toDate(dateRight).getTime();
 };
 // 获取给定日期之间的秒数。
-export const differenceInSeconds = (dateLeft: Date | number, dateRight: Date | number,) => {
+export const differenceInSeconds = (dateLeft: Date | number, dateRight: Date | number) => {
   const diff = differenceInMilliseconds(dateLeft, dateRight) / 1000;
   return diff < 0 ? Math.ceil(diff) : Math.floor(diff);
 };
 // 默认舍入方法获取给定日期之间的完整月数。
-export const differenceInMonths = (dirtyDateLeft: Date | number, dirtyDateRight: Date | number): number => {
+export const differenceInMonths = (
+  dirtyDateLeft: Date | number,
+  dirtyDateRight: Date | number,
+): number => {
   const dateLeft = toDate(dirtyDateLeft);
   const dateRight = toDate(dirtyDateRight);
 
@@ -363,7 +359,8 @@ enum monthEnum {
   'Oct' = 10,
   'Nov' = 11,
   'Dec' = 12,
-};
+}
+
 export function newDateFormat(time: number, format?: string) {
   const t = new Date(time);
   format = format || 'Y-m-d h:i:s';
@@ -393,10 +390,11 @@ export function newDateFormat(time: number, format?: string) {
     return rt >= 10 || isAddZero(o) ? rt : `0${rt}`;
   });
 }
+
 /**
- * 
+ *
  * @param date
- * @returns 
+ * @returns
  * | Distance between dates                                            | Result              |
  * |-------------------------------------------------------------------|---------------------|
  * |   0 <= seconds <= 60                                              | Just now            |
@@ -427,7 +425,8 @@ export const formatDistanceToNow = (date: number | Date) => {
   }
 
   const seconds = differenceInSeconds(dateRight, dateLeft);
-  const offsetInSeconds = (getTimezoneOffsetInMilliseconds(dateRight) - getTimezoneOffsetInMilliseconds(dateLeft)) / 1000;
+  const offsetInSeconds =
+    (getTimezoneOffsetInMilliseconds(dateRight) - getTimezoneOffsetInMilliseconds(dateLeft)) / 1000;
   const minutes = Math.round((seconds - offsetInSeconds) / 60);
   let months;
   // 一分钟内
@@ -450,7 +449,7 @@ export const formatDistanceToNow = (date: number | Date) => {
     return `${weeks}wk ago`;
   } else if (minutes < minutesInMonth * 2) {
     return '1mo ago';
-  };
+  }
   months = differenceInMonths(dateRight, dateLeft);
   if (months < 12) {
     // 一年内
@@ -463,7 +462,7 @@ export const formatDistanceToNow = (date: number | Date) => {
 /**
  * 获取wallet address默认头像
  */
-export const getUserAvatar = (address: string) =>  {
+export const getUserAvatar = (address: string) => {
   return `https://cdn.stamp.fyi/avatar/${address}?s=300`;
 };
 
@@ -474,7 +473,6 @@ export const generateQrCode = async (text: string) => {
     throw new Error(err.message);
   }
 };
-
 
 export type bindDidV2Params = {
   userid: string;
@@ -506,10 +504,12 @@ export enum AuthToDappEnum {
   ON,
 }
 
-export type AuthStatusType = 'off' | 'on' | 'clear'
+export type AuthStatusType = 'off' | 'on' | 'clear';
 
-
-export const selfRequest = async (url: string, payload: bindDidV2Params | FollowOperationApiParams | AuthToDappParams) => {
+export const selfRequest = async (
+  url: string,
+  payload: bindDidV2Params | FollowOperationApiParams | AuthToDappParams,
+) => {
   return await fetch(url, {
     headers: {
       'content-type': 'application/json',
@@ -524,4 +524,14 @@ export const selfRequest = async (url: string, payload: bindDidV2Params | Follow
     .catch((e) => {
       console.log(e);
     });
+};
+
+export const getStarkNetAddress = (address: string) => {
+  let str = address;
+  if (address.indexOf('0x00') !== -1) {
+    str = str.replace('0x00', '0x');
+  } else if (address.indexOf('0x0') !== -1) {
+    str = str.replace('0x0', '0x');
+  }
+  return str;
 };

@@ -4,10 +4,10 @@ import type { Client, WalletType } from '@web3mq/client';
 
 import { Button } from '../../components';
 import { ExclamationCircleIcon, EthNetworkIcon, StarkNetworkIcon } from '../../icons';
-// @ts-ignore
 import Select from 'react-select';
 
 import ss from './CreateChannel.scss';
+import { getStarkNetAddress } from '../../utils';
 
 type AddFriendsProps = {
   className?: string;
@@ -32,7 +32,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
         <div className={ss.optionItem}>
           <div className={ss.leftBox}>
             <div className={ss.left}>{<EthNetworkIcon />}</div>
-            <div className={ss.text}>Eth</div>
+            <div className={ss.text}>Ethereum</div>
           </div>
           <div className={ss.right}>{/*{item.value === selected?.value && <SelectedIcon />}*/}</div>
         </div>
@@ -45,7 +45,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
         <div className={ss.optionItem}>
           <div className={ss.leftBox}>
             <div className={ss.left}>{<StarkNetworkIcon />}</div>
-            <div className={ss.text}>starknet</div>
+            <div className={ss.text}>Starknet</div>
           </div>
           <div className={ss.right}>{/*{item.value === selected?.value && <SelectedIcon />}*/}</div>
         </div>
@@ -63,11 +63,8 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const handleSubmit = async () => {
     try {
       setLoad(true);
-      let str = value;
-      if (value.startsWith('0x') && selectNetwork === 'starknet' && value.indexOf('0x00') !== -1) {
-        str = str.replace('0x00', '0x');
-      }
-      await client.contact.sendFriend(str.toLowerCase(), content, selectNetwork);
+      let starkNetAddress = getStarkNetAddress(value);
+      await client.contact.sendFriend(starkNetAddress.toLowerCase(), content, selectNetwork);
       setLoad(false);
       onSubmit && onSubmit();
     } catch (error) {

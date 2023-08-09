@@ -1,6 +1,6 @@
 {
   "name": "@web3mq/react-components",
-  "version": "1.0.57",
+  "version": "1.0.61",
   "description": "web3mq-react-components",
   "main": "dist/index.js",
   "repository": "git@github.com:Generative-Labs/web3-mq-react.git",
@@ -46,8 +46,8 @@
     "@rollup/plugin-babel": "^5.3.1",
     "@rollup/plugin-image": "^2.1.1",
     "@types/qrcode": "^1.5.0",
-    "@types/react": "^17.0.39",
-    "@types/react-dom": "^17.0.11",
+    "@types/react": "^18.2.19",
+    "@types/react-dom": "^18.2.7",
     "@typescript-eslint/parser": "^5.13.0",
     "@web3mq/client": "^1.0.15",
     "classnames": "^2.3.1",
@@ -59,7 +59,7 @@
     "qrcode": "^1.5.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-select": "4.3.1",
+    "react-select": "^5.7.4",
     "rollup": "^2.68.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-copy": "^3.4.0",
@@ -74,6 +74,7 @@
   },
   "peerDependencies": {
     "@web3mq/client": "^1.0.13",
+    "react-select": "^5.7.4",
     "react": "^18.2.0 || ^17.0.0 || ^16.8.0",
     "react-dom": "^18.2.0 || ^17.0.0 || ^16.8.0"
   },

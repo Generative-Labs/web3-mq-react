@@ -20,7 +20,7 @@ const UnMemoizedRadioGroup: React.FC<IProps> = (props) => {
   const [selected, setSelected] = useState<string>('1');
 
   const handleSelect = useCallback(
-    (item) => {
+    (item: IValueType) => {
       const { id } = item;
       setSelected(id);
       onChange && onChange(item);

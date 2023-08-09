@@ -72,12 +72,12 @@ const UnMemoizedCreateChannel = (props: CreateChannelProps) => {
     handlePrev();
   }, [handlePrev]);
 
-  const handleChange = useCallback((value) => {
+  const handleChange = useCallback((value: any) => {
     setSearchValue(value);
     handleSearchFollers(value);
   }, [handleSearchFollers]);
 
-  const handleFollowOrSendFriend = useCallback(async (userid, action: 'follow') => {
+  const handleFollowOrSendFriend = useCallback(async (userid: any, action: 'follow') => {
     if (action === 'follow') {
       if (loginUserInfo) {
         await client.contact.followOperation({
