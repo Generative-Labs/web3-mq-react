@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ArgentWalletIcon, ViewAllIcon, WalletMetaMaskIcon } from '../../../icons';
+import { ArgentWalletIcon, BraavosIcon, ViewAllIcon, WalletMetaMaskIcon } from '../../../icons';
 import { Loading } from '../../Loading';
 import ss from './index.module.scss';
 
@@ -29,6 +29,14 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       icon: <ArgentWalletIcon />,
       handleClick: async () => {
         await handleWalletClick('Argent X', 'starknet');
+      },
+    },
+    {
+      type: 'starknet',
+      title: 'Braavos',
+      icon: <BraavosIcon />,
+      handleClick: async () => {
+        await handleWalletClick('Braavos', 'starknet');
       },
     },
   ];

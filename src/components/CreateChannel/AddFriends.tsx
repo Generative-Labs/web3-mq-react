@@ -1,8 +1,8 @@
-import React, { useDebugValue, useState } from 'react';
+import React, { useState } from 'react';
 import cx from 'classnames';
 import type { Client, WalletType } from '@web3mq/client';
 
-import { Button } from '../../components';
+import { Button } from '../Button';
 import { ExclamationCircleIcon, EthNetworkIcon, StarkNetworkIcon } from '../../icons';
 import Select from 'react-select';
 
