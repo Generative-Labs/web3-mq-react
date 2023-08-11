@@ -16,7 +16,7 @@ import useToggle from '../../hooks/useToggle';
 import ss from './index.module.scss';
 import cx from 'classnames';
 import type { WalletType } from '@web3mq/client';
-import { Client } from '@web3mq/client';
+import { Client, WalletNameType } from '@web3mq/client';
 import { RenderWallets } from '../LoginModal/RenderWallets';
 import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
 import { DappConnect, WalletMethodMap } from '@web3mq/dapp-connect';
@@ -28,8 +28,13 @@ import type { AuthStatusType, AuthToDappParams } from '../../utils';
 import { AuthToDappEnum, getShortAddress, selfRequest } from '../../utils';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/loginLoading';
-import { StepStringEnum, WalletInfoType } from '../../types/enum';
+import { BlockChainMap, StepStringEnum, WalletInfoType } from '../../types/enum';
 import type { CommonIProps } from '../CommonOperationModal';
+import type {
+  LoginEventDataType,
+  LoginResType,
+  RegisterResType,
+} from '../LoginModal/hooks/useLogin';
 
 type authScopeItem = Record<string, 'on' | 'off'>;
 
@@ -227,12 +232,12 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
       }
       const { userid, userExist } = await client.register.getUserInfo({
         did_value: address,
-        did_type: didType,
+        did_type: BlockChainMap[didType || 'metamask'],
       });
       userAccount.current = {
         userid,
         address: address as string,
-        walletType: didType || 'eth',
+        walletType: didType || 'metamask',
         userExist,
       };
       if (address) {
@@ -253,11 +258,7 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
   const handleWeb3mqCallback = async (eventData: any) => {
     const { method, result } = eventData;
     if (method === WalletMethodMap.providerAuthorization) {
-      setWalletInfo({
-        name: result?.walletInfo?.name || 'Web3MQ Wallet',
-        type: 'web3mq',
-      });
-      await getAccount('eth', result.address.toLowerCase());
+      await getAccount('dappConnect', result.address.toLowerCase());
     }
     if (method === WalletMethodMap.personalSign) {
       await web3MqSignCallback(result.signature);
@@ -294,7 +295,7 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
         timestamp: signTime,
         signature_content: signContent,
         did_signature: signRes,
-        did_type: walletType,
+        did_type: BlockChainMap[walletType],
         auth_status: AuthToDappEnum.ON,
         did_value: address,
         did_pubkey: didPubKey,
@@ -396,25 +397,25 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
     }
   };
 
-  const handleLoginEvent = (eventData: any) => {
+  const handleLoginEvent = (eventData: LoginEventDataType) => {
     if (eventData.data) {
       if (eventData.type === 'login') {
-        const { userid, address } = eventData.data;
+        const { address, userid, walletType } = eventData.data as LoginResType;
         userAccount.current = {
           userid,
           address,
-          walletType: 'eth',
+          walletType,
           userExist: true,
         };
         loginStatus.current = eventData.data;
         setConnectLoadingStep(StepStringEnum.READY_AUTH_TO_DAPP);
       }
       if (eventData.type === 'register') {
-        const { address } = eventData.data;
+        const { address } = eventData.data as RegisterResType;
         userAccount.current = {
           userid: userAccount.current?.userid || '',
           address,
-          walletType: 'eth',
+          walletType: 'metamask',
           userExist: true,
         };
       }
@@ -453,10 +454,10 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       setConnectLoadingStep(StepStringEnum.SIGN_ERROR);
     }
   };
-  const handleWalletClick = async (name: string, type: string) => {
+  const handleWalletClick = async (name: WalletNameType, type: WalletType) => {
     setWalletInfo({
-      name: name,
-      type: type as 'eth' | 'starknet' | 'web3mq' | 'walletConnect',
+      name,
+      type,
     });
     await getAccount(type as WalletType);
   };
@@ -500,10 +501,10 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
                   }}
                   handleConnectEvent={async (event) => {
                     setWalletInfo({
-                      name: event.walletName,
-                      type: event.walletType,
+                      name: event.walletName as WalletNameType,
+                      type: event.walletType as WalletType,
                     });
-                    await getAccount('eth', event.address);
+                    await getAccount('metamask', event.address);
                   }}
                   create={create}
                   connect={connect}

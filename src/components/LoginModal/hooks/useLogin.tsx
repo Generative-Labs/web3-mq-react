@@ -1,12 +1,12 @@
 import React, { useRef, useState } from 'react';
-import type { WalletType } from '@web3mq/client';
+import type { WalletType, BlockChainType } from '@web3mq/client';
 import { AppTypeEnum } from '../../../context';
 import type { DappConnect } from '@web3mq/dapp-connect';
 import SignClient from '@walletconnect/sign-client';
 import type { SessionTypes } from '@walletconnect/types';
 import * as encoding from '@walletconnect/encoding';
 import { Web3Modal } from '@web3modal/standalone';
-import { SignAuditTypeEnum } from '../../../types/enum';
+import { BlockChainMap, SignAuditTypeEnum } from '../../../types/enum';
 
 export type LoginEventType = 'login' | 'register' | 'error';
 export type LoginEventDataType = {
@@ -33,15 +33,17 @@ export type LoginResType = {
   publicKey: string;
   tempPrivateKey: string;
   tempPublicKey: string;
-  didKey: string;
+  didKey: `${BlockChainType}:${string}`;
   userid: string;
   address: string;
+  walletType: WalletType;
   pubkeyExpiredTimestamp: number;
 };
 export type RegisterResType = {
   privateKey: string;
   publicKey: string;
   address: string;
+  walletType: WalletType;
 };
 
 type IProps = {
@@ -358,7 +360,7 @@ const useLogin = (props: IProps) => {
   };
 
   const getUserAccount = async (
-    didType: WalletType = 'eth',
+    didType: WalletType = 'metamask',
     address?: string,
   ): Promise<{
     address: string;
@@ -371,7 +373,7 @@ const useLogin = (props: IProps) => {
     }
     const { userid, userExist } = await client.register.getUserInfo({
       did_value: didValue,
-      did_type: didType,
+      did_type: BlockChainMap[didType],
     });
     walletAddress.current = didValue as string;
     setUserAccount({
@@ -386,7 +388,9 @@ const useLogin = (props: IProps) => {
     };
   };
 
-  const login = async (didType: WalletType = 'eth'): Promise<void> => {
+  const login = async (didType: WalletType = 'metamask'): Promise<void> => {
+    console.log('1111');
+    console.log(userAccount, 'userAccount');
     if (!userAccount) {
       return;
     }
@@ -403,6 +407,7 @@ const useLogin = (props: IProps) => {
         did_value: address,
         did_type: didType,
       });
+      console.log({ publicKey, secretKey }, '{ publicKey, secretKey }');
       localMainPrivateKey = secretKey;
       localMainPublicKey = publicKey;
     }
@@ -416,7 +421,7 @@ const useLogin = (props: IProps) => {
     });
   };
 
-  const register = async (didType: WalletType = 'eth', nickname?: string): Promise<void> => {
+  const register = async (didType: WalletType = 'metamask', nickname?: string): Promise<void> => {
     if (!userAccount) {
       return;
     }
@@ -554,10 +559,11 @@ const useLogin = (props: IProps) => {
         publicKey: mainPublicKey,
         tempPrivateKey,
         tempPublicKey,
-        didKey: `${didType}:${didValue}`,
+        didKey: `${BlockChainMap[didType]}:${didValue}`,
         userid: userid,
         address: didValue,
         pubkeyExpiredTimestamp,
+        walletType: didType,
       },
     });
   };
@@ -632,6 +638,7 @@ const useLogin = (props: IProps) => {
         privateKey: mainPrivateKey,
         publicKey: mainPublicKey,
         address: didValue,
+        walletType: didType,
       },
     });
     await commonLogin({

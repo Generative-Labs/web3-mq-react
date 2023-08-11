@@ -3,6 +3,7 @@ import type SignClient from '@walletconnect/sign-client';
 import {
   ArgentXIcon,
   BindDidWarningIcon,
+  BraavosIcon,
   CheveronLeft,
   CloseBtnIcon,
   ConnectErrorIcon,
@@ -31,7 +32,7 @@ import type {
   UserBindDidParams,
   WalletType,
 } from '@web3mq/client';
-import { Client, getUserPublicProfileRequest } from '@web3mq/client';
+import { Client, getUserPublicProfileRequest, WalletNameType } from '@web3mq/client';
 import { RenderWallets } from '../LoginModal/RenderWallets';
 import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
 import { DappConnect, WalletMethodMap } from '@web3mq/dapp-connect';
@@ -43,9 +44,14 @@ import type { bindDidV2Params } from '../../utils';
 import { getShortAddress, selfRequest } from '../../utils';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/loginLoading';
-import { StepStringEnum, WalletInfoType } from '../../types/enum';
+import { BlockChainMap, StepStringEnum, WalletInfoType, WalletNameMap } from '../../types/enum';
 import type { SessionTypes } from '@walletconnect/types';
 import { PlusIcon } from '../../icons/PlusIcon';
+import type {
+  LoginEventDataType,
+  LoginResType,
+  RegisterResType,
+} from '../LoginModal/hooks/useLogin';
 
 export type EventDataTye = {
   msg: string;
@@ -416,12 +422,12 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
       }
       const { userid, userExist } = await client.register.getUserInfo({
         did_value: address,
-        did_type: didType,
+        did_type: BlockChainMap[didType || 'metamask'],
       });
       userAccount.current = {
         userid,
         address: address as string,
-        walletType: didType || 'eth',
+        walletType: didType || 'metamask',
         userExist,
       };
       if (operationMode === 'follow_user') {
@@ -454,10 +460,10 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
     const { method, result } = eventData;
     if (method === WalletMethodMap.providerAuthorization) {
       setWalletInfo({
-        name: result?.walletInfo?.name || 'Web3MQ Wallet',
-        type: 'web3mq',
+        name: result?.walletInfo?.name || 'Web3MQ',
+        type: 'dappConnect',
       });
-      await getAccount('eth', result.address.toLowerCase());
+      await getAccount('dappConnect', result.address.toLowerCase());
     }
     if (method === WalletMethodMap.personalSign) {
       await web3MqSignCallback(result.signature);
@@ -490,14 +496,14 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
           timestamp: signTime,
           address,
           action: targetUserAccount.current.is_my_following ? 'cancel' : 'follow',
-          did_type: walletType,
+          did_type: BlockChainMap[walletType],
           target_userid: targetUserAccount.current.userid,
         };
       } else {
         params = {
           userid,
           did_signature: signRes,
-          did_type: walletType,
+          did_type: BlockChainMap[walletType],
           did_value: address,
           timestamp: signTime,
           sign_content: signContent,
@@ -578,12 +584,11 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
   const sendSign = async (url = window.location.href) => {
     if (!userAccount.current) return;
     const { address, walletType, userid } = userAccount.current;
-    let wallet_type_name = walletType === 'starknet' ? 'Argent' : 'Ethereum'; // or StarkNet another wallet
     const timestamp = Date.now();
     let NonceContent = sha3_224(
       userid + address + walletType + 'bind' + operationType + operationValue + timestamp,
     );
-    let content = `Web3MQ wants you to sign in with your ${wallet_type_name} account:
+    let content = `Web3MQ wants you to sign in with your ${WalletNameMap[walletType]} account:
 ${address}
 For Web3MQ bind did
 URI: ${url}
@@ -618,26 +623,26 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
     }
   };
 
-  const handleLoginEvent = (eventData: any) => {
+  const handleLoginEvent = (eventData: LoginEventDataType) => {
     if (eventData.data) {
       if (eventData.type === 'login') {
-        const { userid, address } = eventData.data;
+        const { userid, address, walletType } = eventData.data as LoginResType;
         console.log(eventData, 'eventData');
         userAccount.current = {
           userid,
           address,
-          walletType: 'eth',
+          walletType,
           userExist: true,
         };
         loginStatus.current = eventData.data;
         setConnectLoadingStep(StepStringEnum.READY_BIND);
       }
       if (eventData.type === 'register') {
-        const { address } = eventData.data;
+        const { address, walletType } = eventData.data as RegisterResType;
         userAccount.current = {
           userid: userAccount.current?.userid || '',
           address,
-          walletType: 'eth',
+          walletType,
           userExist: true,
         };
       }
@@ -676,10 +681,10 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       setConnectLoadingStep(StepStringEnum.SIGN_ERROR);
     }
   };
-  const handleWalletClick = async (name: string, type: string) => {
+  const handleWalletClick = async (name: WalletNameType, type: WalletType) => {
     setWalletInfo({
-      name: name,
-      type: type as 'eth' | 'starknet' | 'web3mq' | 'walletConnect',
+      name,
+      type,
     });
     await getAccount(type as WalletType);
   };
@@ -687,24 +692,28 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
   const RenderWalletAddressBox = useCallback(() => {
     return (
       <div className={cx(ss.addressBox)} style={styles?.addressBox}>
-        {walletInfo?.type ? (
-          walletInfo.type === 'web3mq' ? (
+        {userAccount.current?.walletType ? (
+          userAccount.current?.walletType === 'dappConnect' ? (
             <Web3MqWalletIcon />
-          ) : walletInfo.type === 'starknet' ? (
-            <ArgentXIcon />
-          ) : walletInfo.type === 'eth' ? (
+          ) : userAccount.current?.walletType === 'braavos' ? (
+            <BraavosIcon />
+          ) : userAccount.current?.walletType === 'metamask' ? (
             <MetaMaskIcon />
+          ) : userAccount.current?.walletType === 'argentX' ? (
+            <ArgentXIcon />
           ) : (
             <WalletConnectIcon style={{ height: '21px' }} />
           )
         ) : (
           <MetaMaskIcon />
         )}
-        <div className={ss.centerText}>{walletInfo?.name || 'MetaMask'}</div>
+        <div className={ss.centerText}>
+          {WalletNameMap[userAccount.current?.walletType || 'metamask']}
+        </div>
         <div className={ss.addressText}>{getShortAddress(userAccount.current?.address || '')}</div>
       </div>
     );
-  }, [JSON.stringify(walletInfo), userAccount.current]);
+  }, [userAccount.current]);
 
   return (
     <div className={cx(ss.container)} style={styles?.modalContainer}>
@@ -749,10 +758,10 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
                   }}
                   handleConnectEvent={async (event) => {
                     setWalletInfo({
-                      name: event.walletName,
-                      type: event.walletType,
+                      name: event.walletName as WalletNameType,
+                      type: event.walletType as WalletType,
                     });
-                    await getAccount('eth', event.address);
+                    await getAccount('metamask', event.address);
                   }}
                   create={create}
                   connect={connect}

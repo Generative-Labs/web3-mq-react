@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type SignClient from '@walletconnect/sign-client';
 import {
   ArgentXIcon,
+  BraavosIcon,
   CheveronLeft,
   CloseBtnIcon,
   ConnectErrorIcon,
@@ -21,7 +22,7 @@ import useToggle from '../../hooks/useToggle';
 import ss from './index.module.scss';
 import cx from 'classnames';
 import type { WalletType } from '@web3mq/client';
-import { Client } from '@web3mq/client';
+import { Client, WalletNameType } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import useLogin, { MainKeysType } from './hooks/useLogin';
 import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
@@ -108,7 +109,9 @@ export const LoginModal: React.FC<IProps> = (props) => {
       : StepStringEnum.HOME,
   );
   const [showLoading, setShowLoading] = useState(false);
-  const [walletType, setWalletType] = useState<WalletType>(propsUserAccount?.walletType || 'eth');
+  const [walletType, setWalletType] = useState<WalletType>(
+    propsUserAccount?.walletType || 'metamask',
+  );
   const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
   const [errorInfo, setErrorInfo] = useState<string>('');
   const [commonCenterStatusData, setCommonCenterStatusData] = useState<
@@ -307,12 +310,12 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const handleWeb3mqCallback = async (eventData: any) => {
     const { method, result } = eventData;
     if (method === WalletMethodMap.providerAuthorization) {
-      setWalletType('eth');
+      setWalletType('dappConnect');
       setWalletInfo({
-        name: result?.walletInfo?.name || 'Web3MQ Wallet',
-        type: 'web3mq',
+        name: result?.walletInfo?.name || 'Web3MQ',
+        type: 'dappConnect',
       });
-      await getAccount('eth', result.address.toLowerCase());
+      await getAccount('dappConnect', result.address.toLowerCase());
     }
     if (method === WalletMethodMap.personalSign) {
       await web3MqSignCallback(result.signature);
@@ -329,11 +332,11 @@ export const LoginModal: React.FC<IProps> = (props) => {
     });
   };
 
-  const handleWalletClick = async (name: string, type: string) => {
-    setWalletType(type as WalletType );
+  const handleWalletClick = async (name: WalletNameType, type: WalletType) => {
+    setWalletType(type as WalletType);
     setWalletInfo({
-      name: name,
-      type: type as 'eth' | 'starknet' | 'web3mq' | 'walletConnect',
+      name,
+      type,
     });
     await getAccount(type as WalletType);
   };
@@ -407,12 +410,14 @@ export const LoginModal: React.FC<IProps> = (props) => {
     return (
       <div className={cx(ss.addressBox)} style={styles?.addressBox}>
         {walletInfo?.type ? (
-          walletInfo.type === 'web3mq' ? (
+          walletInfo.type === 'dappConnect' ? (
             <Web3MqWalletIcon />
-          ) : walletInfo.type === 'starknet' ? (
-            <ArgentXIcon />
-          ) : walletInfo.type === 'eth' ? (
+          ) : walletInfo.type === 'braavos' ? (
+            <BraavosIcon />
+          ) : walletInfo.type === 'metamask' ? (
             <MetaMaskIcon />
+          ) : walletInfo.type === 'argentX' ? (
+            <ArgentXIcon />
           ) : (
             <WalletConnectIcon style={{ height: '21px' }} />
           )
@@ -476,10 +481,10 @@ export const LoginModal: React.FC<IProps> = (props) => {
                   }}
                   handleConnectEvent={async (event) => {
                     setWalletInfo({
-                      name: event.walletName,
-                      type: event.walletType,
+                      name: event.walletName as WalletNameType,
+                      type: event.walletType as WalletType,
                     });
-                    await getAccount('eth', event.address);
+                    await getAccount('metamask', event.address);
                   }}
                   create={create}
                   connect={connect}
