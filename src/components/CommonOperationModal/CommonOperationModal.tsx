@@ -144,7 +144,6 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
   const { visible, show, hide } = useToggle(isShow);
   const [step, setStep] = useState(StepStringEnum.HOME);
   const [showLoading, setShowLoading] = useState(false);
-  const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
   const [signTime, setSignTime] = useState<number>();
   const [signContent, setSignContent] = useState<string>();
   const userAccount = useRef<UserAccountType | undefined>();
@@ -459,10 +458,6 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
   const handleWeb3mqCallback = async (eventData: any) => {
     const { method, result } = eventData;
     if (method === WalletMethodMap.providerAuthorization) {
-      setWalletInfo({
-        name: result?.walletInfo?.name || 'Web3MQ',
-        type: 'dappConnect',
-      });
       await getAccount('dappConnect', result.address.toLowerCase());
     }
     if (method === WalletMethodMap.personalSign) {
@@ -681,11 +676,7 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       setConnectLoadingStep(StepStringEnum.SIGN_ERROR);
     }
   };
-  const handleWalletClick = async (name: WalletNameType, type: WalletType) => {
-    setWalletInfo({
-      name,
-      type,
-    });
+  const handleWalletClick = async (type: WalletType) => {
     await getAccount(type as WalletType);
   };
 
@@ -757,10 +748,6 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
                     setConnectLoadingStep(StepStringEnum.REJECT_CONNECT);
                   }}
                   handleConnectEvent={async (event) => {
-                    setWalletInfo({
-                      name: event.walletName as WalletNameType,
-                      type: event.walletType as WalletType,
-                    });
                     await getAccount('metamask', event.address);
                   }}
                   create={create}

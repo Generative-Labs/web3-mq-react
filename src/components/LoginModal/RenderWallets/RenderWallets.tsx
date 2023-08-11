@@ -9,7 +9,7 @@ type IProps = {
   showCount?: number;
   styles: Record<string, any> | null;
   showLoading: boolean;
-  handleWalletClick: (walletName: WalletNameType, walletType: WalletType) => Promise<void>;
+  handleWalletClick: (walletType: WalletType) => Promise<void>;
   handleViewAll: () => void;
 };
 
@@ -28,7 +28,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       title: 'MetaMask',
       icon: <WalletMetaMaskIcon />,
       handleClick: async () => {
-        await handleWalletClick('MetaMask', 'metamask');
+        await handleWalletClick('metamask');
       },
     },
     {
@@ -36,7 +36,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       title: 'Argent X',
       icon: <ArgentWalletIcon />,
       handleClick: async () => {
-        await handleWalletClick('Argent X', 'argentX');
+        await handleWalletClick('argentX');
       },
     },
     {
@@ -44,7 +44,7 @@ export const RenderWallets: React.FC<IProps> = (props) => {
       title: 'Braavos',
       icon: <BraavosIcon />,
       handleClick: async () => {
-        await handleWalletClick('Braavos', 'braavos');
+        await handleWalletClick('braavos');
       },
     },
   ];

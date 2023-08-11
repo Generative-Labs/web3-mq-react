@@ -105,7 +105,6 @@ export const AuthToReceiveModal: React.FC<IProps> = (props) => {
     propsUserAccount ? StepStringEnum.READY_AUTH_TO_DAPP : StepStringEnum.HOME,
   );
   const [showLoading, setShowLoading] = useState(false);
-  const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
   const [signTime, setSignTime] = useState<number>();
   const [signContent, setSignContent] = useState<string>();
 
@@ -454,11 +453,7 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
       setConnectLoadingStep(StepStringEnum.SIGN_ERROR);
     }
   };
-  const handleWalletClick = async (name: WalletNameType, type: WalletType) => {
-    setWalletInfo({
-      name,
-      type,
-    });
+  const handleWalletClick = async (type: WalletType) => {
     await getAccount(type as WalletType);
   };
 
@@ -500,10 +495,6 @@ Issued At: ${moment().utc().local().format('DD/MM/YYYY hh:mm')}`;
                     setConnectLoadingStep(StepStringEnum.REJECT_CONNECT);
                   }}
                   handleConnectEvent={async (event) => {
-                    setWalletInfo({
-                      name: event.walletName as WalletNameType,
-                      type: event.walletType as WalletType,
-                    });
                     await getAccount('metamask', event.address);
                   }}
                   create={create}
