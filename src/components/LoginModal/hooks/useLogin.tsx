@@ -389,8 +389,6 @@ const useLogin = (props: IProps) => {
   };
 
   const login = async (didType: WalletType = 'metamask'): Promise<void> => {
-    console.log('1111');
-    console.log(userAccount, 'userAccount');
     if (!userAccount) {
       return;
     }
@@ -407,7 +405,6 @@ const useLogin = (props: IProps) => {
         did_value: address,
         did_type: didType,
       });
-      console.log({ publicKey, secretKey }, '{ publicKey, secretKey }');
       localMainPrivateKey = secretKey;
       localMainPublicKey = publicKey;
     }
