@@ -1,42 +1,50 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 import { ArgentWalletIcon, BraavosIcon, ViewAllIcon, WalletMetaMaskIcon } from '../../../icons';
 import { Loading } from '../../Loading';
 import ss from './index.module.scss';
+import type { WalletNameType, WalletType } from '@web3mq/client';
 
 type IProps = {
   showCount?: number;
   styles: Record<string, any> | null;
   showLoading: boolean;
-  handleWalletClick: (walletName: string, walletType: string) => Promise<void>;
+  handleWalletClick: (walletType: WalletType) => Promise<void>;
   handleViewAll: () => void;
+};
+
+type WalletConfigType = {
+  type: WalletType;
+  title: WalletNameType;
+  icon: ReactNode;
+  handleClick: any;
 };
 
 export const RenderWallets: React.FC<IProps> = (props) => {
   const { showCount = 0, styles, showLoading, handleWalletClick, handleViewAll } = props;
-  const walletsConfig = [
+  const walletsConfig: WalletConfigType[] = [
     {
-      type: 'eth',
+      type: 'metamask',
       title: 'MetaMask',
       icon: <WalletMetaMaskIcon />,
       handleClick: async () => {
-        await handleWalletClick('MetaMask', 'eth');
+        await handleWalletClick('metamask');
       },
     },
     {
-      type: 'starknet',
+      type: 'argentX',
       title: 'Argent X',
       icon: <ArgentWalletIcon />,
       handleClick: async () => {
-        await handleWalletClick('Argent X', 'starknet');
+        await handleWalletClick('argentX');
       },
     },
     {
-      type: 'starknet',
+      type: 'braavos',
       title: 'Braavos',
       icon: <BraavosIcon />,
       handleClick: async () => {
-        await handleWalletClick('Braavos', 'starknet');
+        await handleWalletClick('braavos');
       },
     },
   ];

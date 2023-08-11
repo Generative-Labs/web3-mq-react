@@ -1,6 +1,7 @@
 import QRCode from 'qrcode';
 import { ethers } from 'ethers';
-import type { WalletType, FollowOperationApiParams } from '@web3mq/client';
+import type { FollowOperationApiParams } from '@web3mq/client';
+import type { BlockChainType } from '@web3mq/client';
 
 //@ts-ignore
 // const provider = new ethers.BrowserProvider(window.ethereum);
@@ -477,7 +478,7 @@ export const generateQrCode = async (text: string) => {
 export type bindDidV2Params = {
   userid: string;
   did_signature: string;
-  did_type: WalletType;
+  did_type: BlockChainType;
   did_value: string;
   timestamp: number;
   sign_content: string;
@@ -496,7 +497,7 @@ export type AuthToDappParams = {
   did_value: string;
   did_pubkey?: string;
   auth_status: AuthToDappEnum;
-  did_type: WalletType;
+  did_type: BlockChainType;
 };
 
 export enum AuthToDappEnum {

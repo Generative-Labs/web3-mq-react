@@ -10,6 +10,11 @@
   border-radius: 48px;
   margin: 20px auto 0;
   padding: 0 10px;
+  svg {
+    width: 30px;
+    height: 30px;
+  }
+
   @include themeify {
     border: 1px solid themed(Gray_200);
     color: themed(Gray_700);

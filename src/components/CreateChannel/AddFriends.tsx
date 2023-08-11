@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, {ReactNode, useState} from 'react';
 import cx from 'classnames';
-import type { Client, WalletType } from '@web3mq/client';
+import type { Client, BlockChainType } from '@web3mq/client';
 
 import { Button } from '../Button';
 import { ExclamationCircleIcon, EthNetworkIcon, StarkNetworkIcon } from '../../icons';
@@ -16,15 +16,20 @@ type AddFriendsProps = {
   userId?: string;
   onSubmit?: () => void;
 };
+
+type optionType = {
+  value: BlockChainType,
+  key: BlockChainType,
+  label: ReactNode
+}
 export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const { className, client, disabled = false, userId = '', onSubmit } = props;
   const [value, setValue] = useState<string>(userId);
   const [content, setContent] = useState<string>('');
   const [isWarn, setIsWarn] = useState<boolean>(false);
   const [load, setLoad] = useState<boolean>(false);
-  const [selectNetwork, setSelectNetwork] = useState<WalletType>('eth');
-
-  const options = [
+  const [selectNetwork, setSelectNetwork] = useState<BlockChainType>('eth');
+  const options: optionType[]= [
     {
       value: 'eth',
       key: 'eth',
