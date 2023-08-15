@@ -526,13 +526,3 @@ export const selfRequest = async (
       console.log(e);
     });
 };
-
-export const getStarkNetAddress = (address: string) => {
-  let str = address;
-  if (address.indexOf('0x00') !== -1) {
-    str = str.replace('0x00', '0x');
-  } else if (address.indexOf('0x0') !== -1) {
-    str = str.replace('0x0', '0x');
-  }
-  return str;
-};

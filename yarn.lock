@@ -2540,10 +2540,10 @@
     motion "10.16.2"
     qrcode "1.5.3"
 
-"@web3mq/client@^1.0.19":
-  version "1.0.19"
-  resolved "https://registry.npmjs.org/@web3mq/client/-/client-1.0.19.tgz#8c47352b55962fd49044872f7ccbc778ef3ad0ab"
-  integrity sha512-CxnddDFAaer0koYOc5MLxMwT+lU01toUGXVOZxyR/rpxsR2L1zC8V0+7q8DMpLlRb8FJQLzQ2OaS3ztyG/YWow==
+"@web3mq/client@^1.0.20":
+  version "1.0.20"
+  resolved "https://registry.npmjs.org/@web3mq/client/-/client-1.0.20.tgz#38156edd51774a9136de3936ad0ea536231bbf98"
+  integrity sha512-qZj0R7g6gMdki2jIeNqiUpboWiXahHlpSC8XD9IWWKZ3L3IX+jPmgLtq4enI7taucDxXOs9X30WV4GKV8uJ9cw==
   dependencies:
     "@noble/ed25519" "^1.6.1"
     "@protobuf-ts/plugin" "^2.7.0"
@@ -4020,7 +4020,7 @@ get-starknet-core@^2.1.0:
 
 get-starknet-core@^3.0.1:
   version "3.2.0"
-  resolved "https://registry.npmjs.org/get-starknet-core/-/get-starknet-core-3.2.0.tgz"
+  resolved "https://registry.npmjs.org/get-starknet-core/-/get-starknet-core-3.2.0.tgz#44cabcbd573262340d575cb6b9a38e469a8029ed"
   integrity sha512-SZhxtLlKoPKLZ2H3l9WIU7CiNmkL3qLWGksALmvZdAXa/9PykYfLtvIB5B8A2UZMpf2ojTZlWLfuo1KhgmVobA==
 
 get-starknet@^2.0.0:
@@ -4033,7 +4033,7 @@ get-starknet@^2.0.0:
 
 get-starknet@^3.0.1:
   version "3.0.1"
-  resolved "https://registry.npmjs.org/get-starknet/-/get-starknet-3.0.1.tgz"
+  resolved "https://registry.npmjs.org/get-starknet/-/get-starknet-3.0.1.tgz#46a4ece33defcedf83d8e006e1222bb868132116"
   integrity sha512-EyUl+DVQH5PXW2OUdY06/yaqlMizzLKRLzp3S+VhYz+l6wGvW5pmhTXHLaYI4hWfebIDfFkFvAPxVPv/TkWLyA==
   dependencies:
     bowser "^2.11.0"

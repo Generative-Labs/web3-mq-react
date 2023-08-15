@@ -1,4 +1,4 @@
-import React, {ReactNode, useState} from 'react';
+import React, { ReactNode, useState } from 'react';
 import cx from 'classnames';
 import type { Client, BlockChainType } from '@web3mq/client';
 
@@ -7,7 +7,7 @@ import { ExclamationCircleIcon, EthNetworkIcon, StarkNetworkIcon } from '../../i
 import Select from 'react-select';
 
 import ss from './CreateChannel.scss';
-import { getStarkNetAddress } from '../../utils';
+import { number } from 'starknet';
 
 type AddFriendsProps = {
   className?: string;
@@ -18,10 +18,10 @@ type AddFriendsProps = {
 };
 
 type optionType = {
-  value: BlockChainType,
-  key: BlockChainType,
-  label: ReactNode
-}
+  value: BlockChainType;
+  key: BlockChainType;
+  label: ReactNode;
+};
 export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const { className, client, disabled = false, userId = '', onSubmit } = props;
   const [value, setValue] = useState<string>(userId);
@@ -29,7 +29,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const [isWarn, setIsWarn] = useState<boolean>(false);
   const [load, setLoad] = useState<boolean>(false);
   const [selectNetwork, setSelectNetwork] = useState<BlockChainType>('eth');
-  const options: optionType[]= [
+  const options: optionType[] = [
     {
       value: 'eth',
       key: 'eth',
@@ -68,7 +68,7 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const handleSubmit = async () => {
     try {
       setLoad(true);
-      let starkNetAddress = getStarkNetAddress(value);
+      let starkNetAddress = number.cleanHex(value);
       await client.contact.sendFriend(starkNetAddress.toLowerCase(), content, selectNetwork);
       setLoad(false);
       onSubmit && onSubmit();

@@ -31,6 +31,7 @@ const externalDependencies = [
   '@babel/runtime/helpers/extends',
   'js-sha3',
   'react-select',
+  'starknet',
 ];
 
 const baseConfig = {
