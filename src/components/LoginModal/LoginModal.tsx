@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type SignClient from '@walletconnect/sign-client';
 import {
   ArgentXIcon,
+  BraavosIcon,
   CheveronLeft,
   CloseBtnIcon,
   ConnectErrorIcon,
@@ -21,7 +22,7 @@ import useToggle from '../../hooks/useToggle';
 import ss from './index.module.scss';
 import cx from 'classnames';
 import type { WalletType } from '@web3mq/client';
-import { Client } from '@web3mq/client';
+import { Client, WalletNameType } from '@web3mq/client';
 import { RenderWallets } from './RenderWallets';
 import useLogin, { MainKeysType } from './hooks/useLogin';
 import type { DappConnect as DappConnectType } from '@web3mq/dapp-connect';
@@ -30,7 +31,7 @@ import { DappConnectModal } from '@web3mq/dapp-connect-react';
 import { WalletConnectButton } from '../WalletConnectButton';
 import { Loading } from '../Loading';
 import { getShortAddress } from '../../utils';
-import { StepStringEnum, WalletInfoType } from '../../types/enum';
+import { StepStringEnum, WalletInfoType, WalletNameMap } from '../../types/enum';
 import type { CommonIProps } from '../CommonOperationModal';
 
 interface IProps extends CommonIProps {
@@ -108,8 +109,9 @@ export const LoginModal: React.FC<IProps> = (props) => {
       : StepStringEnum.HOME,
   );
   const [showLoading, setShowLoading] = useState(false);
-  const [walletType, setWalletType] = useState<WalletType>(propsUserAccount?.walletType || 'eth');
-  const [walletInfo, setWalletInfo] = useState<WalletInfoType>();
+  const [walletType, setWalletType] = useState<WalletType>(
+    propsUserAccount?.walletType || 'metamask',
+  );
   const [errorInfo, setErrorInfo] = useState<string>('');
   const [commonCenterStatusData, setCommonCenterStatusData] = useState<
     CommonCenterStatusIProp | undefined
@@ -307,12 +309,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
   const handleWeb3mqCallback = async (eventData: any) => {
     const { method, result } = eventData;
     if (method === WalletMethodMap.providerAuthorization) {
-      setWalletType('eth');
-      setWalletInfo({
-        name: result?.walletInfo?.name || 'Web3MQ Wallet',
-        type: 'web3mq',
-      });
-      await getAccount('eth', result.address.toLowerCase());
+      setWalletType('dappConnect');
+      await getAccount('dappConnect', result.address.toLowerCase());
     }
     if (method === WalletMethodMap.personalSign) {
       await web3MqSignCallback(result.signature);
@@ -329,12 +327,8 @@ export const LoginModal: React.FC<IProps> = (props) => {
     });
   };
 
-  const handleWalletClick = async (name: string, type: string) => {
-    setWalletType(type as WalletType );
-    setWalletInfo({
-      name: name,
-      type: type as 'eth' | 'starknet' | 'web3mq' | 'walletConnect',
-    });
+  const handleWalletClick = async (type: WalletType) => {
+    setWalletType(type as WalletType);
     await getAccount(type as WalletType);
   };
 
@@ -406,24 +400,26 @@ export const LoginModal: React.FC<IProps> = (props) => {
     if (!userAccount) return <div></div>;
     return (
       <div className={cx(ss.addressBox)} style={styles?.addressBox}>
-        {walletInfo?.type ? (
-          walletInfo.type === 'web3mq' ? (
+        {userAccount.walletType ? (
+          userAccount.walletType === 'dappConnect' ? (
             <Web3MqWalletIcon />
-          ) : walletInfo.type === 'starknet' ? (
-            <ArgentXIcon />
-          ) : walletInfo.type === 'eth' ? (
+          ) : userAccount.walletType === 'braavos' ? (
+            <BraavosIcon />
+          ) : userAccount.walletType === 'metamask' ? (
             <MetaMaskIcon />
+          ) : userAccount.walletType === 'argentX' ? (
+            <ArgentXIcon />
           ) : (
             <WalletConnectIcon style={{ height: '21px' }} />
           )
         ) : (
           <MetaMaskIcon />
         )}
-        <div className={ss.centerText}>{walletInfo?.name || 'MetaMask'}</div>
+        <div className={ss.centerText}>{WalletNameMap[userAccount.walletType] || 'MetaMask'}</div>
         <div className={ss.addressText}>{getShortAddress(userAccount.address || '')}</div>
       </div>
     );
-  }, [JSON.stringify(walletInfo), userAccount]);
+  }, [userAccount]);
 
   return (
     // <WalletProvider>
@@ -475,11 +471,7 @@ export const LoginModal: React.FC<IProps> = (props) => {
                     setConnectLoadingStep(StepStringEnum.REJECT_CONNECT);
                   }}
                   handleConnectEvent={async (event) => {
-                    setWalletInfo({
-                      name: event.walletName,
-                      type: event.walletType,
-                    });
-                    await getAccount('eth', event.address);
+                    await getAccount('metamask', event.address);
                   }}
                   create={create}
                   connect={connect}

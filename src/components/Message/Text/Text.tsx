@@ -29,7 +29,7 @@ export const Text: React.FC = () => {
   );
 
   const renderThreadMessage = useCallback(
-    (_isReply) => (
+    (_isReply: any) => (
       <div
         className={ss.threadMessage}
         onClick={(e) => {

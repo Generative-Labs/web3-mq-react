@@ -54,7 +54,7 @@ export const Profile = React.memo((props: PropsWithChildren<IProps>) => {
   }, [wallet_address]);
 
   const handleEvent = useCallback(
-    (e) => {
+    (e: any) => {
       if (selectRef.current && !selectRef.current.contains(e.target)) {
         hide();
       }

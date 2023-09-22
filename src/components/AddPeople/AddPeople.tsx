@@ -31,7 +31,7 @@ const UnMemoizedAddPeople: React.FC = () => {
     loadNextPage,
   } =  usePaginatedMembers(client, visible);
 
-  const filterContactList = useCallback((contactList, memberList) => {
+  const filterContactList = useCallback((contactList: MembersType[], memberList: MembersType[]) => {
     const memberIds = memberList.map((item: MembersType) => {
       return item.userid;
     });

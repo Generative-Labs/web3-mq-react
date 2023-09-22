@@ -49,3 +49,6 @@ export * from './Web3MqWalletIcon';
 export * from './BindDidWarningIcon';
 export * from './ConnectSuccessIcon';
 export * from './ConnectDappSuccessIcon';
+export * from './EthNetworkIcon';
+export * from './BraavosIcon';
+export * from './StarkNetworkIcon';

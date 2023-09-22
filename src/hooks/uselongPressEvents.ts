@@ -33,7 +33,7 @@ export const uselongPressEvents = function ({
   };
 
   const handleEvent = useCallback(
-    (e) => {
+    (e: any) => {
       if (ref.current && !ref.current.contains(e.target)) {
         stop(e);
       }

@@ -1,3 +1,5 @@
+import type { WalletType, BlockChainType, WalletNameType } from '@web3mq/client';
+
 export enum ACCOUNT_CONNECT_TYPE {
   PHONE = 'phone',
   EMAIL = 'email',
@@ -44,10 +46,23 @@ export enum SignAuditTypeEnum {
 }
 
 export type WalletInfoType = {
-  name: string;
-  type: 'eth' | 'starknet' | 'web3mq' | 'walletConnect';
+  name: WalletNameType;
+  type: WalletType;
 };
 
+export const WalletNameMap: Record<WalletType, WalletNameType> = {
+  metamask: 'MetaMask',
+  argentX: 'Argent X',
+  braavos: 'Braavos',
+  dappConnect: 'Web3MQ',
+};
+
+export const BlockChainMap: Record<WalletType, BlockChainType> = {
+  metamask: 'eth',
+  braavos: 'starknet',
+  argentX: 'starknet',
+  dappConnect: 'eth',
+};
 
 // BindDid Modal
 // FollowUser Modal
@@ -59,7 +74,6 @@ export enum StepStringEnum {
   DID_BINDING = 'did_binding',
   DID_BIND_SUCCESS = 'did_bind_success',
   DID_BIND_ERROR = 'did_bind_error',
-
 }
 
 // Auth to dapp
