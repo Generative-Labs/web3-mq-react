@@ -17,25 +17,27 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
   } = props;
 
   const isActive = activeChannel?.chatid === channel.chatid;
-  const { 
-    chatid, 
+  const {
+    chatid,
     chat_name,
     chat_type,
-    avatar_url, 
-    avatar_base64, 
-    unread, 
-    lastMessage, 
+    avatar_url,
+    avatar_base64,
+    unread,
+    lastMessage,
     updatedAt,
   } = channel;
-  const { 
-    defaultUserAvatar = '', 
-    defaultUserName = '', 
-  } = channel.homeOwnerInfo || {};
+  let lastMessageContent = lastMessage;
+  let lastObj = undefined;
+  try {
+    lastObj = JSON.parse(lastMessage);
+    if (lastObj && lastObj.messageType === 'werewolf_notify' && lastObj.content) {
+      lastMessageContent = `System Notification: ${lastObj.content}`;
+    }
+  } catch (e) {}
+  const { defaultUserAvatar = '', defaultUserName = '' } = channel.homeOwnerInfo || {};
 
-  const chatName = chat_type !== 'user' ? 
-    (chat_name || chatid)
-    : 
-    ( defaultUserName || chat_name );
+  const chatName = chat_type !== 'user' ? chat_name || chatid : defaultUserName || chat_name;
   const avatarUrl = avatar_base64 || avatar_url || (chat_type === 'user' && defaultUserAvatar);
 
   return (
@@ -45,7 +47,7 @@ export const ChannelPreview = (props: ChannelPreviewProps) => {
       channel={channel}
       unread={unread || 0}
       displayTitle={chatName}
-      lastMessage={lastMessage}
+      lastMessage={lastMessageContent}
       updatedAt={updatedAt}
       setActiveChannel={changeActiveChannelEvent}
       avatarUrl={avatarUrl}

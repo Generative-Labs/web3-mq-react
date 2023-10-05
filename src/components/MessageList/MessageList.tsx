@@ -4,22 +4,23 @@ import type { EventTypes } from '@web3mq/client';
 import { useMessageListElements } from './hooks/useMessageListElements';
 import { usePaginatedMessages } from './hooks/usePaginatedMessages';
 import { useChatContext } from '../../context/ChatContext';
-import type {CommonUserInfoType} from '../Chat/hooks/useQueryUserInfo';
+import type { CommonUserInfoType } from '../Chat/hooks/useQueryUserInfo';
 import type { ComponentContextValue } from '../../context/ComponentContext';
 import { Paginator } from '../Paginator';
 import { Loading } from '../Loading';
 
 import ss from './index.scss';
-
+import cx from 'classnames';
 
 export type MessageListProps = {
+  className?: string;
   Load?: React.ReactNode;
   Message?: ComponentContextValue['Message'];
   isThread?: boolean;
 };
 
 const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
-  const { isThread = false, Load } = props;
+  const { isThread = false, Load, className = '' } = props;
   const listRef = useRef<HTMLDivElement | null>(null);
   // const messagesEndRef = useRef<HTMLDivElement | null>(null);
   // let [msgCount, setMsgCount] = useState<number>(0);
@@ -31,16 +32,16 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
       const { scrollHeight, clientHeight } = el;
       el.style.scrollBehavior = behavior;
       el.scrollTop = scrollHeight - clientHeight;
-    };
+    }
   }, []);
 
   const { client, getUserInfo, loginUserInfo } = useChatContext('MessageList');
-  
+
   const { msgListloading, loadMoreLoading, messageList, loadNextPage } = usePaginatedMessages({
     client,
     scrollBottom,
     loginUserInfo: loginUserInfo as CommonUserInfoType,
-    getUserInfo
+    getUserInfo,
   });
 
   const elements = useMessageListElements({
@@ -118,15 +119,11 @@ const UnMemoizedMessageList = (props: PropsWithChildren<MessageListProps>) => {
   // }, [msgCount]);
 
   if (msgListloading) {
-    return (
-      <div className={ss.loadingContainer}>
-        {Load || <Loading />}
-      </div>
-    );
+    return <div className={ss.loadingContainer}>{Load || <Loading />}</div>;
   }
 
   return (
-    <div className={ss.messageListcontainer} ref={listRef}>
+    <div className={cx(ss.messageListcontainer, className)} ref={listRef}>
       <Paginator
         reverse
         element={listRef}
