@@ -2590,10 +2590,10 @@
     motion "10.16.2"
     qrcode "1.5.3"
 
-"@web3mq/client@^1.0.21":
-  version "1.0.21"
-  resolved "https://registry.yarnpkg.com/@web3mq/client/-/client-1.0.21.tgz#a66bbc98c858534455efd0018272cf31b9f293fc"
-  integrity sha512-AoNDwzQks7L1zAe4q/KaJ9wSPTb8TEryzPgGtYCDtUj3QVdbk+9Rw2LeZarYSPRGbrctrN/K6Kp+tG0mcq5LgQ==
+"@web3mq/client@1.1.0-beta.1":
+  version "1.1.0-beta.1"
+  resolved "https://registry.yarnpkg.com/@web3mq/client/-/client-1.1.0-beta.1.tgz#0ab5557b2f315c12606ac4af46c17785498f8c83"
+  integrity sha512-gEYpWAVmXXmTMED966NTepCT8P07c+MeLoaL8C72E/2HhHu13Rz2kOPJYR2bfs/pXDCZ4Yid3QMazo4AkFFccQ==
   dependencies:
     "@noble/ed25519" "^1.6.1"
     "@protobuf-ts/plugin" "^2.7.0"
