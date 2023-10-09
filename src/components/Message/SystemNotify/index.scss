@@ -1,0 +1,33 @@
+@import "../../../style/index.scss";
+
+.systemContainer {
+  text-align: center;
+  padding: 16px 24px;
+}
+
+.textInner {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  .thread,
+  .reply {
+    cursor: pointer;
+    display: none;
+    margin-left: 15px;
+  }
+}
+
+.text {
+  font-family: 'Inter', sans-serif;
+  @include themeify {
+    font-size: themed(Body_font-size);
+    font-weight: themed(Regular_font-weight);
+    color: themed(Gray_400);
+    //background-color: themed(White_color);
+    background: transparent;
+
+  }
+  height: 28px;
+  line-height: 28px;
+}
