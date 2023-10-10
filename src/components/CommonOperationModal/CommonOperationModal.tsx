@@ -346,7 +346,7 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
             url={`${fastestUrl}/api/dapp/user_auth/`}
             fastestUrl={fastestUrl}
             propsUserAccount={userAccount.current}
-            dappId={'web3mq:push-server-v1'}
+            dappId={env === 'test' ? 'web3mq:pushserver-v1' : 'web3mq:push-server-v1'}
             containerId={containerId}
             appType={appType}
             customBtnNode={
@@ -510,7 +510,7 @@ export const CommonOperationModal: React.FC<IProps> = (props) => {
       if (params) {
         selfRequest(url, params)
           .then((res) => {
-            if (res) {
+            if (res && res.code === 0) {
               setConnectLoadingStep(StepStringEnum.DID_BIND_SUCCESS);
               res.address = userAccount.current?.address || '';
               handleOperationEvent({
