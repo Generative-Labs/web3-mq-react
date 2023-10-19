@@ -5,9 +5,10 @@
   margin-left: 24px;
   display: flex;
   align-items: center;
+
   div:first-child {
     margin-right: 8px;
-    @include themeify{
+    @include themeify {
       svg path {
         fill: themed(Primary_color);
       }
@@ -98,25 +99,28 @@
   max-height: 420px;
 }
 
-.listWarp::-webkit-scrollbar{
-  width:10px;
-  height:10px;
+.listWarp::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
-.listWarp::-webkit-scrollbar-track{
-  @include themeify{
+
+.listWarp::-webkit-scrollbar-track {
+  @include themeify {
     background: themed(White_color);
   }
-  border-radius:2px;
+  border-radius: 2px;
 }
-.listWarp::-webkit-scrollbar-thumb{
-  @include themeify{
+
+.listWarp::-webkit-scrollbar-thumb {
+  @include themeify {
     background: themed(Gray_500);
   }
-  border-radius:10px;
+  border-radius: 10px;
 }
-.listWarp::-webkit-scrollbar-thumb:hover{
 
-  @include themeify{
+.listWarp::-webkit-scrollbar-thumb:hover {
+
+  @include themeify {
     background: themed(Gray_900);
   }
 }
@@ -135,4 +139,8 @@
       color: themed(Primary_color);
     }
   }
+}
+
+.groupSettingDialogClassName {
+  background-color: #F5F5F5 !important;
 }

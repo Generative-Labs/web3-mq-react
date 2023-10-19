@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 
 import ss from './index.scss';
-import type { GroupSettingsModalTypeEnum } from '../GroupSettings';
+import { GroupSettingsModalTypeEnum } from '../GroupSettings';
 import { useChannelStateContext, useChatContext } from '../../../context';
 import { Avatar } from '../../Avatar';
 import { usePaginatedMembers } from '../../AddPeople/hooks/usePaginatedMembers';
-import { getShortAddress } from '../../../utils';
-import { GroupSettingsRightIcon } from '../../../icons';
+import {getShortAddress, getUserAvatar} from '../../../utils';
+import { GroupSettingsRightIcon, AddMembersIcon } from '../../../icons';
 
 type MembersType = any;
 
@@ -55,6 +55,7 @@ export const RoomSettings: React.FC<IProps> = (props) => {
       return null;
     }
     const members = isFocus ? filterContactList(contactList, memberList) : memberList;
+    console.log(members, 'members');
 
     return (
       <div className={ss.listWarp}>
@@ -68,8 +69,8 @@ export const RoomSettings: React.FC<IProps> = (props) => {
               }
             }}
           >
-            <Avatar image={item.avatar} />
-            <div className={ss.name}>{item.userid}</div>
+            <Avatar size={28} image={item.avatar_url || getUserAvatar(item.wallet_address) || ''} />
+            <div className={ss.name}>{  item.nickname || getShortAddress(item.wallet_address) || getShortAddress(item.userid) }</div>
           </div>
         ))}
       </div>
@@ -78,22 +79,33 @@ export const RoomSettings: React.FC<IProps> = (props) => {
 
   return (
     <div className={ss.roomSettingsBox}>
-      <div className={ss.avatarBox}>
-        <Avatar name="user1" size={40} shape="rounded" image={avatarUrl} />
-      </div>
-      <div className={ss.roomNameBox}>
-        <div>Room name</div>
-        <div>{chatName}</div>
-      </div>
-      <div className={ss.groupManageBtn}>
-        Group management
-        <div className={ss.rightBtn}>
+      <div className={ss.roomSettingItemBox}>
+        <div className={ss.left}>
+          <Avatar name="user1" size={40} shape="rounded" image={avatarUrl} />
+        </div>
+        <div className={ss.right}>
           <GroupSettingsRightIcon />
         </div>
       </div>
-
-      <div className={ss.listContainer}>
-        <div className={ss.listTitle}>{isFocus ? 'contacts' : 'members'}</div>
+      <div className={ss.roomSettingItemBox}>
+        <div className={ss.left}>Room name</div>
+        <div className={ss.right}>
+          <span>{chatName}</span>
+          <GroupSettingsRightIcon />
+        </div>
+      </div>
+      <div className={ss.roomSettingItemBox} onClick={() => {
+        handleModalTypeChange(GroupSettingsModalTypeEnum.GroupManage);
+      }}>
+        <div className={ss.left}>Group management</div>
+        <div className={ss.right}>
+          <GroupSettingsRightIcon />
+        </div>
+      </div>
+      <div className={ss.addMemberBox}>
+        <div className={ss.addMemberBtn}>
+          <AddMembersIcon /><span>Add Members</span>
+        </div>
         <RenderList />
       </div>
     </div>

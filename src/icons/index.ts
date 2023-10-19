@@ -1,3 +1,5 @@
+import {AddMembersIcon} from './AddMembersIcon';
+
 export * from './AddUserIcon';
 export * from './EthLogoIcon';
 export * from './ExclamationCircleIcon';
@@ -54,3 +56,5 @@ export * from './BraavosIcon';
 export * from './StarkNetworkIcon';
 export * from './GroupSettingsIcon';
 export * from './GroupSettingsRightIcon';
+export * from './AddMembersIcon';
+export * from './SelectRadioTrueIcon';

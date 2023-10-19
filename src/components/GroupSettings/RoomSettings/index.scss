@@ -1,59 +1,138 @@
 @import "../../../style/index.scss";
 
 .roomSettingsBox {
-  .listContainer {
-    padding: 16px;
+  padding: 0 16px;
+  margin-top: 16px;
 
-    .listTitle {
-      margin: 5px 0 15px;
-      font-weight: 700;
-      @include themeify {
-        font-size: themed(Headline_font-size);
-        color: themed(Primary_color);
-      }
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+
+  .roomSettingItemBox {
+    padding: 8px 16px;
+    min-height: 44px;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 8px;
+    background: #FFF;
+
+    :hover {
+      cursor: pointer;
     }
 
+    @include themeify {
+      background-color: themed(White_color);
+    }
+    font-family: Inter, sans-serif;
+    font-style: normal;
+    font-weight: 400;
+
+    .left {
+      @include themeify {
+        color: themed(Gray_900);
+      }
+      font-size: 16px;
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+      @include themeify {
+        color: themed(Gray_500);
+      }
+      font-size: 14px;
+
+      div {
+        height: 16px;
+      }
+
+      span {
+        margin-right: 8px;
+      }
+
+    }
+  }
+
+  .addMemberBox {
+    min-height: 44px;
+    border-radius: 8px;
+    background: #FFF;
+
+    .addMemberBtn {
+      padding: 8px 16px;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+      gap: 16px;
+      min-height: 44px;
+
+      div {
+        width: 28px;
+        height: 28px;
+      }
+      svg path {
+        fill: themed(Ghost_button_text_color);
+      }
+      span {
+        height: 20px;
+        line-height: 20px;
+      }
+
+      @include themeify {
+        color: themed(Ghost_button_text_color);
+      }
+      font-family: Inter, sans-serif;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+    }
     .listWarp {
       overflow-y: auto;
       max-height: 420px;
+      .listItem {
+        padding: 8px 16px;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 8px;
+        min-height: 44px;
+        cursor: pointer;
+
+
+        .name {
+          font-weight: 500;
+          @include themeify {
+            font-size: themed(Body_font-size);
+            color: themed(Primary_color);
+          }
+        }
+      }
     }
 
-    .listWarp::-webkit-scrollbar{
-      width:10px;
-      height:10px;
+    .listWarp::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
     }
-    .listWarp::-webkit-scrollbar-track{
-      @include themeify{
+
+    .listWarp::-webkit-scrollbar-track {
+      @include themeify {
         background: themed(White_color);
       }
-      border-radius:2px;
+      border-radius: 2px;
     }
-    .listWarp::-webkit-scrollbar-thumb{
-      @include themeify{
+
+    .listWarp::-webkit-scrollbar-thumb {
+      @include themeify {
         background: themed(Gray_500);
       }
-      border-radius:10px;
+      border-radius: 10px;
     }
-    .listWarp::-webkit-scrollbar-thumb:hover{
 
-      @include themeify{
+    .listWarp::-webkit-scrollbar-thumb:hover {
+
+      @include themeify {
         background: themed(Gray_900);
-      }
-    }
-
-    .listItem {
-      cursor: pointer;
-      min-height: 48px;
-      display: flex;
-      align-items: center;
-
-      .name {
-        margin-left: 10px;
-        font-weight: 500;
-        @include themeify {
-          font-size: themed(Body_font-size);
-          color: themed(Primary_color);
-        }
       }
     }
   }

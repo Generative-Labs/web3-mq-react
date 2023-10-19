@@ -10,7 +10,8 @@ import { Modal } from '../Modal';
 import { Loading } from '../Loading';
 
 import ss from './index.scss';
-import {RoomSettings} from './RoomSettings/RoomSettings';
+import { RoomSettings } from './RoomSettings/RoomSettings';
+import { GroupManage } from './GroupManage/GroupManage';
 
 type MembersType = any;
 
@@ -142,9 +143,14 @@ const UnMemoizedGroupSettings: React.FC = () => {
           ) : null
         }
         title={modalTitle}
+        dialogClassName={ss.groupSettingDialogClassName}
       >
-
-        { showModalType === GroupSettingsModalTypeEnum.RoomSettings && <RoomSettings handleModalTypeChange={setShowModalType}  /> }
+        {showModalType === GroupSettingsModalTypeEnum.RoomSettings && (
+          <RoomSettings handleModalTypeChange={setShowModalType} />
+        )}
+        {showModalType === GroupSettingsModalTypeEnum.GroupManage && (
+          <GroupManage handleModalTypeChange={setShowModalType} />
+        )}
 
         {/*<div className={ss.selectMain}>*/}
         {/*  <div className={ss.label}>To</div>*/}
