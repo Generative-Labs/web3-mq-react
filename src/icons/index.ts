@@ -52,3 +52,5 @@ export * from './ConnectDappSuccessIcon';
 export * from './EthNetworkIcon';
 export * from './BraavosIcon';
 export * from './StarkNetworkIcon';
+export * from './GroupSettingsIcon';
+export * from './GroupSettingsRightIcon';

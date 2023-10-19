@@ -11,6 +11,7 @@ import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { useChannelActionContext } from '../../context/ChannelActionContext';
 
 import ss from './index.scss';
+import {GroupSettings} from '../GroupSettings';
 
 export type MessageHeaderProps = {
   avatarName?: string;
@@ -57,7 +58,7 @@ export const MessageHeader = (props: PropsWithChildren<MessageHeaderProps>) => {
         <div className={ss.title}>{title}</div>
       </div>
       <div className={ss.operationBar}>
-        {chat_type === 'group' && <AddPeople />}
+        {chat_type === 'group' && <GroupSettings />}
         {/*<div className={ss.icon} onClick={handleOpenAllThread}>*/}
         {/*  <ThreadIcon />*/}
         {/*  {appType === AppTypeEnum['pc'] && <div>All Thread</div>}*/}

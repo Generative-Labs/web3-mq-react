@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { AddPeopleIcon, CloseBtnIcon } from '../../icons';
+import { CloseBtnIcon, GroupSettingsIcon } from '../../icons';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
 import { useChannelStateContext } from '../../context/ChannelStateContext';
 import useToggle from '../../hooks/useToggle';
@@ -10,10 +10,11 @@ import { Modal } from '../Modal';
 import { Loading } from '../Loading';
 
 import ss from './index.scss';
+import {RoomSettings} from './RoomSettings/RoomSettings';
 
 type MembersType = any;
 
-enum showModalTypeEnum {
+export enum GroupSettingsModalTypeEnum {
   RoomSettings,
   AddMembers,
   EditAvatar,
@@ -23,28 +24,36 @@ enum showModalTypeEnum {
   SelectTokens,
 }
 
-const modalTitle = {
-  [showModalTypeEnum.RoomSettings]: 'Room Settings',
-  [showModalTypeEnum.AddMembers]: 'Add Members',
-  [showModalTypeEnum.EditAvatar]: 'Group Avatar',
-  [showModalTypeEnum.EditName]: 'Group Name',
-  [showModalTypeEnum.GroupManage]: 'Group management',
-  [showModalTypeEnum.SelectNFTCollection]: 'NFT Collection Settings',
-  [showModalTypeEnum.SelectTokens]: 'Select Token',
+const modalTitleMap = {
+  [GroupSettingsModalTypeEnum.RoomSettings]: 'Room Settings',
+  [GroupSettingsModalTypeEnum.AddMembers]: 'Add Members',
+  [GroupSettingsModalTypeEnum.EditAvatar]: 'Group Avatar',
+  [GroupSettingsModalTypeEnum.EditName]: 'Group Name',
+  [GroupSettingsModalTypeEnum.GroupManage]: 'Group management',
+  [GroupSettingsModalTypeEnum.SelectNFTCollection]: 'NFT Collection Settings',
+  [GroupSettingsModalTypeEnum.SelectTokens]: 'Select Token',
 };
 
-const UnMemoizedAddPeople: React.FC = () => {
+const UnMemoizedGroupSettings: React.FC = () => {
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<MembersType[]>([]);
   const { appType, client, containerId } = useChatContext('MessageHeader');
   const { activeChannel } = useChannelStateContext('MessageHeader');
-  const [showModalType, setShowModalType] = useState<showModalTypeEnum>();
+  const [showModalType, setShowModalType] = useState<GroupSettingsModalTypeEnum>();
 
   const { contactList } = client.contact;
   const visible = useMemo(() => {
     return showModalType !== undefined;
   }, [showModalType]);
+  const modalTitle = useMemo(() => {
+    if (showModalType === undefined) {
+      return 'error title';
+    } else {
+      return modalTitleMap[showModalType];
+    }
+  }, [showModalType]);
+
   const hide = () => {
     setShowModalType(undefined);
   };
@@ -115,11 +124,10 @@ const UnMemoizedAddPeople: React.FC = () => {
       <div
         className={ss.icon}
         onClick={() => {
-          setShowModalType(showModalTypeEnum.RoomSettings);
+          setShowModalType(GroupSettingsModalTypeEnum.RoomSettings);
         }}
       >
-        <AddPeopleIcon />
-        {appType === AppTypeEnum['pc'] && <div>Add People</div>}
+        <GroupSettingsIcon />
       </div>
       <Modal
         appType={appType}
@@ -127,45 +135,48 @@ const UnMemoizedAddPeople: React.FC = () => {
         closeModal={resetStatus}
         containerId={containerId}
         leftBtn={
-          showModalType !== showModalTypeEnum.RoomSettings ? (
+          showModalType !== GroupSettingsModalTypeEnum.RoomSettings ? (
             <div className={ss.inviteBtn} onClick={handleInvite}>
               invite111
             </div>
           ) : null
         }
-        title={showModalType ? modalTitle[showModalType] : ''}
+        title={modalTitle}
       >
-        <div className={ss.selectMain}>
-          <div className={ss.label}>To</div>
-          <div className={ss.selectWarp}>
-            {selectItem.map((item) => (
-              <div className={ss.selectItem} key={item.userid}>
-                <div className={ss.name}>{item.userid}</div>
-                <CloseBtnIcon
-                  style={{ fontSize: 10 }}
-                  onClick={() => {
-                    setSelectItem(
-                      selectItem.filter((selectObj) => selectObj.userid !== item.userid),
-                    );
-                  }}
-                />
-              </div>
-            ))}
-            <input
-              className={ss.input}
-              type="text"
-              onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
-            />
-          </div>
-        </div>
-        <div className={ss.listContainer}>
-          <div className={ss.listTitle}>{isFocus ? 'contacts' : 'members'}</div>
-          <RenderList />
-        </div>
+
+        { showModalType === GroupSettingsModalTypeEnum.RoomSettings && <RoomSettings handleModalTypeChange={setShowModalType}  /> }
+
+        {/*<div className={ss.selectMain}>*/}
+        {/*  <div className={ss.label}>To</div>*/}
+        {/*  <div className={ss.selectWarp}>*/}
+        {/*    {selectItem.map((item) => (*/}
+        {/*      <div className={ss.selectItem} key={item.userid}>*/}
+        {/*        <div className={ss.name}>{item.userid}</div>*/}
+        {/*        <CloseBtnIcon*/}
+        {/*          style={{ fontSize: 10 }}*/}
+        {/*          onClick={() => {*/}
+        {/*            setSelectItem(*/}
+        {/*              selectItem.filter((selectObj) => selectObj.userid !== item.userid),*/}
+        {/*            );*/}
+        {/*          }}*/}
+        {/*        />*/}
+        {/*      </div>*/}
+        {/*    ))}*/}
+        {/*    <input*/}
+        {/*      className={ss.input}*/}
+        {/*      type="text"*/}
+        {/*      onFocus={() => setIsFocus(true)}*/}
+        {/*      // onBlur={() => setIsFocus(false)}*/}
+        {/*    />*/}
+        {/*  </div>*/}
+        {/*</div>*/}
+        {/*<div className={ss.listContainer}>*/}
+        {/*  <div className={ss.listTitle}>{isFocus ? 'contacts' : 'members'}</div>*/}
+        {/*  <RenderList />*/}
+        {/*</div>*/}
       </Modal>
     </div>
   );
 };
 
-export const AddPeople = React.memo(UnMemoizedAddPeople);
+export const GroupSettings = React.memo(UnMemoizedGroupSettings);
