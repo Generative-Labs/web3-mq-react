@@ -1,4 +1,5 @@
 import {AddMembersIcon} from './AddMembersIcon';
+import {BackIcon} from './BackIcon';
 
 export * from './AddUserIcon';
 export * from './EthLogoIcon';
@@ -58,3 +59,4 @@ export * from './GroupSettingsIcon';
 export * from './GroupSettingsRightIcon';
 export * from './AddMembersIcon';
 export * from './SelectRadioTrueIcon';
+export * from './BackIcon';

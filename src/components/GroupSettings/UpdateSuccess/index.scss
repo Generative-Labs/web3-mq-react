@@ -1,0 +1,32 @@
+@import "../../../style/index.scss";
+
+.updateSuccessBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: auto;
+  min-width: 141px;
+  border-radius: 18px;
+  padding: 24px 32px;
+  .iconBox {
+    width: 49px;
+    height: 48px;
+  }
+  .description {
+    margin-top: 5px;
+    white-space: nowrap;
+    @include themeify {
+      font-size: themed(Body_font-size);
+      font-weight: themed(Regular_font-weight);
+      color: themed(Gray_500);
+    }
+  }
+
+}
+
+
+
+
+
+

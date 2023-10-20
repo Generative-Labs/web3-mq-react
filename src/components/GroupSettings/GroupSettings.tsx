@@ -1,19 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-import { CloseBtnIcon, GroupSettingsIcon } from '../../icons';
-import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
-import { useChannelStateContext } from '../../context/ChannelStateContext';
-import useToggle from '../../hooks/useToggle';
-import { usePaginatedMembers } from './hooks/usePaginatedMembers';
-import { Avatar } from '../Avatar';
+import { BackIcon, GroupSettingsIcon } from '../../icons';
+import { useChatContext } from '../../context/ChatContext';
 import { Modal } from '../Modal';
-import { Loading } from '../Loading';
 
 import ss from './index.scss';
-import { RoomSettings } from './RoomSettings/RoomSettings';
-import { GroupManage } from './GroupManage/GroupManage';
-
-type MembersType = any;
+import { RoomSettings } from './RoomSettings';
+import { PermissionSettings } from './PermissionSettings';
+import { AddMember } from './AddMember';
+import { SelectNFTCollection } from './SelectNFTCollection';
+import { UpdateSuccess } from './UpdateSuccess';
+import cx from 'classnames';
 
 export enum GroupSettingsModalTypeEnum {
   RoomSettings,
@@ -23,6 +20,8 @@ export enum GroupSettingsModalTypeEnum {
   GroupManage,
   SelectNFTCollection,
   SelectTokens,
+  Error,
+  Success,
 }
 
 const modalTitleMap = {
@@ -33,92 +32,54 @@ const modalTitleMap = {
   [GroupSettingsModalTypeEnum.GroupManage]: 'Group management',
   [GroupSettingsModalTypeEnum.SelectNFTCollection]: 'NFT Collection Settings',
   [GroupSettingsModalTypeEnum.SelectTokens]: 'Select Token',
+  [GroupSettingsModalTypeEnum.Error]: 'Error',
+  [GroupSettingsModalTypeEnum.Success]: 'Success',
 };
 
 const UnMemoizedGroupSettings: React.FC = () => {
-  const [isFocus, setIsFocus] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [selectItem, setSelectItem] = useState<MembersType[]>([]);
-  const { appType, client, containerId } = useChatContext('MessageHeader');
-  const { activeChannel } = useChannelStateContext('MessageHeader');
+  const { appType, containerId } = useChatContext('MessageHeader');
   const [showModalType, setShowModalType] = useState<GroupSettingsModalTypeEnum>();
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const { contactList } = client.contact;
   const visible = useMemo(() => {
     return showModalType !== undefined;
   }, [showModalType]);
   const modalTitle = useMemo(() => {
     if (showModalType === undefined) {
-      return 'error title';
+      return '';
     } else {
       return modalTitleMap[showModalType];
     }
   }, [showModalType]);
 
-  const hide = () => {
+  const resetStatus = useCallback(() => {
     setShowModalType(undefined);
+  }, []);
+
+  const handleBack = () => {
+    if (
+      showModalType === GroupSettingsModalTypeEnum.SelectNFTCollection ||
+      showModalType === GroupSettingsModalTypeEnum.SelectTokens
+    ) {
+      setShowModalType(GroupSettingsModalTypeEnum.GroupManage);
+    } else {
+      setShowModalType(GroupSettingsModalTypeEnum.RoomSettings);
+    }
   };
 
-  const { memberList, memberListloading, loadMoreLoading, loadNextPage } = usePaginatedMembers(
-    client,
-    visible,
-  );
-
-  const filterContactList = useCallback((contactList: MembersType[], memberList: MembersType[]) => {
-    const memberIds = memberList.map((item: MembersType) => {
-      return item.userid;
-    });
-
-    return contactList.filter((item: MembersType) => !memberIds.includes(item.userid));
-  }, []);
-
-  const resetStatus = useCallback(() => {
-    setLoading(false);
-    hide();
-    setIsFocus(false);
-    setSelectItem([]);
-  }, []);
-
-  const handleInvite = useCallback(async () => {
-    if (selectItem.length === 0) {
-      return;
-    }
-    const ids = selectItem.map((member) => member.userid);
-    setLoading(true);
-    try {
-      await client.channel.inviteGroupMember(ids);
-      resetStatus();
-    } catch (error) {
-      setLoading(false);
-    }
-  }, [selectItem.length]);
-
-  const RenderList = useCallback(() => {
-    if (!activeChannel || !contactList) {
+  const RenderLeftBtn = useCallback(() => {
+    if (
+      showModalType === GroupSettingsModalTypeEnum.RoomSettings ||
+      showModalType === GroupSettingsModalTypeEnum.Success
+    ) {
       return null;
     }
-
-    const members = isFocus ? filterContactList(contactList, memberList) : memberList;
-
     return (
-      <div className={ss.listWarp}>
-        {members.map((item: MembersType) => (
-          <div
-            className={ss.listItem}
-            key={item.userid}
-            onClick={() => {
-              if (isFocus && !selectItem.includes(item)) {
-                setSelectItem([...selectItem, item]);
-              }
-            }}
-          >
-            <Avatar image={item.avatar} />
-            <div className={ss.name}>{item.userid}</div>
-          </div>
-        ))}
+      <div className={ss.inviteBtn} onClick={handleBack}>
+        <BackIcon />
       </div>
     );
-  }, [activeChannel, contactList, isFocus, selectItem.length, memberList]);
+  }, [handleBack, showModalType]);
 
   return (
     <div className={ss.addPeopleContainer}>
@@ -135,51 +96,41 @@ const UnMemoizedGroupSettings: React.FC = () => {
         visible={visible}
         closeModal={resetStatus}
         containerId={containerId}
-        leftBtn={
-          showModalType !== GroupSettingsModalTypeEnum.RoomSettings ? (
-            <div className={ss.inviteBtn} onClick={handleInvite}>
-              invite111
-            </div>
-          ) : null
-        }
+        leftBtn={<RenderLeftBtn />}
         title={modalTitle}
-        dialogClassName={ss.groupSettingDialogClassName}
+        dialogClassName={
+          !showModalType ||
+          ![
+            GroupSettingsModalTypeEnum.SelectNFTCollection,
+            GroupSettingsModalTypeEnum.Success,
+            GroupSettingsModalTypeEnum.AddMembers,
+          ].includes(showModalType)
+            ? ss.groupSettingGrayDialogClassName
+            : showModalType === GroupSettingsModalTypeEnum.AddMembers ? ss.groupSettingDialogClassName :null
+        }
       >
         {showModalType === GroupSettingsModalTypeEnum.RoomSettings && (
           <RoomSettings handleModalTypeChange={setShowModalType} />
         )}
         {showModalType === GroupSettingsModalTypeEnum.GroupManage && (
-          <GroupManage handleModalTypeChange={setShowModalType} />
+          <PermissionSettings
+            handleSetMsgChange={setErrorMessage}
+            handleModalTypeChange={setShowModalType}
+          />
         )}
-
-        {/*<div className={ss.selectMain}>*/}
-        {/*  <div className={ss.label}>To</div>*/}
-        {/*  <div className={ss.selectWarp}>*/}
-        {/*    {selectItem.map((item) => (*/}
-        {/*      <div className={ss.selectItem} key={item.userid}>*/}
-        {/*        <div className={ss.name}>{item.userid}</div>*/}
-        {/*        <CloseBtnIcon*/}
-        {/*          style={{ fontSize: 10 }}*/}
-        {/*          onClick={() => {*/}
-        {/*            setSelectItem(*/}
-        {/*              selectItem.filter((selectObj) => selectObj.userid !== item.userid),*/}
-        {/*            );*/}
-        {/*          }}*/}
-        {/*        />*/}
-        {/*      </div>*/}
-        {/*    ))}*/}
-        {/*    <input*/}
-        {/*      className={ss.input}*/}
-        {/*      type="text"*/}
-        {/*      onFocus={() => setIsFocus(true)}*/}
-        {/*      // onBlur={() => setIsFocus(false)}*/}
-        {/*    />*/}
-        {/*  </div>*/}
-        {/*</div>*/}
-        {/*<div className={ss.listContainer}>*/}
-        {/*  <div className={ss.listTitle}>{isFocus ? 'contacts' : 'members'}</div>*/}
-        {/*  <RenderList />*/}
-        {/*</div>*/}
+        {showModalType === GroupSettingsModalTypeEnum.Error && <div>{errorMessage}</div>}
+        {showModalType === GroupSettingsModalTypeEnum.SelectNFTCollection && (
+          <SelectNFTCollection
+            handleModalTypeChange={setShowModalType}
+            handleSetMsgChange={setErrorMessage}
+          />
+        )}
+        {showModalType === GroupSettingsModalTypeEnum.Success && (
+          <UpdateSuccess handleModalTypeChange={setShowModalType} />
+        )}
+        {showModalType === GroupSettingsModalTypeEnum.AddMembers && (
+          <AddMember handleModalTypeChange={setShowModalType} />
+        )}
       </Modal>
     </div>
   );

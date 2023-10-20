@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import ss from './index.scss';
 import type { GroupPermissionValueType } from '@web3mq/client';
-import type { GroupSettingsModalTypeEnum } from '../GroupSettings';
+import { GroupSettingsModalTypeEnum } from '../GroupSettings';
 import { useChannelStateContext, useChatContext } from '../../../context';
 import { SelectRadioTrueIcon } from '../../../icons';
 import { Button } from '../../Button';
@@ -14,6 +14,7 @@ type IProps = {
   className?: string;
   style?: React.CSSProperties;
   handleModalTypeChange: (type?: GroupSettingsModalTypeEnum) => void;
+  handleSetMsgChange: (msg: string) => void;
 };
 
 enum GroupPermissionTypeEnum {
@@ -28,14 +29,13 @@ const groupPermissionMaps = {
   [GroupPermissionTypeEnum.Invite]: 'creator_invite_friends',
 };
 
-export const GroupManage: React.FC<IProps> = (props) => {
-  const { handleModalTypeChange } = props;
+export const PermissionSettings: React.FC<IProps> = (props) => {
+  const { handleModalTypeChange, handleSetMsgChange } = props;
   const { activeChannel } = useChannelStateContext('MessageHeader');
   console.log(activeChannel, 'activeChannel');
-  const [isFocus, setIsFocus] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<GroupPermissionTypeEnum>();
-  const { appType, client, containerId } = useChatContext('MessageHeader');
+  const { client } = useChatContext('MessageHeader');
 
   const listConfig = useMemo(() => {
     return [
@@ -78,7 +78,6 @@ export const GroupManage: React.FC<IProps> = (props) => {
     } else {
       setSelectItem(GroupPermissionTypeEnum.Public);
     }
-    console.log(res.data.permissions, 'res');
   };
   useEffect(() => {
     getGroupPermission();
@@ -86,26 +85,37 @@ export const GroupManage: React.FC<IProps> = (props) => {
 
   const handleSubmit = async () => {
     if (selectItem === GroupPermissionTypeEnum.NFT) {
-      //
-      // handleModalTypeChange();
+      handleModalTypeChange(GroupSettingsModalTypeEnum.SelectNFTCollection);
     } else {
-      const res = await client.channel.updateGroupPermissions({
-        groupid: activeChannel.chatid,
-        permissions: {
-          'group:join': {
-            type: 'enum',
-            value: selectItem ? groupPermissionMaps[selectItem]  as GroupPermissionValueType: 'public',
+      try {
+        setLoading(true);
+        await client.channel.updateGroupPermissions({
+          groupid: activeChannel.chatid,
+          permissions: {
+            'group:join': {
+              type: 'enum',
+              value: selectItem
+                ? (groupPermissionMaps[selectItem] as GroupPermissionValueType)
+                : 'public',
+            },
           },
-        },
-      });
-      handleModalTypeChange();
+        });
+        setLoading(false);
+        handleModalTypeChange(GroupSettingsModalTypeEnum.Success);
+      } catch (e: any) {
+        setLoading(false);
+        handleSetMsgChange(e.message);
+        handleModalTypeChange(GroupSettingsModalTypeEnum.Error);
+      }
     }
   };
 
   return (
     <>
       {loading ? (
-        <Loading />
+        <div className={ss.loadingBox}>
+          <Loading />
+        </div>
       ) : (
         <div className={ss.groupManageBox}>
           <div className={ss.title}>Who can join this group</div>

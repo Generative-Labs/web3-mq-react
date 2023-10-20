@@ -5,13 +5,9 @@
   margin-left: 24px;
   display: flex;
   align-items: center;
+
   div:first-child {
     margin-right: 8px;
-    @include themeify{
-      svg path {
-        fill: themed(Primary_color);
-      }
-    }
   }
 }
 
@@ -19,9 +15,6 @@
   @include themeify {
     color: themed(Violet_500);
     font-size: themed(title3_font-size);
-    svg path {
-      fill: themed(Primary_color);
-    }
     &:hover {
       color: themed(Violet_600);
     }
@@ -94,31 +87,8 @@
 }
 
 .listWarp {
-  overflow-y: auto;
+  overflow-y: scroll;
   max-height: 420px;
-}
-
-.listWarp::-webkit-scrollbar{
-  width:10px;
-  height:10px;
-}
-.listWarp::-webkit-scrollbar-track{
-  @include themeify{
-    background: themed(White_color);
-  }
-  border-radius:2px;
-}
-.listWarp::-webkit-scrollbar-thumb{
-  @include themeify{
-    background: themed(Gray_500);
-  }
-  border-radius:10px;
-}
-.listWarp::-webkit-scrollbar-thumb:hover{
-
-  @include themeify{
-    background: themed(Gray_900);
-  }
 }
 
 .listItem {

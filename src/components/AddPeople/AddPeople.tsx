@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { AddPeopleIcon, CloseBtnIcon } from '../../icons';
 import { useChatContext, AppTypeEnum } from '../../context/ChatContext';
@@ -13,41 +13,15 @@ import ss from './index.scss';
 
 type MembersType = any;
 
-enum showModalTypeEnum {
-  RoomSettings,
-  AddMembers,
-  EditAvatar,
-  EditName,
-  GroupManage,
-  SelectNFTCollection,
-  SelectTokens,
-}
-
-const modalTitle = {
-  [showModalTypeEnum.RoomSettings]: 'Room Settings',
-  [showModalTypeEnum.AddMembers]: 'Add Members',
-  [showModalTypeEnum.EditAvatar]: 'Group Avatar',
-  [showModalTypeEnum.EditName]: 'Group Name',
-  [showModalTypeEnum.GroupManage]: 'Group management',
-  [showModalTypeEnum.SelectNFTCollection]: 'NFT Collection Settings',
-  [showModalTypeEnum.SelectTokens]: 'Select Token',
-};
-
 const UnMemoizedAddPeople: React.FC = () => {
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<MembersType[]>([]);
   const { appType, client, containerId } = useChatContext('MessageHeader');
   const { activeChannel } = useChannelStateContext('MessageHeader');
-  const [showModalType, setShowModalType] = useState<showModalTypeEnum>();
+  const { visible, show, hide } = useToggle();
 
   const { contactList } = client.contact;
-  const visible = useMemo(() => {
-    return showModalType !== undefined;
-  }, [showModalType]);
-  const hide = () => {
-    setShowModalType(undefined);
-  };
 
   const { memberList, memberListloading, loadMoreLoading, loadNextPage } = usePaginatedMembers(
     client,
@@ -112,12 +86,7 @@ const UnMemoizedAddPeople: React.FC = () => {
 
   return (
     <div className={ss.addPeopleContainer}>
-      <div
-        className={ss.icon}
-        onClick={() => {
-          setShowModalType(showModalTypeEnum.RoomSettings);
-        }}
-      >
+      <div className={ss.icon} onClick={show}>
         <AddPeopleIcon />
         {appType === AppTypeEnum['pc'] && <div>Add People</div>}
       </div>
@@ -127,13 +96,15 @@ const UnMemoizedAddPeople: React.FC = () => {
         closeModal={resetStatus}
         containerId={containerId}
         leftBtn={
-          showModalType !== showModalTypeEnum.RoomSettings ? (
+          loading ? (
+            <Loading />
+          ) : (
             <div className={ss.inviteBtn} onClick={handleInvite}>
-              invite111
+              invite
             </div>
-          ) : null
+          )
         }
-        title={showModalType ? modalTitle[showModalType] : ''}
+        title={isFocus ? 'New Group Chat' : 'Room Members'}
       >
         <div className={ss.selectMain}>
           <div className={ss.label}>To</div>
@@ -155,7 +126,7 @@ const UnMemoizedAddPeople: React.FC = () => {
               className={ss.input}
               type="text"
               onFocus={() => setIsFocus(true)}
-              onBlur={() => setIsFocus(false)}
+              // onBlur={() => setIsFocus(false)}
             />
           </div>
         </div>

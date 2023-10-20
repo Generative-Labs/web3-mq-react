@@ -22,9 +22,11 @@
       min-height: 62px;
       display: flex;
       justify-content: start;
+      align-items: center;
       gap: 12px;
       .left {
         width: 20px;
+        line-height: 20px;
         .selectDefaultBox {
           width: 20px;
           height: 20px;
@@ -60,7 +62,7 @@
       }
 
       &:last-child {
-        border-bottom: none;
+        border-bottom: none !important;
       }
     }
 
@@ -74,6 +76,14 @@
     }
 
   }
+}
+.loadingBox {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
 }
 
 
