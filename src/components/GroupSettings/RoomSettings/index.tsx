@@ -19,11 +19,8 @@ type IProps = {
 
 export const RoomSettings: React.FC<IProps> = (props) => {
   const { handleModalTypeChange } = props;
-
-  const [selectItem, setSelectItem] = useState<MembersType[]>([]);
   const { client } = useChatContext('MessageHeader');
   const { activeChannel } = useChannelStateContext('MessageHeader');
-  const { contactList } = client.contact;
   const { memberList, memberListloading, loadMoreLoading, loadNextPage } = usePaginatedMembers(
     client,
     true,
@@ -32,7 +29,7 @@ export const RoomSettings: React.FC<IProps> = (props) => {
   const chatName = chat_type !== 'user' ? chat_name || getShortAddress(chatid) : '';
   const avatarUrl = avatar_base64 || avatar_url || (chat_type === 'user' && '');
   const RenderList = useCallback(() => {
-    if (!activeChannel || !contactList) {
+    if (!activeChannel) {
       return null;
     }
 
@@ -61,7 +58,7 @@ export const RoomSettings: React.FC<IProps> = (props) => {
         )}
       </>
     );
-  }, [activeChannel, contactList, selectItem.length, memberList, memberListloading]);
+  }, [activeChannel, memberList, memberListloading]);
 
   return (
     <div className={ss.roomSettingsBox}>

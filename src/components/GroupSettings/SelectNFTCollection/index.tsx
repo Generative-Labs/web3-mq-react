@@ -6,10 +6,8 @@ import { Button } from '../../Button';
 import cx from 'classnames';
 import Select from 'react-select';
 import { number } from 'starknet';
-
 import ss from './index.scss';
 
-type MembersType = any;
 
 type IProps = {
   className?: string;
@@ -40,7 +38,6 @@ type optionType = {
 export const SelectNFTCollection: React.FC<IProps> = (props) => {
   const { handleModalTypeChange, handleSetMsgChange, className } = props;
   const { activeChannel } = useChannelStateContext('MessageHeader');
-  const [selectItem, setSelectItem] = useState<GroupPermissionTypeEnum>();
   const { client } = useChatContext('MessageHeader');
   const [errorMsg, setErrorMsg] = useState('');
   const [load, setLoad] = useState<boolean>(false);

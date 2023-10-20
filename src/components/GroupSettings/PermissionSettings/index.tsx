@@ -8,7 +8,6 @@ import { SelectRadioTrueIcon } from '../../../icons';
 import { Button } from '../../Button';
 import { Loading } from '../../Loading';
 
-type MembersType = any;
 
 type IProps = {
   className?: string;
@@ -32,7 +31,6 @@ const groupPermissionMaps = {
 export const PermissionSettings: React.FC<IProps> = (props) => {
   const { handleModalTypeChange, handleSetMsgChange } = props;
   const { activeChannel } = useChannelStateContext('MessageHeader');
-  console.log(activeChannel, 'activeChannel');
   const [loading, setLoading] = useState<boolean>(false);
   const [selectItem, setSelectItem] = useState<GroupPermissionTypeEnum>();
   const { client } = useChatContext('MessageHeader');

@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { BackIcon, GroupSettingsIcon } from '../../icons';
+import { BackIcon, ConnectErrorIcon, GroupSettingsIcon, SuccessIcon } from '../../icons';
 import { useChatContext } from '../../context/ChatContext';
 import { Modal } from '../Modal';
 
@@ -9,8 +9,7 @@ import { RoomSettings } from './RoomSettings';
 import { PermissionSettings } from './PermissionSettings';
 import { AddMember } from './AddMember';
 import { SelectNFTCollection } from './SelectNFTCollection';
-import { UpdateSuccess } from './UpdateSuccess';
-import cx from 'classnames';
+import { CommonCenterStatus, CommonCenterStatusIProp } from '../LoginModal/loginLoading';
 
 export enum GroupSettingsModalTypeEnum {
   RoomSettings,
@@ -49,6 +48,14 @@ const UnMemoizedGroupSettings: React.FC = () => {
       return '';
     } else {
       return modalTitleMap[showModalType];
+    }
+  }, [showModalType]);
+
+  useEffect(() => {
+    if (showModalType === GroupSettingsModalTypeEnum.Success) {
+      setTimeout(() => {
+        setShowModalType(undefined);
+      }, 1000);
     }
   }, [showModalType]);
 
@@ -106,7 +113,9 @@ const UnMemoizedGroupSettings: React.FC = () => {
             GroupSettingsModalTypeEnum.AddMembers,
           ].includes(showModalType)
             ? ss.groupSettingGrayDialogClassName
-            : showModalType === GroupSettingsModalTypeEnum.AddMembers ? ss.groupSettingDialogClassName :null
+            : showModalType === GroupSettingsModalTypeEnum.AddMembers
+              ? ss.groupSettingDialogClassName
+              : null
         }
       >
         {showModalType === GroupSettingsModalTypeEnum.RoomSettings && (
@@ -118,7 +127,24 @@ const UnMemoizedGroupSettings: React.FC = () => {
             handleModalTypeChange={setShowModalType}
           />
         )}
-        {showModalType === GroupSettingsModalTypeEnum.Error && <div>{errorMessage}</div>}
+        {showModalType === GroupSettingsModalTypeEnum.Error && (
+          <div style={{ padding: '16px' }}>
+            <CommonCenterStatus
+              {...{
+                styles: {},
+                icon: <ConnectErrorIcon />,
+                title: 'Operation failed!',
+                textContent: errorMessage || 'The operation failed!',
+                showBtn: true,
+                btnText: 'Try Again',
+                handleBtnClick: () => {
+                  setErrorMessage('');
+                  setShowModalType(GroupSettingsModalTypeEnum.RoomSettings);
+                },
+              }}
+            />
+          </div>
+        )}
         {showModalType === GroupSettingsModalTypeEnum.SelectNFTCollection && (
           <SelectNFTCollection
             handleModalTypeChange={setShowModalType}
@@ -126,7 +152,17 @@ const UnMemoizedGroupSettings: React.FC = () => {
           />
         )}
         {showModalType === GroupSettingsModalTypeEnum.Success && (
-          <UpdateSuccess handleModalTypeChange={setShowModalType} />
+          <div style={{ padding: '16px' }}>
+            <CommonCenterStatus
+              {...{
+                styles: {},
+                icon: <SuccessIcon />,
+                title: 'Successful!',
+                textContent: errorMessage || 'The operation successful!',
+                showBtn: false,
+              }}
+            />
+          </div>
         )}
         {showModalType === GroupSettingsModalTypeEnum.AddMembers && (
           <AddMember handleModalTypeChange={setShowModalType} />
