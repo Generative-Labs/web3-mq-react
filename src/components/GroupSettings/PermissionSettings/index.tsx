@@ -48,7 +48,7 @@ export const PermissionSettings: React.FC<IProps> = (props) => {
         value: GroupPermissionTypeEnum.Invite,
       },
       {
-        title: 'Holding specific NFG Collection',
+        title: 'Holding specific NFT Collection',
         desc: 'Only users with a specific NFT collection can join the group',
         value: GroupPermissionTypeEnum.NFT,
       },
