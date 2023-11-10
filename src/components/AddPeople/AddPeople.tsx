@@ -13,7 +13,6 @@ import ss from './index.scss';
 
 type MembersType = any;
 
-
 const UnMemoizedAddPeople: React.FC = () => {
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -24,12 +23,10 @@ const UnMemoizedAddPeople: React.FC = () => {
 
   const { contactList } = client.contact;
 
-  const {
-    memberList,
-    memberListloading,
-    loadMoreLoading,
-    loadNextPage,
-  } =  usePaginatedMembers(client, visible);
+  const { memberList, memberListloading, loadMoreLoading, loadNextPage } = usePaginatedMembers(
+    client,
+    visible,
+  );
 
   const filterContactList = useCallback((contactList: MembersType[], memberList: MembersType[]) => {
     const memberIds = memberList.map((item: MembersType) => {

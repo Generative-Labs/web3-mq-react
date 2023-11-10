@@ -43,7 +43,7 @@ export const usePaginatedChannels = (
   };
 
   const loadNextPage = () => {
-    if ((client.channel.channelList?.length || 0) < PAGE.size) {
+    if ((client.channel.channelList?.length || 0) < PAGE.size * PAGE.page) {
       return;
     }
     PAGE.page++;

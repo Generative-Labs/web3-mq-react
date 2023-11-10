@@ -1,0 +1,164 @@
+@import "../../../style/index.scss";
+
+
+.selectNFTCollectionContainer, .selectContactsContainer, .createRoomContainer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 124px);
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0em;
+  text-align: left;
+
+  &.hide {
+    display: none;
+  }
+
+  @include themeify {
+    font-size: themed(Body_font-size);
+    font-weight: themed(Regular_font-weight);
+    border-bottom: 1px solid themed(Gray_100);
+  }
+}
+.commonInput, .commonTextarea {
+  box-sizing: border-box;
+  width: 100%;
+  text-align: left;
+  line-height: 20px;
+  padding: 10px 16px;
+  outline: none;
+  border-radius: 8px;
+
+  &:disabled {
+    cursor: no-drop;
+  }
+
+  @include themeify {
+    font-size: themed(Headline_font-size);
+    border: 1px solid themed(Gray_200);
+    color: themed(Gray_900);
+    background: themed(White_color);
+    &:focus {
+      border: 2px solid themed(Violet_400);
+    }
+  }
+}
+
+.selectNFTCollectionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 16px 0;
+
+  .label {
+    margin-top: 10px;
+  }
+  @include themeify{
+    .optionItem {
+      border-radius: 8px;
+      width: 100%;
+      height: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      box-sizing: border-box;
+      cursor: pointer;
+
+      .leftBox {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .text {
+          color: #18181B;
+          font-family: Inter, sans-serif;
+          font-size: themed(Headline_font-size);
+          font-style: normal;
+          font-weight: themed(Regular_font-weight);
+          text-align: left;
+        }
+
+        .left {
+          margin-right: 10px;
+          width: 20px;
+          height: 20px;
+
+        }
+      }
+
+      .left, .right {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+.selectNFTCollectionContainer {
+
+  > .label {
+    @include themeify {
+      color: themed(Gray_900);
+    }
+    margin-bottom: 8px;
+    margin-top: 16px;
+  }
+
+  .label:nth-child(4) {
+    margin-top: 16px;
+  }
+
+  > .warnning {
+    box-sizing: border-box;
+    display: flex;
+    line-height: 16px;
+    padding: 12px;
+    margin-top: 8px;
+    border-radius: 12px;
+
+    &.hide {
+      display: none;
+    }
+
+    @include themeify {
+      font-size: themed(Caption1_font-size);
+      font-weight: themed(Medium_font-weight);
+      color: themed(Red_500);
+      border: 1px solid themed(Red_100);
+      background-color: themed(Red_50);
+    }
+  }
+
+  .warnIcon {
+    display: flex;
+    align-items: center;
+    width: 16px;
+    height: 16px;
+    @include themeify {
+      $font-size: themed(Headline_font-size) or 16px;
+      font-size: $font-size/4;
+    }
+  }
+}
+
+.loadingBox {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+.submitBtnBox {
+  padding-top: 16px;
+  .submitBtn {
+    width: 100%;
+  }
+}
+
+
+
+
+
+
+

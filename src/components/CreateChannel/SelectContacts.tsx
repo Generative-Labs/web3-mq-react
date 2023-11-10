@@ -12,6 +12,7 @@ import ss from './CreateChannel.scss';
 
 type SelectContactsProps = {
   className?: string;
+  btnText?: string;
   contactList: Array<any>;
   selectedContacts: Array<any>;
   handleNext: () => void;
@@ -20,7 +21,7 @@ type SelectContactsProps = {
 };
 
 export const SelectContacts: React.FC<SelectContactsProps> = React.memo((props) => {
-  const { className, contactList, selectedContacts, handleNext, onDeleted, onSelected } = props;
+  const { className, contactList, selectedContacts, handleNext, onDeleted, onSelected, btnText='Next' } = props;
   const [ content, setContent ] = useState<string>('');
   const [ searchResult, setSearchResult] = useState<any[]>(contactList);
   const [ inputWidth, setInputWidth ] = useState<number>(4);
@@ -110,7 +111,7 @@ export const SelectContacts: React.FC<SelectContactsProps> = React.memo((props) 
           </div>
       }
       <div className={cx(ss.btnContaner)}>
-        <Button block disabled={selectedContacts.length < 1} size='large' type='primary' onClick={handleNext}>Next</Button>
+        <Button block disabled={selectedContacts.length < 1} size='large' type='primary' onClick={handleNext}>{ btnText }</Button>
       </div>
     </div>
   );
