@@ -11,6 +11,7 @@ import useToggle from '../../hooks/useToggle';
 import { ConnectClosedIcon, SuccessIcon } from '../../icons';
 
 import ss from './index.scss';
+import {Loading} from '../Loading';
 
 export type ConnectMessageProps = {
   btnNode?: React.ReactNode;
@@ -106,11 +107,7 @@ export const ConnectMessage: React.FC<ConnectMessageProps> = (props) => {
       <>
         <div className={cx(ss.iconBox)}>
           {status === 0 ? 
-            (connectIcon || <img 
-              className={cx(ss.roate)} 
-              src={LoadingPng} 
-              alt="" 
-            />)
+            (connectIcon || <Loading />)
             :
             status === 1
               ?

@@ -9,6 +9,7 @@ import {
 import '@web3mq/react-components/dist/css/index.css';
 import Main from './components/Main';
 import Login from './components/Login';
+import { ReactComponent as ZuZaLuLogo } from './assets/zuzaluLogo.svg'
 
 import useLogin from './hooks/useLogin';
 
@@ -21,7 +22,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     init();
-    document.body.setAttribute('data-theme', 'light');
+    document.body.setAttribute('data-theme', 'zuzalu');
     window.addEventListener('resize', () => {
       setAppType(window.innerWidth <= 600 ? AppTypeEnum['h5'] : AppTypeEnum['pc']);
     });
@@ -51,7 +52,7 @@ const App: React.FC = () => {
   return (
     <Chat client={client} appType={appType} logout={logout}>
       <ConnectMessage />
-      <DashBoard />
+      <DashBoard PCHomeLogo={<div><ZuZaLuLogo /></div>} />
       <Main />
       {/* <Channel>
         <Window>

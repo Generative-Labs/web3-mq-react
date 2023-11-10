@@ -63,15 +63,15 @@ const MsgInput: React.FC = () => {
   return (
     <>
       <div className={cx(ss.inputBox, { [ss.mobileStyle]: appType === 'h5' })}>
-        <OpenModalIcon
-          className={cx(ss.auditBox, {
-            [ss.close]: visible,
-          })}
-          onClick={() => setVisible(!visible)}
-        />
+        {/*<OpenModalIcon*/}
+        {/*  className={cx(ss.auditBox, {*/}
+        {/*    [ss.close]: visible,*/}
+        {/*  })}*/}
+        {/*  // onClick={() => setVisible(!visible)}*/}
+        {/*/>*/}
         <ChatAutoComplete />
       </div>
-      {visible && <RenderOperation />}
+      {/*{visible && <RenderOperation />}*/}
       {/* <Modal
         visible={modalType !== undefined}
         title={modalType}

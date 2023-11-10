@@ -9,14 +9,25 @@ import ss from './index.scss';
 
 type IProps = {
   tabMaps: TabType[];
+  homeLogo?: React.ReactNode;
 };
 
 const PCBar: React.FC<IProps> = (props) => {
-  const { tabMaps } = props;
   const { setShowListTypeView, showListTypeView, loginUserInfo } = useChatContext();
+  const {
+    tabMaps,
+    homeLogo = (
+      <Avatar
+        className={ss.userAvatar}
+        image={loginUserInfo?.defaultUserAvatar || ''}
+        name="user"
+        size={56}
+      />
+    ),
+  } = props;
   return (
     <div className={ss.PcContainer}>
-      <Profile AvatarNode={<Avatar className={ss.userAvatar} image={loginUserInfo?.defaultUserAvatar || ''} name="user" size={56} />} hasLogout />
+      <Profile AvatarNode={homeLogo} hasLogout />
       <div className={ss.list}>
         {tabMaps.map((tabItem) => {
           return (
@@ -27,7 +38,9 @@ const PCBar: React.FC<IProps> = (props) => {
               key={tabItem.title}
               className={cx(ss.tabItem, { [ss.selected]: showListTypeView === tabItem.type })}
             >
-              <div className={cx(ss.icon, { [ss.selected]: showListTypeView === tabItem.type })}>{tabItem.icon}</div>
+              <div className={cx(ss.icon, { [ss.selected]: showListTypeView === tabItem.type })}>
+                {tabItem.icon}
+              </div>
               <div className={ss.title}>{tabItem.title}</div>
             </div>
           );

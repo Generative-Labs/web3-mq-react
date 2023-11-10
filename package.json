@@ -1,6 +1,6 @@
 {
   "name": "@web3mq/react-components",
-  "version": "1.0.73",
+  "version": "1.0.75-beta.1",
   "description": "web3mq-react-components",
   "main": "dist/index.js",
   "repository": "git@github.com:Generative-Labs/web3-mq-react.git",

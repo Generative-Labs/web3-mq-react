@@ -9,6 +9,9 @@
   text-transform: uppercase;
   @include themeify{
     color: themed(White_color);
+    svg path {
+      fill: themed(Violet_500);
+    };
   }
 }
 .circle {
@@ -37,3 +40,15 @@
   object-fit: cover;
   text-align: center;
 }
+//.avatarDefaultBox {
+//  width: 40px;
+//  height: 40px;
+//  font-size: 20px;
+//  @include themeify {
+//    svg path {
+//      fill: themed(Violet_500);
+//    }
+//  };
+//
+//};
+

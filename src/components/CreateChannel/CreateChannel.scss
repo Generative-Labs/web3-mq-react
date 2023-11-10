@@ -10,7 +10,10 @@
   border-radius: 20px;
   margin-right: -3px;
   @include themeify {
-    background: themed(White_color)
+    background: themed(White_color);
+    svg path {
+      fill: themed(Violet_500)
+    }
   }
 }
 
