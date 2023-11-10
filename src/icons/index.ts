@@ -1,3 +1,6 @@
+import {AddMembersIcon} from './AddMembersIcon';
+import {BackIcon} from './BackIcon';
+
 export * from './AddUserIcon';
 export * from './EthLogoIcon';
 export * from './ExclamationCircleIcon';
@@ -52,3 +55,8 @@ export * from './ConnectDappSuccessIcon';
 export * from './EthNetworkIcon';
 export * from './BraavosIcon';
 export * from './StarkNetworkIcon';
+export * from './GroupSettingsIcon';
+export * from './GroupSettingsRightIcon';
+export * from './AddMembersIcon';
+export * from './SelectRadioTrueIcon';
+export * from './BackIcon';
