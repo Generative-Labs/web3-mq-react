@@ -16,12 +16,12 @@ type CreateRoomProps = {
   client: Client;
   selectedContacts: Array<any>;
   onClose?: () => void;
-}
+};
 export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
   const { className, client, selectedContacts, onClose } = props;
-  const [ selectFileUrl, setSelectFileUrl ] = useState<string>('');
-  const [ roomName, setRoomName ] = useState<string>('');
-  const [ btnLoad, setBtnLoad ] = useState<boolean>(false);
+  const [selectFileUrl, setSelectFileUrl] = useState<string>('');
+  const [roomName, setRoomName] = useState<string>('');
+  const [btnLoad, setBtnLoad] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleEvent = () => {};
@@ -38,7 +38,7 @@ export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
   const handleClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
-    };
+    }
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,12 +53,12 @@ export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
     try {
       setBtnLoad(true);
       // create room
-      await client.channel.createRoom({groupName: roomName, avatarBase64: selectFileUrl});
+      await client.channel.createRoom({ groupName: roomName, avatarBase64: selectFileUrl });
       // set room to active
       const { channelList } = client.channel;
       if (channelList) {
         await client.channel.setActiveChannel(channelList[0]);
-        const selected = selectedContacts.map(item => item.userid);
+        const selected = selectedContacts.map((item) => item.userid);
         // invite contact
         await client.channel.inviteGroupMember(selected);
       }
@@ -73,29 +73,33 @@ export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
   return (
     <div className={cx(ss.createRoomContainer, className)}>
       <div className={ss.operationContainer}>
-        <div className={cx(ss.fileBox, {[ss.nopadding]: selectFileUrl})} onClick={handleClick}>
-          { selectFileUrl ? (
-            <div className={ss.imgBox}><img style={{height: '100%', width: '100%'}} src={selectFileUrl} alt="" /></div>
+        <div className={cx(ss.fileBox, { [ss.nopadding]: selectFileUrl })} onClick={handleClick}>
+          {selectFileUrl ? (
+            <div className={ss.imgBox}>
+              <img style={{ height: '100%', width: '100%' }} src={selectFileUrl} alt="" />
+            </div>
           ) : (
             <CameraIcon className={ss.cameraIcon} />
           )}
-          <input 
+          <input
             ref={fileInputRef}
-            style={{display: 'none'}} 
-            type='file'
+            style={{ display: 'none' }}
+            type="file"
             onChange={handleFileChange}
           />
         </div>
-        <input 
+        <input
           className={ss.commonInput}
-          placeholder='Room name' 
-          value={roomName} 
-          type='text' 
-          onChange={(e) => { setRoomName(e.target.value)}} 
+          placeholder="Room name"
+          value={roomName}
+          type="text"
+          onChange={(e) => {
+            setRoomName(e.target.value);
+          }}
         />
       </div>
       <div className={ss.mainContainer}>
-        { selectedContacts.map(contact => (
+        {selectedContacts.map((contact) => (
           <label key={contact.userid} className={ss.searchContactItem}>
             <Avatar image={contact.avatar_url || contact.defaultUserAvatar} size={40} />
             <div className={ss.wrapper}>
@@ -106,12 +110,14 @@ export const CreateRoom: React.FC<CreateRoomProps> = (props) => {
       </div>
       <div className={cx(ss.btnContaner)}>
         <Button
-          block  
-          disabled={!selectFileUrl || !roomName || btnLoad} 
-          size='large' 
-          type='primary' 
+          block
+          disabled={!roomName || btnLoad}
+          size="large"
+          type="primary"
           onClick={handleSubmit}
-        >Create</Button>
+        >
+          Create
+        </Button>
       </div>
     </div>
   );
