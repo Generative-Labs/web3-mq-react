@@ -16,12 +16,13 @@ type SelectContactsProps = {
   contactList: Array<any>;
   selectedContacts: Array<any>;
   handleNext: () => void;
+  needRequire?: boolean
   onSelected: (contact: Array<any>) => void;
   onDeleted: (contact: Array<any>) => void;
 };
 
 export const SelectContacts: React.FC<SelectContactsProps> = React.memo((props) => {
-  const { className, contactList, selectedContacts, handleNext, onDeleted, onSelected, btnText='Next' } = props;
+  const { className, contactList, selectedContacts, handleNext, onDeleted, onSelected, btnText='Next', needRequire = true } = props;
   const [ content, setContent ] = useState<string>('');
   const [ searchResult, setSearchResult] = useState<any[]>(contactList);
   const [ inputWidth, setInputWidth ] = useState<number>(4);
@@ -111,7 +112,7 @@ export const SelectContacts: React.FC<SelectContactsProps> = React.memo((props) 
           </div>
       }
       <div className={cx(ss.btnContaner)}>
-        <Button block disabled={selectedContacts.length < 1} size='large' type='primary' onClick={handleNext}>{ btnText }</Button>
+        <Button block disabled={ needRequire ? selectedContacts.length < 1 : false } size='large' type='primary' onClick={handleNext}>{ btnText }</Button>
       </div>
     </div>
   );

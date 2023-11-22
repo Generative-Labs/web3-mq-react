@@ -53,6 +53,9 @@ const App: React.FC = () => {
 
   const handleEvent = (data: any) => {
     console.log(data, 'data');
+    if (data.type === 'message.getList') {
+        console.log(web3mqClient.message.messageList, 'aaa')
+    }
   };
 
   useEffect(() => {

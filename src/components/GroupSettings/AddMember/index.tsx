@@ -14,10 +14,11 @@ type IProps = {
   className?: string;
   style?: React.CSSProperties;
   handleModalTypeChange: (type?: GroupSettingsModalTypeEnum) => void;
+  setErrorMessage: any;
 };
 
 export const AddMember: React.FC<IProps> = (props) => {
-  const { handleModalTypeChange } = props;
+  const { handleModalTypeChange, setErrorMessage } = props;
   const [loading, setLoading] = useState<boolean>(false);
   const { client } = useChatContext('MessageHeader');
   const { selectedContacts, handleDeleteContact, handleSelectedContact } =
@@ -49,7 +50,9 @@ export const AddMember: React.FC<IProps> = (props) => {
       await client.channel.inviteGroupMember(ids);
       setLoading(false);
       handleModalTypeChange(GroupSettingsModalTypeEnum.Success);
-    } catch (error) {
+    } catch (error: any) {
+      handleModalTypeChange(GroupSettingsModalTypeEnum.Error);
+      setErrorMessage(error.message);
       setLoading(false);
     }
   }, [selectedContacts.length]);

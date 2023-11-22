@@ -165,7 +165,7 @@ const UnMemoizedGroupSettings: React.FC = () => {
           </div>
         )}
         {showModalType === GroupSettingsModalTypeEnum.AddMembers && (
-          <AddMember handleModalTypeChange={setShowModalType} />
+          <AddMember setErrorMessage={setErrorMessage} handleModalTypeChange={setShowModalType} />
         )}
       </Modal>
     </div>
