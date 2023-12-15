@@ -68,7 +68,10 @@ export const AddFriends: React.FC<AddFriendsProps> = (props) => {
   const handleSubmit = async () => {
     try {
       setLoad(true);
-      let starkNetAddress = number.cleanHex(value);
+      let starkNetAddress = value;
+      if (selectNetwork === 'starknet') {
+        starkNetAddress = number.cleanHex(value);
+      }
       await client.contact.sendFriend(starkNetAddress.toLowerCase(), content, selectNetwork);
       setLoad(false);
       onSubmit && onSubmit();

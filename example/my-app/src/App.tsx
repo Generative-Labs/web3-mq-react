@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Client } from '@web3mq/client';
-import {
-  Chat,
-  ConnectMessage,
-  DashBoard,
-  AppTypeEnum,
-} from '@web3mq/react-components';
+import { Chat, ConnectMessage, DashBoard, AppTypeEnum } from '@web3mq/react-components';
 import '@web3mq/react-components/dist/css/index.css';
 import Main from './components/Main';
 import Login from './components/Login';

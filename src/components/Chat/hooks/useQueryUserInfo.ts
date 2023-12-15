@@ -34,6 +34,7 @@ export type CommonUserInfoType = {
     total_following: number;
   };
   wallet_type: string;
+  is_my_following?: boolean;
   wallet_address: string;
   permissions?: any;
   didValueMap: Record<WEB3_MQ_DID_TYPE, string>;

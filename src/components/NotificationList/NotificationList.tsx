@@ -50,7 +50,6 @@ export const NotificationList: React.FC<NotificationListProps> = (props) => {
       client.off('notification.getList');
     };
   }, []);
-
   const renderContact = (item: NotifyResponse, index: number) => {
     const props = {
       client,
