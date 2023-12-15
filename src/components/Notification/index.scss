@@ -8,6 +8,14 @@
     background-color: themed(White_color);
   }
 }
+
+.loadingBox {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .notificationHeaderContainer {
   width: 100%;
   display: flex;

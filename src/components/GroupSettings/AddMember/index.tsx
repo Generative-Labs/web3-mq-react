@@ -57,9 +57,6 @@ export const AddMember: React.FC<IProps> = (props) => {
     }
   }, [selectedContacts.length]);
 
-  useEffect(() => {
-    console.log(selectedContacts, 'selectedContacts');
-  }, [selectedContacts]);
 
   return (
     <>

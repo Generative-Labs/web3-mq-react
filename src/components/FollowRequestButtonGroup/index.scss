@@ -27,7 +27,7 @@
     background-color: themed(Red_50);
     .warnIcon {
       $font-size: themed(Headline_font-size) or 16px;
-      font-size: $font-size/4;
+      font-size: calc($font-size / 4);
     }
   }
 }

@@ -2,11 +2,26 @@ import { useMemo, useState } from 'react';
 import type { Client } from '@web3mq/client';
 
 type PermissionType = Record<string, { type: string; value: string }>;
-type UserPermissionsType = {
-  permissions: PermissionType,
+export type UserPermissionsType = {
+  permissions: PermissionType;
   follow_status: 'follower' | 'following' | 'follow_each' | '';
-  target_userid: string,
+  target_userid: string;
+};
+
+export enum RelationEnum {
+  canMessage,
+  needFollow,
+  needRequestFriend,
+  both,
 }
+
+export const RelationAuditMaps = {
+  [RelationEnum.canMessage]: 'Send Message',
+  [RelationEnum.needFollow]: 'Follow',
+  [RelationEnum.needRequestFriend]: 'Request',
+  [RelationEnum.both]: 'Follow',
+};
+
 export const useOperatePermissions = (client: Client) => {
   const [targetUserPermissions, setTargetUserPermissions] = useState<UserPermissionsType>({
     permissions: {},
@@ -16,14 +31,37 @@ export const useOperatePermissions = (client: Client) => {
 
   const toChatTargetUser = useMemo(() => {
     const { permissions, follow_status } = targetUserPermissions;
-    if (!permissions['user:chat']) return false;
+    if (!permissions['user:chat']) return RelationEnum.both;
     const { value } = permissions['user:chat'];
-    if (value === 'public' || 
-      value === 'follower' && (follow_status === 'follow_each' || follow_status === 'following') ||
-      value === 'following' && (follow_status === 'follow_each' || follow_status === 'follower') ||
-      value === 'friend' && follow_status === 'follow_each'
-    ) return true;
-    return false; 
+    if (value === 'public') {
+      return RelationEnum.canMessage;
+    }
+    if (follow_status === 'follow_each') {
+      return RelationEnum.canMessage;
+    }
+    if (value === 'follower') {
+      if (follow_status === 'following') {
+        return RelationEnum.canMessage;
+      } else {
+        return RelationEnum.needFollow;
+      }
+    }
+    if (value === 'following') {
+      if (follow_status === 'follower') {
+        return RelationEnum.canMessage;
+      } else {
+        return RelationEnum.needRequestFriend;
+      }
+    }
+    if (value === 'friend') {
+      if (follow_status === 'following') {
+        return RelationEnum.needRequestFriend;
+      }
+      if (follow_status === 'follower') {
+        return RelationEnum.needFollow;
+      }
+    }
+    return RelationEnum.both;
   }, [targetUserPermissions]);
 
   const getTargetUserPermissions = async (userId: string) => {
@@ -33,24 +71,23 @@ export const useOperatePermissions = (client: Client) => {
     if (!permissions['user:chat']) {
       permissions['user:chat'] = {
         type: 'enum',
-        value: 'friend'
+        value: 'friend',
       };
     }
     setTargetUserPermissions({
       ...targetUserPermissions,
       permissions,
       follow_status,
-      target_userid
+      target_userid,
     });
   };
-
   const updateTargetUserPermissions = (
-    type: 'permissions' | 'follow_status' | 'target_userid', 
-    newValue: PermissionType | UserPermissionsType['follow_status'] | string
+    type: 'permissions' | 'follow_status' | 'target_userid',
+    newValue: PermissionType | UserPermissionsType['follow_status'] | string,
   ) => {
-    setTargetUserPermissions(preValue => ({
+    setTargetUserPermissions((preValue) => ({
       ...preValue,
-      [type]: newValue
+      [type]: newValue,
     }));
   };
 
@@ -58,6 +95,6 @@ export const useOperatePermissions = (client: Client) => {
     targetUserPermissions,
     toChatTargetUser,
     getTargetUserPermissions,
-    updateTargetUserPermissions
+    updateTargetUserPermissions,
   };
 };
