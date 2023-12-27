@@ -14,7 +14,7 @@ export const usePaginatedMembers = (client: Client, visible: boolean) => {
   const getGroupMemberList = async () => {
     setMemberListloading(true);
     const data = await client.channel.getGroupMemberList(PAGE);
-    setMemberList(data?.data.result);
+    setMemberList(data?.result);
     setMemberListloading(false);
   };
 
@@ -25,7 +25,7 @@ export const usePaginatedMembers = (client: Client, visible: boolean) => {
     PAGE.page++;
     setLoadMoreLoading(true);
     const data = await client.channel.getGroupMemberList(PAGE);
-    setMemberList(data?.data.result);
+    setMemberList(data?.result);
     setLoadMoreLoading(false);
   };
 

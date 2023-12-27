@@ -60,7 +60,7 @@ export const usePaginatedMessages = (props: {
           for (let message of messageList) {
             if (!message.hasOwnProperty('senderInfo')) {
               const { senderId } = message;
-              // 是否是自己发送消息
+              // check is self message
               if (senderId === client.keys.userid) {
                 message.senderInfo = loginUserInfo;
               } else {

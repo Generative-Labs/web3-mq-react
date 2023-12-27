@@ -248,14 +248,19 @@ const App: React.FC = () => {
       <div>
         <button
           onClick={async () => {
-            const a = await sha256(
-              'user:ea63cbd115dc2a4a2935f6ee669725c11ac2638fa5200ba94d71c84a{"group:join":{"type":"enum","value":"nft_validation"}}[{"chain_id":"1","chain_type":"evm","contract":"0xd29f5f02f5ffcd102faf467f2f236c601830780d"}]',
-            );
-            const str = ByteArrayToHexString(a);
-            console.log(str, 'str');
+            const { notificationList} = web3mqClient.notify;
+            const ids = notificationList?.map((item: any) => {
+              if (!item.read) {
+                return item.messageId;
+              }
+            });
+            const res = await web3mqClient.notify.changeNotificationStatus([ids[0]], 'read');
+            console.log(ids, 'ids');
+            console.log('res:', res);
+            console.log(JSON.stringify(res));
           }}
         >
-          test
+          change Notification State
         </button>
       </div>
       <div>
@@ -316,7 +321,7 @@ const App: React.FC = () => {
               didType: BlockChainMap[walletType],
               walletAddress: address,
             });
-              console.log(res1)
+            console.log(res1);
             console.log(JSON.stringify(res1));
             const { requestTime, signContent } = res1;
 
@@ -362,35 +367,35 @@ const App: React.FC = () => {
         <button
           onClick={async () => {
             const walletType = 'metamask';
-              const { address } = await Client.register.getAccount(walletType);
-              const reason = 'test my guild request';
-              const { requestTime, signContent } =
-                  await web3mqClient?.channel.getApproveJoinGroupRequestSignContent({
-                      groupid: approveGroupID,
-                      isApprove: true,
-                      didType: BlockChainMap[walletType],
-                      walletAddress: address,
-                      requestUserid: requestUserid,
-                      reason,
-                  });
-
-              const { sign, publicKey } = await Client.register.sign(
-                  signContent,
-                  address,
-                  walletType,
-              );
-              await web3mqClient?.channel.approveJoinGroupRequestBySignature({
-                  didPubkey: publicKey,
-                  signature: sign,
-                  signContent,
-                  requestTimestamp: requestTime,
-                  groupid: approveGroupID,
-                  requestReason: reason,
-                  didType: BlockChainMap[walletType],
-                  walletAddress: address,
-                  requestUserid: requestUserid,
-                  isApprove: true,
+            const { address } = await Client.register.getAccount(walletType);
+            const reason = 'test my guild request';
+            const { requestTime, signContent } =
+              await web3mqClient?.channel.getApproveJoinGroupRequestSignContent({
+                groupid: approveGroupID,
+                isApprove: true,
+                didType: BlockChainMap[walletType],
+                walletAddress: address,
+                requestUserid: requestUserid,
+                reason,
               });
+
+            const { sign, publicKey } = await Client.register.sign(
+              signContent,
+              address,
+              walletType,
+            );
+            await web3mqClient?.channel.approveJoinGroupRequestBySignature({
+              didPubkey: publicKey,
+              signature: sign,
+              signContent,
+              requestTimestamp: requestTime,
+              groupid: approveGroupID,
+              requestReason: reason,
+              didType: BlockChainMap[walletType],
+              walletAddress: address,
+              requestUserid: requestUserid,
+              isApprove: true,
+            });
           }}
         >
           approve request Join Group

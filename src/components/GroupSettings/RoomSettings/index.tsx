@@ -4,7 +4,7 @@ import ss from './index.scss';
 import { GroupSettingsModalTypeEnum } from '../GroupSettings';
 import { useChannelStateContext, useChatContext } from '../../../context';
 import { Avatar } from '../../Avatar';
-import { usePaginatedMembers } from '../../AddPeople/hooks/usePaginatedMembers';
+import { usePaginatedMembers } from '../hooks/usePaginatedMembers';
 import { getShortAddress, getUserAvatar } from '../../../utils';
 import { AddMembersIcon, GroupSettingsRightIcon } from '../../../icons';
 import { Loading } from '../../Loading';

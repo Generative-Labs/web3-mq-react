@@ -2,8 +2,6 @@ import React, { PropsWithChildren, useCallback } from 'react';
 import cx from 'classnames';
 
 import { Avatar } from '../Avatar';
-import { AvatarGroup } from '../AvatarGroup';
-import { AddPeople } from '../AddPeople';
 // import { formatMessageData } from '../../utils';
 import { ArrowLeft, ThreadIcon } from '../../icons';
 import { useChannelStateContext } from '../../context/ChannelStateContext';

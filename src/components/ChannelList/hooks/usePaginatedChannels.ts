@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { Client, EventTypes, NotifyResponse } from '@web3mq/client';
 
 import { AppTypeEnum } from '../../../context';
-import type {CommonUserInfoType, SearchDidType} from '../../Chat/hooks/useQueryUserInfo';
+import type { CommonUserInfoType, SearchDidType } from '../../Chat/hooks/useQueryUserInfo';
 
 type StatusType = {
   error: boolean;
@@ -17,11 +17,8 @@ const PAGE = {
 export const usePaginatedChannels = (
   client: Client,
   appType: AppTypeEnum,
-  getUserInfo: (
-    didValue: string,
-    didType: SearchDidType,
-  ) => Promise<CommonUserInfoType | null>,
-  setActiveNotification: (activeNotification : NotifyResponse | null) => void
+  getUserInfo: (didValue: string, didType: SearchDidType) => Promise<CommonUserInfoType | null>,
+  setActiveNotification: (activeNotification: NotifyResponse | null) => void,
 ) => {
   const [channels, setChannels] = useState<any[]>([]);
   const [refreshing, setRefreshing] = useState<boolean>(false);
